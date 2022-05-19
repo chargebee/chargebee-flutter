@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Constants.dart';
-import 'ListProducts.dart';
+import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
 
 void main() => runApp(MyApp());
 
@@ -53,20 +53,23 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController productIdTextFieldController = TextEditingController();
   late String productIDs;
 
+  late ProgressBarUtil mProgressBarUtil;
+
   @override
   void initState(){
     // For Android
-    // authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
-    //     "cb-wpkheixkuzgxbnt23rzslg724y");
-    // For iOS
     authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
-        "cb-njjoibyzbrhyjg7yz4hkwg2ywq");
+        "cb-wpkheixkuzgxbnt23rzslg724y");
+    // For iOS
+    // authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
+    //     "cb-njjoibyzbrhyjg7yz4hkwg2ywq");
     //initPlatformState();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    mProgressBarUtil  = ProgressBarUtil(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Chargebee- Flutter SDK Example"),
@@ -110,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> authentication(
       String siteName, String apiKey, String sdkKey) async {
     try {
-      await ChargebeeFlutterChannelMethods.authentication(
+      await ChargebeeFlutterMethods.authentication(
           siteName, apiKey, sdkKey);
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
@@ -120,11 +123,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> getProductIdList(List<String> productIDsList) async {
 
     try {
-      cbProductList = await ChargebeeFlutterChannelMethods.getProductIdList(productIDsList);
-      if (kDebugMode) {
-        //print("cbProductList : $cbProductList");
-      }
+      cbProductList = await ChargebeeFlutterMethods.getProductIdList(productIDsList);
+
       if(cbProductList.isNotEmpty) {
+        if(mProgressBarUtil.isProgressBarShowing()){
+          mProgressBarUtil.hideProgressDialog();
+        }
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -135,6 +139,9 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
+      if(mProgressBarUtil.isProgressBarShowing()){
+        mProgressBarUtil.hideProgressDialog();
+      }
     }
 
   }
@@ -217,13 +224,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 textColor: Colors.white,
                 child: Text('OK'),
                 onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                    log('productIDs with comma from user : $productIDs');
-                    List<String> listItems = productIDs.split(',');
-                    getProductIdList(listItems);
 
+                  setState(() {
                     try {
+                      Navigator.pop(context);
+                      log('productIDs with comma from user : $productIDs');
+                      mProgressBarUtil.showProgressDialog();
+
+                      List<String> listItems = productIDs.split(',');
+                      getProductIdList(listItems);
 
                     }catch(e){
                       log('error : ${e.toString()}');

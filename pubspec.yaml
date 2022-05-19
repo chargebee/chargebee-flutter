@@ -8,6 +8,8 @@ environment:
   flutter: ">=2.8.1"
 
 dependencies:
+  progress_dialog_null_safe: ^1.0.4
+
   flutter:
     sdk: flutter
   collection: ^1.15.0

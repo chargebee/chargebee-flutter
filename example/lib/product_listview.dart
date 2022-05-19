@@ -2,6 +2,8 @@ import 'package:chargebee_flutter_sdk/chargebee_flutter_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
+import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
+
 
 class ProductListView extends StatefulWidget {
   final List<Map<String, dynamic>> listProducts;
@@ -20,6 +22,8 @@ class ProductListViewState extends State<ProductListView> {
   late List<Map<String, dynamic>> listProducts;
   ProductListViewState(this.listProducts);
 
+  late ProgressBarUtil mProgressBarUtil;
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -27,7 +31,7 @@ class ProductListViewState extends State<ProductListView> {
   }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    mProgressBarUtil  = ProgressBarUtil(context);
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -74,20 +78,28 @@ class ProductListViewState extends State<ProductListView> {
 
   Future<void> purchaseProduct(Map<String, dynamic> product) async {
     print("customerId : $customerId");
+
     try {
-      var subscriptionStatus = (await ChargebeeFlutterChannelMethods.purchaseProduct(product, customerId))!;
+      Map<dynamic, dynamic> result = (await ChargebeeFlutterMethods.purchaseProduct(product, customerId));
       if (kDebugMode) {
-        print("subscriptionStatus : $subscriptionStatus");
+        print("subscription result : $result");
       }
-      print("subscriptionStatus : $subscriptionStatus");
-      String status = subscriptionStatus["status"];
+      if(mProgressBarUtil.isProgressBarShowing()){
+        mProgressBarUtil.hideProgressDialog();
+      }
+      String status = result["status"].toString();
       print("status : $status");
       if(status !=null && status == "true"){
-        _showSuccessDialog(context);
+        _showSuccessDialog(context, "Success");
+      }else{
+        _showSuccessDialog(context,"Failed");
       }
 
     }  catch (e) {
       log('PlatformException : ${e.toString()}');
+      if(mProgressBarUtil.isProgressBarShowing()){
+        mProgressBarUtil.hideProgressDialog();
+      }
     }
 
   }
@@ -117,6 +129,7 @@ class ProductListViewState extends State<ProductListView> {
                 onPressed: () {
                   setState(() {
                     Navigator.pop(context);
+
                   });
                 },
               ),
@@ -128,6 +141,7 @@ class ProductListViewState extends State<ProductListView> {
                   setState(() {
                     Navigator.pop(context);
 
+                    mProgressBarUtil.showProgressDialog();
                     try {
                       log('Customer ID : $customerId');
 
@@ -144,13 +158,13 @@ class ProductListViewState extends State<ProductListView> {
         });
   }
 
-  Future<void> _showSuccessDialog(BuildContext context) async {
+  Future<void> _showSuccessDialog(BuildContext context, String status) async {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: const Text('Chargebee'),
-            content: const Text('Success'),
+            content:  Text(status),
             actions: <Widget>[
               FlatButton(
                 color: Colors.green,
@@ -164,6 +178,7 @@ class ProductListViewState extends State<ProductListView> {
           );
         });
   }
+
 
 }
 

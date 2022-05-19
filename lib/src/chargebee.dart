@@ -7,7 +7,7 @@ import 'package:chargebee_flutter_sdk/src/model/sku_Item.dart';
 import 'package:chargebee_flutter_sdk/src/utils/cb_support.dart';
 import 'package:flutter/services.dart';
 
-class ChargebeeFlutterChannelMethods {
+class ChargebeeFlutterMethods {
   static const platform = MethodChannel(Constants.methodChannelName);
 
   static Future<void> authentication(
@@ -36,8 +36,8 @@ class ChargebeeFlutterChannelMethods {
 
   static Future<List<Map<String, dynamic>>> getProductIdList(
       List<String> listID) async {
-    List<Object?> result = [];
 
+    List<Object?> result = [];
     List<Map<String, dynamic>> cbProductList = [];
 
     try {
@@ -47,21 +47,14 @@ class ChargebeeFlutterChannelMethods {
       if (Platform.isIOS) {
         print('result  : $result');
       } else {
-        // result =  await platform.invokeMethod(
-        //     Constants.mGetProducts, {Constants.productIDs: listID}) ;
-
-        //print('output from flutter plugins  : ${result.length}');
-
         for (var i = 0; i < result.length; i++) {
           CBProduct output = CBMapper.cbProductsFromJson(result[i].toString());
 
           Map<String, dynamic> map = output.toJson();
 
-         // print('Map it with cb product  : $map');
           cbProductList.add(map);
         }
-
-       // print('cbProductList  : $cbProductList');
+        print('ProductList  : $cbProductList');
       }
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
@@ -69,11 +62,11 @@ class ChargebeeFlutterChannelMethods {
     return cbProductList;
   }
 
-  static Future<Map<String, dynamic>> purchaseProduct(Map<String, dynamic> product, String customerId) async {
+  static Future<Map<dynamic, dynamic>> purchaseProduct(Map<String, dynamic> product, String customerId) async {
 
-    var result = <String, dynamic>{};
+    Map<dynamic, dynamic> result={};
+
     print('product  : $product');
-
     print('customerId  : $customerId');
 
     SkuDetailsWrapper skuProperties = product["skuDetails"];
@@ -81,17 +74,17 @@ class ChargebeeFlutterChannelMethods {
     Map<String, dynamic> map = {"skuDetails":skuDetails, "customerId":customerId};
 
     try {
-      var response =  await platform.invokeMethod(
+       result =  await platform.invokeMethod(
           Constants.mPurchaseProduct, {Constants.product: map}) ;
+
       if(Platform.isIOS) {
         print('result from flutter plugIn: $result');
 
-      }
-      else {
+      } else {
         print('result from flutter plugIn  : $result');
       }
 
-      return response;
+      return result;
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
     }

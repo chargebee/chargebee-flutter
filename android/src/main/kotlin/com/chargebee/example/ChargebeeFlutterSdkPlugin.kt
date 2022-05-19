@@ -1,28 +1,29 @@
 package com.chargebee.example
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
+import com.android.billingclient.api.SkuDetails
 import com.chargebee.android.Chargebee
+import com.chargebee.android.ProgressBarListener
+import com.chargebee.android.billingservice.BillingClientManager
 import com.chargebee.android.billingservice.CBCallback
 import com.chargebee.android.billingservice.CBPurchase
 import com.chargebee.android.exceptions.CBException
-import com.chargebee.android.exceptions.ChargebeeResult
 import com.chargebee.android.models.*
+import com.chargebee.android.models.CBProduct.*
+import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.*
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.util.*
-import io.flutter.embedding.engine.plugins.activity.ActivityAware
-import io.flutter.embedding.engine.plugins.activity.*
-import com.chargebee.android.models.CBProduct.*
-import com.google.gson.Gson
-import com.android.billingclient.api.SkuDetails
 
-class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
+class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware{
 
     private lateinit var channel: MethodChannel
     var mItemsList = ArrayList<String>()
@@ -30,7 +31,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     var mSkuProductList = ArrayList<String>()
     var result: MethodChannel.Result? = null
     var mContext: Context? = null
-    var subscriptionStatus = HashMap<String,Any>()
+    var subscriptionStatus = HashMap<String, Any>()
 
     private lateinit var context: Context
     private lateinit var activity: Activity
@@ -56,7 +57,8 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
             }
             "purchaseProduct" -> {
-                if(args != null){
+                if (args != null) {
+                    BillingClientManager.mProgressBarListener = activity
                     purchaseProduct(args, result)
                 }
             }
@@ -75,6 +77,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         Log.i("ChargebeePlugIn", " $siteName, $apiKey, $sdkKey, ${activity.packageName}")
         // Configure with Chargebee SDK
         Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = activity.packageName)
+
     }
 
     private fun retrieveProducts(args: Map<String, Any>, result: Result) {
@@ -87,32 +90,24 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 productIdList,
                 object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
                     override fun onSuccess(productDetails: ArrayList<CBProduct>) {
-
-                        Log.e(javaClass.simpleName, "productDetails:  $productDetails")
+                        Log.i(javaClass.simpleName, "Product from Google Play Console:  $productDetails")
                         mSkuProductList.clear()
-
                         for (product in productDetails) {
                             val jsonString = Gson().toJson(product)
-                            Log.e(javaClass.simpleName, "jsonString:  $jsonString")
-
-//                            val cbProducts = CBProducts(product.productId,product.productTitle,product.skuDetails )
-//                            val skuProduct = mapOf<String, Any>("productId" to product.productId,
-//                                    "productTitle" to product.productTitle )
+                            Log.e(javaClass.simpleName, "Convert CBProduct into jsonString:  $jsonString")
 
                             mSkuProductList.add(jsonString)
                         }
-
                         result.success(mSkuProductList)
                     }
 
                     override fun onError(error: CBException) {
                         Log.e(javaClass.simpleName, "Error:  ${error.message}")
-
                     }
                 })
     }
 
-    private fun purchaseProduct(args: Map<String, Any>, result: Result ) {
+    private fun purchaseProduct(args: Map<String, Any>, result: Result) {
 
         val product: Map<String, Any> = args["product"] as Map<String, Any>
         var customerID = "";
@@ -133,17 +128,20 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 skuDetails,
                 false
         )
-        CBPurchase.purchaseProduct(cbProduct, customerID,  object : CBCallback.PurchaseCallback<String>{
-            override fun onSuccess(subscriptionID: String, status:Boolean) {
+        CBPurchase.purchaseProduct(cbProduct, customerID, object : CBCallback.PurchaseCallback<String> {
+            override fun onSuccess(subscriptionID: String, status: Boolean) {
                 Log.i(javaClass.simpleName, "Subscription ID:  $subscriptionID")
+                Log.i(javaClass.simpleName, "Status:  $status")
                 subscriptionStatus.put("subscriptionId", subscriptionID)
                 subscriptionStatus.put("status", status)
 
                 result.success(subscriptionStatus)
             }
-            override fun onError(error: CBException) {
 
+            override fun onError(error: CBException) {
                 Log.i(javaClass.simpleName, "Exception :${error.message}")
+                subscriptionStatus.put("status", false)
+                result.success(subscriptionStatus)
             }
         })
     }
@@ -164,8 +162,8 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
     }
 
-
     override fun onDetachedFromActivityForConfigChanges() {
 
     }
+
 }
