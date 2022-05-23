@@ -1,0 +1,315 @@
+import 'dart:async';
+import 'dart:developer';
+import 'package:chargebee_flutter_sdk/chargebee_flutter_sdk.dart';
+import 'package:chargebee_flutter_sdk_example/product_listview.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'Constants.dart';
+import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(Constants.menu, title: 'Chargebee-Flutter SDK'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  final List<String> cbMenu;
+
+  const MyHomePage(this.cbMenu,{Key? key,  required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState(cbMenu);
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+
+  _MyHomePageState(this.cbMenu);
+
+  late List<String> cbMenu;
+
+  List<Map<String, dynamic>> cbProductList = [];
+
+
+  final TextEditingController siteNameController = TextEditingController();
+  final TextEditingController apiKeyController = TextEditingController();
+  final TextEditingController sdkKeyController = TextEditingController();
+  late String siteNameText, apiKeyText, sdkKeyText;
+
+  final TextEditingController productIdTextFieldController = TextEditingController();
+  late String productIDs;
+
+  late ProgressBarUtil mProgressBarUtil;
+
+  @override
+  void initState(){
+    // For Android
+    authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
+        "cb-wpkheixkuzgxbnt23rzslg724y");
+    // For iOS
+    // authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
+    //     "cb-njjoibyzbrhyjg7yz4hkwg2ywq");
+    //initPlatformState();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    mProgressBarUtil  = ProgressBarUtil(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Chargebee- Flutter SDK Example"),
+      ),
+      body: ListView.builder(
+        itemCount: cbMenu.length,
+        itemBuilder: (context, pos) {
+          return Card(
+            child: ListTile(
+              title: Text(cbMenu[pos]),
+              onTap: () {
+                onItemClick(cbMenu[pos]);
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  onItemClick(String menuItem) async {
+    switch(menuItem) {
+      case Constants.config: {
+        showAuthenticationDialog(context);
+      }
+      break;
+
+      case Constants.getProducts: {
+        showSkProductDialog(context);
+      }
+      break;
+
+      default: {
+        //statements;
+      }
+      break;
+    }
+
+  }
+
+  Future<void> authentication(
+      String siteName, String apiKey, String sdkKey) async {
+    try {
+      await ChargebeeFlutterMethods.authentication(
+          siteName, apiKey, sdkKey);
+    } on PlatformException catch (e) {
+      log('PlatformException : ${e.message}');
+    }
+  }
+
+  Future<void> getProductIdList(List<String> productIDsList) async {
+
+    try {
+      cbProductList = await ChargebeeFlutterMethods.getProductIdList(productIDsList);
+
+      if(cbProductList.isNotEmpty) {
+        if(mProgressBarUtil.isProgressBarShowing()){
+          mProgressBarUtil.hideProgressDialog();
+        }
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  ProductListView(
+                      cbProductList, title: 'Google Play-Product List'),
+            ));
+      }
+    } on PlatformException catch (e) {
+      log('PlatformException : ${e.message}');
+      if(mProgressBarUtil.isProgressBarShowing()){
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
+
+  }
+
+
+  /*Future<void> getAllItems() async {
+    try {
+      await ChargebeeFlutterSource.retrieveAllItems();
+
+    } on PlatformException catch (e) {
+      log('PlatformException : ${e.message}');
+    }
+  }
+  Future<void> retrieveAllItems() async {
+    String result;
+    try {
+      await platform.invokeMethod('retrieveAllItems').then((value) {
+        result = value.toString();
+        log('retrieveItems : $result');
+        List<String> listItems = result.split(',');
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ListItems(listItems),
+            ));
+      });
+    } on PlatformException catch (e) {
+      log('PlatformException : ${e.message}');
+    }
+  }
+
+  Future<void> retrieveAllPlans() async {
+    String result;
+    try {
+      await platform.invokeMethod('retrieveAllPlans').then((value) {
+        result = value.toString();
+        log('retrieveAllPlans : $result');
+        List<String> listItems = result.split(',');
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ListItems(listItems),
+            ));
+      });
+    } on PlatformException catch (e) {
+      log('PlatformException : ${e.message}');
+    }
+  }
+  */
+
+
+  Future<void> showSkProductDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Please enter Product Ids(Comma separated)'),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  productIDs = value;
+                });
+              },
+              controller: productIdTextFieldController,
+              decoration: const InputDecoration(hintText: "Product ID's"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.red,
+                textColor: Colors.white,
+                child: Text('CANCEL'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              FlatButton(
+                color: Colors.green,
+                textColor: Colors.white,
+                child: Text('OK'),
+                onPressed: () {
+
+                  setState(() {
+                    try {
+                      Navigator.pop(context);
+                      log('productIDs with comma from user : $productIDs');
+                      mProgressBarUtil.showProgressDialog();
+
+                      List<String> listItems = productIDs.split(',');
+                      getProductIdList(listItems);
+
+                    }catch(e){
+                      log('error : ${e.toString()}');
+                    }
+
+                  });
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<void> showAuthenticationDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Chargebee'),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      siteNameText = value;
+                    });
+                  },
+                  controller: siteNameController,
+                  decoration: const InputDecoration(hintText: "Site Name"),
+                ),
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      apiKeyText = value;
+                    });
+                  },
+                  controller: apiKeyController,
+                  decoration: const InputDecoration(hintText: "API Key"),
+                ),
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      sdkKeyText = value;
+                    });
+                  },
+                  controller: sdkKeyController,
+                  decoration: const InputDecoration(hintText: "SDK Key"),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.red,
+                textColor: Colors.white,
+                child: Text('CANCEL'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              FlatButton(
+                color: Colors.green,
+                textColor: Colors.white,
+                child: const Text('Initialize'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  log('app details : $siteNameText, $apiKeyText, $sdkKeyText');
+                  authentication(siteNameText, apiKeyText, sdkKeyText);
+                  //});
+                },
+              ),
+            ],
+          );
+        });
+  }
+}
+
