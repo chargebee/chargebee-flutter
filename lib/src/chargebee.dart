@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 import 'dart:io';
 import 'package:chargebee_flutter_sdk/src/constants.dart';
@@ -36,7 +35,6 @@ class ChargebeeFlutterMethods {
 
   static Future<List<Map<String, dynamic>>> getProductIdList(
       List<String> listID) async {
-
     List<Object?> result = [];
     List<Map<String, dynamic>> cbProductList = [];
 
@@ -62,24 +60,26 @@ class ChargebeeFlutterMethods {
     return cbProductList;
   }
 
-  static Future<Map<dynamic, dynamic>> purchaseProduct(Map<String, dynamic> product, String customerId) async {
-
-    Map<dynamic, dynamic> result={};
+  static Future<Map<dynamic, dynamic>> purchaseProduct(
+      Map<String, dynamic> product, String customerId) async {
+    Map<dynamic, dynamic> result = {};
 
     print('product  : $product');
     print('customerId  : $customerId');
 
     SkuDetailsWrapper skuProperties = product["skuDetails"];
     String skuDetails = skuProperties.skuDetails;
-    Map<String, dynamic> map = {"skuDetails":skuDetails, "customerId":customerId};
+    Map<String, dynamic> map = {
+      "skuDetails": skuDetails,
+      "customerId": customerId
+    };
 
     try {
-       result =  await platform.invokeMethod(
-          Constants.mPurchaseProduct, {Constants.product: map}) ;
+      result = await platform
+          .invokeMethod(Constants.mPurchaseProduct, {Constants.product: map});
 
-      if(Platform.isIOS) {
+      if (Platform.isIOS) {
         print('result from flutter plugIn: $result');
-
       } else {
         print('result from flutter plugIn  : $result');
       }
@@ -117,4 +117,17 @@ class ChargebeeFlutterMethods {
     }
   }
 
+  static Future<List<Object?>> retrieveSubscriptions(
+      Map<String, dynamic> queryParams) async {
+    List<Object?> result = [];
+    try {
+      log('PlatformException : $queryParams');
+      result =
+          await platform.invokeMethod('retrieveSubscriptions', queryParams);
+      print('result  : $result');
+    } on PlatformException catch (e) {
+      log('PlatformException : ${e.message}');
+    }
+    return result;
+  }
 }

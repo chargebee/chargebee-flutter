@@ -11,6 +11,7 @@ class Constants{
 
   static const productIDs = "product_id";
   static const product = "product";
+  static const params = "params";
 
   // Methods name
   static const mAuthentication = "authentication";
@@ -18,4 +19,6 @@ class Constants{
   static const mRetrieveAllPlans = 'retrieveAllPlans';
   static const mGetProducts = 'getProducts';
   static const mPurchaseProduct = 'purchaseProduct';
+  static const SubscriptionMethod = 'retrieveSubscriptions';
+
 }

@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Constants.dart';
 import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
+import 'dart:convert';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,8 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   final List<String> cbMenu;
 
-  const MyHomePage(this.cbMenu,{Key? key,  required this.title}) : super(key: key);
+  const MyHomePage(this.cbMenu, {Key? key, required this.title})
+      : super(key: key);
 
   final String title;
 
@@ -37,28 +38,28 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   _MyHomePageState(this.cbMenu);
 
   late List<String> cbMenu;
 
   List<Map<String, dynamic>> cbProductList = [];
 
-
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController apiKeyController = TextEditingController();
   final TextEditingController sdkKeyController = TextEditingController();
   late String siteNameText, apiKeyText, sdkKeyText;
 
-  final TextEditingController productIdTextFieldController = TextEditingController();
+  final TextEditingController productIdTextFieldController =
+      TextEditingController();
   late String productIDs;
+  late String queryParams;
 
   late ProgressBarUtil mProgressBarUtil;
 
   @override
-  void initState(){
+  void initState() {
     // For Android
-    authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
+    authentication("cb-imay-test", "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
         "cb-wpkheixkuzgxbnt23rzslg724y");
     // For iOS
     // authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    mProgressBarUtil  = ProgressBarUtil(context);
+    mProgressBarUtil = ProgressBarUtil(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Chargebee- Flutter SDK Example"),
@@ -91,107 +92,64 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   onItemClick(String menuItem) async {
-    switch(menuItem) {
-      case Constants.config: {
-        showAuthenticationDialog(context);
-      }
-      break;
+    switch (menuItem) {
+      case Constants.config:
+        {
+          showAuthenticationDialog(context);
+        }
+        break;
 
-      case Constants.getProducts: {
-        showSkProductDialog(context);
-      }
-      break;
+      case Constants.getProducts:
+        {
+          showSkProductDialog(context);
+        }
+        break;
 
-      default: {
-        //statements;
-      }
-      break;
+      case Constants.getSubscriptionStatus:
+        {
+          showSubscriptionDialog(context);
+        }
+        break;
+      default:
+        {
+          //statements;
+        }
+        break;
     }
-
   }
 
   Future<void> authentication(
       String siteName, String apiKey, String sdkKey) async {
     try {
-      await ChargebeeFlutterMethods.authentication(
-          siteName, apiKey, sdkKey);
+      await ChargebeeFlutterMethods.authentication(siteName, apiKey, sdkKey);
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
     }
   }
 
   Future<void> getProductIdList(List<String> productIDsList) async {
-
     try {
-      cbProductList = await ChargebeeFlutterMethods.getProductIdList(productIDsList);
+      cbProductList =
+          await ChargebeeFlutterMethods.getProductIdList(productIDsList);
 
-      if(cbProductList.isNotEmpty) {
-        if(mProgressBarUtil.isProgressBarShowing()){
+      if (cbProductList.isNotEmpty) {
+        if (mProgressBarUtil.isProgressBarShowing()) {
           mProgressBarUtil.hideProgressDialog();
         }
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  ProductListView(
-                      cbProductList, title: 'Google Play-Product List'),
+              builder: (BuildContext context) => ProductListView(cbProductList,
+                  title: 'Google Play-Product List'),
             ));
       }
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
-      if(mProgressBarUtil.isProgressBarShowing()){
+      if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
     }
-
   }
-
-
-  /*Future<void> getAllItems() async {
-    try {
-      await ChargebeeFlutterSource.retrieveAllItems();
-
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
-    }
-  }
-  Future<void> retrieveAllItems() async {
-    String result;
-    try {
-      await platform.invokeMethod('retrieveAllItems').then((value) {
-        result = value.toString();
-        log('retrieveItems : $result');
-        List<String> listItems = result.split(',');
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => ListItems(listItems),
-            ));
-      });
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
-    }
-  }
-
-  Future<void> retrieveAllPlans() async {
-    String result;
-    try {
-      await platform.invokeMethod('retrieveAllPlans').then((value) {
-        result = value.toString();
-        log('retrieveAllPlans : $result');
-        List<String> listItems = result.split(',');
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => ListItems(listItems),
-            ));
-      });
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
-    }
-  }
-  */
-
 
   Future<void> showSkProductDialog(BuildContext context) async {
     return showDialog(
@@ -224,7 +182,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 textColor: Colors.white,
                 child: Text('OK'),
                 onPressed: () {
-
                   setState(() {
                     try {
                       Navigator.pop(context);
@@ -233,17 +190,72 @@ class _MyHomePageState extends State<MyHomePage> {
 
                       List<String> listItems = productIDs.split(',');
                       getProductIdList(listItems);
-
-                    }catch(e){
+                    } catch (e) {
                       log('error : ${e.toString()}');
                     }
-
                   });
                 },
               ),
             ],
           );
         });
+  }
+
+  Future<void> showSubscriptionDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Please enter the queryParameters'),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  queryParams = value;
+                });
+              },
+              controller: productIdTextFieldController,
+              decoration: const InputDecoration(hintText: " key value pair"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.red,
+                textColor: Colors.white,
+                child: Text('CANCEL'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              FlatButton(
+                color: Colors.green,
+                textColor: Colors.white,
+                child: Text('OK'),
+                onPressed: () {
+                  setState(() {
+                    try {
+                      Navigator.pop(context);
+                      log('QueryParam from user : $queryParams');
+                      mProgressBarUtil.showProgressDialog();
+                      // Map param = json.decode(queryParams);
+                      // ChargebeeFlutterMethods.retrieveSubscriptions( {"status": "is_active"});
+                      subscriptionStatus();
+                    } catch (e) {
+                      log('error : ${e.toString()}');
+                    }
+                  });
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<void> subscriptionStatus() async {
+    List<Object?> subscriptionsList = [];
+    subscriptionsList = await ChargebeeFlutterMethods.retrieveSubscriptions(
+        {"status": "active", "customer_id": "12345"}) as List<Object?>;
+    log('Subs List : $subscriptionsList');
   }
 
   Future<void> showAuthenticationDialog(BuildContext context) async {
@@ -312,4 +324,3 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 }
-

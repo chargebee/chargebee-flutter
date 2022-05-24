@@ -19,174 +19,172 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		01AB5F9DCF138A386A53860B9570755E /* CBNetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522FC3F94615332577F1A13DECE0DBC1 /* CBNetworkRequest.swift */; };
-		05A1537036CE86F9BDBB88AA3664694E /* CBItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A94CE191942F03241A3EAD4718572C5 /* CBItem.swift */; };
-		0E0194DA3F57EB2303F6B3F9AE55B2D3 /* CBLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF9ABD47C860D8BD6FA340C2700B9B9 /* CBLogger.swift */; };
-		20110A4C2AD9141274D828C3B236B481 /* CBEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E479A8074D60362D20611778275B4F91 /* CBEnvironment.swift */; };
-		2540E72A621757BA9D0003505AD43F14 /* StripeTokenResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457714F2FF13083A205A71D5FFDBC1B6 /* StripeTokenResource.swift */; };
-		294775B9EEE82C828635A422473E8F58 /* Chargebee.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEABEFAC3D6B90450725A5F34B993B6D /* Chargebee.swift */; };
-		2AF75E9645D99A9DC085B1EE46A0A875 /* CBProductsV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BEA379EDCDF5EC5E98C6546FEFCB28 /* CBProductsV1.swift */; };
-		2B2D7D76D23EA46F16DC7E1837A6A08E /* CBSubscriptionResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D921890C199449C106D5978004E4668 /* CBSubscriptionResource.swift */; };
-		2C920AE543F9C4E6A6CF619243827EB1 /* CBAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6EAADD77310481348864CC92CD735E /* CBAPIRequest.swift */; };
-		380FB680E97C5A1A907FB671D398DF98 /* CBError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C479EA52DC1B73615F7BFB551C30C9E /* CBError.swift */; };
-		3DD5B46E5500EF68F507D4C9EE46336D /* CBPurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B09511119FC9FD3F9D8F5DEF6E3E1D4E /* CBPurchaseManager.swift */; };
-		4195662A9A629AAEF163FA9F4A20F48B /* CBLoggerResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC241687FB13D9EEC86D90522EE2C21 /* CBLoggerResource.swift */; };
-		51C381559822A8B43F66594D15632F17 /* Chargebee-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = DF3248989682D4E8BBF04F2012440829 /* Chargebee-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		044FDD4A96123B0159965A1503DD8C99 /* CBLoggerResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDBC8C35A25D085B97C31BB58024329 /* CBLoggerResource.swift */; };
+		1B5A855FCE15991627659D8745B52D7D /* CBPaymentDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A7DC482403D5E0ED67AB7E47EB4F22 /* CBPaymentDetail.swift */; };
+		1F658CBB2F030892D75C4E9C400C7A83 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		25101C5E47DE56D51084BEE70278F83E /* StripeTokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9D709574FD6B45A6BB67399549BD88 /* StripeTokenizer.swift */; };
+		280EDA10BFF33D9C6A991BCF247E34B7 /* CBPurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F48FAEEEBC099E7C3065592C3E8B1F /* CBPurchaseManager.swift */; };
+		2F0697C6FDA05019256CB16D6B49F178 /* CBAddOnResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460C2649F8C292038AD13D3C1D36CB7D /* CBAddOnResource.swift */; };
+		2FE31217423F64E87FEE2D02EB7F5960 /* CBProductsV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4675A4E0E3D3179250AC98DF50917229 /* CBProductsV1.swift */; };
+		3770665C823E4C3D3697A4AC4B191FF0 /* CBEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9FCEC64496F1FDC0204983143BC293 /* CBEnvironment.swift */; };
+		5262ECE18D5BAB63E1F36DE82CC495C3 /* CBAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE30375B14169DA81E26F7DDDCE18532 /* CBAPIRequest.swift */; };
 		532ABBB74D361B84344E8BD65BC223D3 /* Pods-Runner-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 96BF45FBE2BC9AD7B2D7E56D01B5EE46 /* Pods-Runner-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		53B67CD29B1405C7FCBC1AA8F429CE5E /* Chargebee-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D7970C412259EBEA324C6DE57E7098 /* Chargebee-dummy.m */; };
-		5DEF302B8503340F8C6B4D2D2E86CD1A /* CBItemListResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46720AD3C56AB8F3B4A25FCB758E605 /* CBItemListResource.swift */; };
+		58E0E48C8AF2A1E39DC158173532F364 /* CBError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26647D8014D3EBFDD0215AE18C768713 /* CBError.swift */; };
+		5AF9A1DE74CDC257B905BCB960A312E2 /* Chargebee-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 119684204F06F42B658014AF6EE15E2F /* Chargebee-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		602028F36FD4C331315250D787A6541A /* SwiftChargebeeFlutterSdkPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB4E41E859242F6FCF8E5E59B3BE431 /* SwiftChargebeeFlutterSdkPlugin.swift */; };
 		64D382BCB3A8F01AC7822A46C97CFC5B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		662511656024FB821D378DE884FCAF8A /* CBItemListResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A5788C0BDDB71BEBDD8439A5F9AEA3 /* CBItemListResource.swift */; };
 		6DE2BBD7E21EB42CA8EAA0ECEE1129E1 /* SKProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7959095E0179286FD47E6151A2EDE0 /* SKProducts.swift */; };
-		79AF80BD280DCCA7C800C4B18D238BF4 /* CBResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD03D1B835A98FD9A42F351D1939082 /* CBResult.swift */; };
-		7E0A45BC7545D41500C6BB50E8B541D9 /* CBSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBDCDE66110723A30936DD73A585B58 /* CBSubscription.swift */; };
-		805A29C0E04D09B30F64D6C80229524C /* CBToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5736365B3FBED56DBBCD03188D306A3 /* CBToken.swift */; };
-		81A5DF6DED883D44B501293C4816EBFC /* CBTemporaryToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = D826A9CDB78A014B4ADF8372037B7AB4 /* CBTemporaryToken.swift */; };
+		7AC599A64585067456492FD48190A96C /* CBAuthenticationResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631E4AF0E9F5262A14AD73D746B5AD45 /* CBAuthenticationResource.swift */; };
 		84267342BC0BC8CAC3D06460823E42A2 /* ChargebeeFlutterSdkPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EF457DD596C75A7461A78CB8CA0001A0 /* ChargebeeFlutterSdkPlugin.m */; };
-		901A9AA0471CB38CDC76DAFB4150399C /* CBAuthenticationResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF00D931DCBA7F55E88EB9278DB1BCE7 /* CBAuthenticationResource.swift */; };
+		90D5A6ED69E98034DB32D36D340483E8 /* CBValidateReceiptResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E69C3BABB868BCD1B1EC8AEE461DAB /* CBValidateReceiptResource.swift */; };
 		926EC4F52EF081B18A3C3D0A58757132 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		93078B53A2F6E1F0F022FAE80CB3DA17 /* CBAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED788D57527A5E2BD9FEB79023FF0D89 /* CBAuthentication.swift */; };
+		9462F5D74D6A155FA241EAE53F2EB923 /* CBTokenResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C9CBB93DC3E60CBC3DE69114BF05DC /* CBTokenResource.swift */; };
+		999B77E80D013C1A6275F889E4055898 /* CBReceiptValidationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90E9E540D82CA2437DD6117E8A83F9B /* CBReceiptValidationManager.swift */; };
+		A41648D0E0BC9440DB4E294B61C93BDA /* CBProductsV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892AF76C09BDD90D5A119D6C5EFBD6CB /* CBProductsV2.swift */; };
+		A53159EA842135D7F0866E33F3695A7A /* CBLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1485A4F75191A86D8232E8EF9CF68430 /* CBLogger.swift */; };
+		A6E892AC4E3D0DDE5E93AE4456EB6717 /* CBPurchaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95FBE09A7EC77FC8C21EDB26964AD43 /* CBPurchaseError.swift */; };
 		A955547B00132A1729EF2B14934A9188 /* Pods-Runner-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B3C932BD54DBB963102A89E0F9E3948 /* Pods-Runner-dummy.m */; };
-		B5226B86E9E626EE88A188FD0A5024FF /* CBAddOnResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415C960DBCEF3AEA0FCB95ECC5FB11DA /* CBAddOnResource.swift */; };
-		BA63D0AD81F91CEA28C15690E3D77334 /* CBPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44982F26B2C525D7A0E32BB308A352D /* CBPlan.swift */; };
 		BBCB6E3C70A163CA34F1BD2F3A185515 /* chargebee_flutter_sdk-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 69A72E0CA5EF3721C40616A59818E867 /* chargebee_flutter_sdk-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BF5DC1B9AF13CD6FE41D294935585EFB /* CBItemResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C3D6FF120CDD812E9132CE8067AF68 /* CBItemResource.swift */; };
 		C09C176C2FA8A2D475A66170DF509C29 /* chargebee_flutter_sdk-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2E05E7C80899EEE3AA9F474FBB8169 /* chargebee_flutter_sdk-dummy.m */; };
-		C951D7AD2B8E20CFF1B3CF11F3CD7D20 /* CBTokenResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EEEDB8544CBDFA7B8064D6B30DA9D3 /* CBTokenResource.swift */; };
-		D151BD6749389F30108578B2FD185187 /* CBPaymentDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F322FE3333E64A175A3351C535C4DF81 /* CBPaymentDetail.swift */; };
-		D2F087C501487A1C5F3BDC80609F3CCB /* CBPurchaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F0D5234C15100401779BE4A2F59E01 /* CBPurchaseError.swift */; };
-		D35461BF008F5875EC61193B8B664556 /* StripeTokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF639F0E1418FDFE8F10AB33B777FEE1 /* StripeTokenizer.swift */; };
-		DD9DF1D1E6CF6F8B4EAF6B29ED6E76B7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		C54393F7385934B5A0073FC25EC05B9F /* CBSubscriptionResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802FF62FF90AB79357784C887FF34804 /* CBSubscriptionResource.swift */; };
+		CA627DAE0DC59503BC29CAE843797CAC /* CBResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC674B4236FDA5CF05ACCF06640218A /* CBResult.swift */; };
+		D09352B15717FB97587ED44A568D1CAB /* CBTemporaryToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCCF105B02E3DB71C2D67E775688EE6 /* CBTemporaryToken.swift */; };
+		D0BBDF975D54AFE8D3BBAAB23853DF99 /* StripeTokenResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1430079625B40D7E7DD369AF0B20DBD5 /* StripeTokenResource.swift */; };
+		D1D07BB6BDC76D87A3EAC9E12EAB9C5D /* CBPaymentConfigResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD53AFC26A051AD143FC5E73C61F12F4 /* CBPaymentConfigResource.swift */; };
+		D4886AC6344B124B9D0FD60B1379F1CC /* CBItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC902ED9E1C3E0A5296E5D032CE4C30B /* CBItem.swift */; };
+		D584FA8424F412C3D9F9CEF5B6678FF4 /* CBPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AEC428ADEFE526ACC7E460AF82A2AF /* CBPlan.swift */; };
+		DBACF29BBD8ED6BEC44B81C1BD8E61C8 /* CBSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9172DEFCFE4E3A6B4A927832C5721BF0 /* CBSubscription.swift */; };
+		DEDAD57B3B67FEB20A540548987B9DF7 /* Chargebee-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6119F74C0E12E4647110D6F8FCE7484E /* Chargebee-dummy.m */; };
 		DF5000643D4EE975AB583C7D63DB4D13 /* FlutterErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DF19F2A047F7182C07562C14041D96 /* FlutterErrorHandler.swift */; };
+		DFD1FD42D574927A7A3E14182E8E3DB6 /* CBPlanResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9A1E48983FBA3092C88CC89779EB67 /* CBPlanResource.swift */; };
+		E488019ED463A11AB9B8EE2E65204B9E /* CBNetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF361E619DC175FFD9075BEB889BB2D2 /* CBNetworkRequest.swift */; };
+		E5134F536E4089BA9779462B4F86B2FD /* CBAddon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6997B14B8DEFED80EC0893BD58E7AD54 /* CBAddon.swift */; };
 		E56185CF74127AD4C6739AC9487A5F7F /* ChargebeeFlutterSdkPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 196A1D6F1DE8C83CC42AB3400A5381D9 /* ChargebeeFlutterSdkPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E772276A49B46376B291728B07545A72 /* CBPlanResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AB8F6C33A88378410132F39C3604F0 /* CBPlanResource.swift */; };
-		E8A59F9104E54B57ADDABA65803CA6CB /* CBValidateReceiptResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F446D7ADF838734EE0BEE8D1FBCA2BC5 /* CBValidateReceiptResource.swift */; };
-		EE663BF9245C80896208CF0888A75CC6 /* CBPaymentConfigResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49FF9FB73484E4EB462E3E17B73C9C0 /* CBPaymentConfigResource.swift */; };
-		F25F9684FF76DA8D4D7737E110306F67 /* CBProductsV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A5D9EFCCD9664645893272DC56D5AD /* CBProductsV2.swift */; };
-		F28DEC4B113B77ED35025D81B2297729 /* CBAddon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3374DA810643091C6D31399AFBF39A /* CBAddon.swift */; };
-		F51D92B0626659DB4177757536041249 /* CBTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43321F320D83818C41DE2E2ACBDCD4D4 /* CBTypes.swift */; };
-		F830D5C3588D56A1DE2BD5F0F12D11D0 /* CBReceiptValidationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9510C3416EE66084FE0E3223E1FF7B67 /* CBReceiptValidationManager.swift */; };
-		F8681787B35807DD72710961FDC7C584 /* CBItemResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3356CF21830FF59BA0C271D2A745557F /* CBItemResource.swift */; };
-		FE7AA40C06F23D0613BBD893BB6CBCA1 /* CBAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A20FFCB26BA9386860575D02F30216 /* CBAuthentication.swift */; };
+		EB22ECC920A1CA7FED51827DCA5404ED /* CBToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167E722084AE6286D5033B2425C44236 /* CBToken.swift */; };
+		ED09EE7894D2116786CE66E07C281B73 /* Chargebee.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6917FABAC2C58D123386D895D59E3FA /* Chargebee.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1717A71426D97D77F786D41C762C4F7E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1EFDDC32A34D56D411E640A81DCD9E73;
-			remoteInfo = Flutter;
-		};
-		31F0EAF5317F40615819092A7A9FD611 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1EFDDC32A34D56D411E640A81DCD9E73;
-			remoteInfo = Flutter;
-		};
-		408A863A925922035991CC21BAD68ED9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 71EE13E200B17216F8F29E73E2F73FFB;
-			remoteInfo = Chargebee;
-		};
-		87FB95B70434DEBEFFC99FD54E550CDB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 71EE13E200B17216F8F29E73E2F73FFB;
-			remoteInfo = Chargebee;
-		};
-		C8F8AEE15B83565295528BCBCB9A2266 /* PBXContainerItemProxy */ = {
+		304F30C99B3532F5D311AF8FBA7A75AD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0CA3ACD9CFA84B293CC4DF9783EB1F47;
 			remoteInfo = chargebee_flutter_sdk;
 		};
+		3B837411A5CD2D4352432C41C8FA7B2B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1EFDDC32A34D56D411E640A81DCD9E73;
+			remoteInfo = Flutter;
+		};
+		DEE2A1CB13586B640A89CEDB75030B55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1EFDDC32A34D56D411E640A81DCD9E73;
+			remoteInfo = Flutter;
+		};
+		ECD7A75CB932C27C8D4AC67DF6CCB9FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 71EE13E200B17216F8F29E73E2F73FFB;
+			remoteInfo = Chargebee;
+		};
+		F4ADF78C0D9A5B608B752A7F9F4C65B9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 71EE13E200B17216F8F29E73E2F73FFB;
+			remoteInfo = Chargebee;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		00CC62C33A87BC9608E81F2A7CFCA069 /* chargebee_flutter_sdk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = chargebee_flutter_sdk.debug.xcconfig; sourceTree = "<group>"; };
 		05DD13E083B55FA4FCF5724E0082AEC4 /* Flutter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Flutter.debug.xcconfig; sourceTree = "<group>"; };
-		0D921890C199449C106D5978004E4668 /* CBSubscriptionResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBSubscriptionResource.swift; path = Chargebee/Classes/Subscription/CBSubscriptionResource.swift; sourceTree = "<group>"; };
-		17BEA379EDCDF5EC5E98C6546FEFCB28 /* CBProductsV1.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBProductsV1.swift; path = Chargebee/Classes/Purchase/CBProductsV1.swift; sourceTree = "<group>"; };
+		10E69C3BABB868BCD1B1EC8AEE461DAB /* CBValidateReceiptResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBValidateReceiptResource.swift; path = Chargebee/Classes/ReceiptValidation/CBValidateReceiptResource.swift; sourceTree = "<group>"; };
+		119684204F06F42B658014AF6EE15E2F /* Chargebee-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Chargebee-umbrella.h"; sourceTree = "<group>"; };
+		1430079625B40D7E7DD369AF0B20DBD5 /* StripeTokenResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StripeTokenResource.swift; path = Chargebee/Classes/Token/Stripe/StripeTokenResource.swift; sourceTree = "<group>"; };
+		1485A4F75191A86D8232E8EF9CF68430 /* CBLogger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBLogger.swift; path = Chargebee/Classes/Logger/CBLogger.swift; sourceTree = "<group>"; };
+		167E722084AE6286D5033B2425C44236 /* CBToken.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBToken.swift; path = Chargebee/Classes/Token/CBToken.swift; sourceTree = "<group>"; };
 		196A1D6F1DE8C83CC42AB3400A5381D9 /* ChargebeeFlutterSdkPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ChargebeeFlutterSdkPlugin.h; path = ../../../../../../../ios/Classes/ChargebeeFlutterSdkPlugin.h; sourceTree = "<group>"; };
-		1A6EAADD77310481348864CC92CD735E /* CBAPIRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBAPIRequest.swift; path = Chargebee/Classes/Network/CBAPIRequest.swift; sourceTree = "<group>"; };
 		1D62C07ECFE8C836B0CA71CDF08CE00C /* chargebee_flutter_sdk-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "chargebee_flutter_sdk-Info.plist"; sourceTree = "<group>"; };
-		1DBDCDE66110723A30936DD73A585B58 /* CBSubscription.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBSubscription.swift; path = Chargebee/Classes/Subscription/CBSubscription.swift; sourceTree = "<group>"; };
-		28336A813D06984A5779A33A08C20EB9 /* Chargebee-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Chargebee-Info.plist"; sourceTree = "<group>"; };
-		29EEEDB8544CBDFA7B8064D6B30DA9D3 /* CBTokenResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBTokenResource.swift; path = Chargebee/Classes/Token/CBTokenResource.swift; sourceTree = "<group>"; };
-		2BD03D1B835A98FD9A42F351D1939082 /* CBResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBResult.swift; path = Chargebee/Classes/Result/CBResult.swift; sourceTree = "<group>"; };
+		23C9CBB93DC3E60CBC3DE69114BF05DC /* CBTokenResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBTokenResource.swift; path = Chargebee/Classes/Token/CBTokenResource.swift; sourceTree = "<group>"; };
+		26647D8014D3EBFDD0215AE18C768713 /* CBError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBError.swift; path = Chargebee/Classes/Result/CBError.swift; sourceTree = "<group>"; };
+		2CF663333FA1FCB0CD906BB9F8F7AAC0 /* Chargebee.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Chargebee.debug.xcconfig; sourceTree = "<group>"; };
 		317C26B9A7CEDD34ADE8F37FAAB7AC20 /* Pods-Runner-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Runner-frameworks.sh"; sourceTree = "<group>"; };
-		3356CF21830FF59BA0C271D2A745557F /* CBItemResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBItemResource.swift; path = Chargebee/Classes/Item/CBItemResource.swift; sourceTree = "<group>"; };
+		35F48FAEEEBC099E7C3065592C3E8B1F /* CBPurchaseManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPurchaseManager.swift; path = Chargebee/Classes/Purchase/CBPurchaseManager.swift; sourceTree = "<group>"; };
 		3CE16505C69EE1AC396E1544525B636F /* Chargebee */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Chargebee; path = Chargebee.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		415C960DBCEF3AEA0FCB95ECC5FB11DA /* CBAddOnResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBAddOnResource.swift; path = Chargebee/Classes/Addon/CBAddOnResource.swift; sourceTree = "<group>"; };
-		43321F320D83818C41DE2E2ACBDCD4D4 /* CBTypes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBTypes.swift; path = Chargebee/Classes/Token/CBTypes.swift; sourceTree = "<group>"; };
-		457714F2FF13083A205A71D5FFDBC1B6 /* StripeTokenResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StripeTokenResource.swift; path = Chargebee/Classes/Token/Stripe/StripeTokenResource.swift; sourceTree = "<group>"; };
-		45A5D9EFCCD9664645893272DC56D5AD /* CBProductsV2.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBProductsV2.swift; path = Chargebee/Classes/Purchase/CBProductsV2.swift; sourceTree = "<group>"; };
+		460C2649F8C292038AD13D3C1D36CB7D /* CBAddOnResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBAddOnResource.swift; path = Chargebee/Classes/Addon/CBAddOnResource.swift; sourceTree = "<group>"; };
+		4675A4E0E3D3179250AC98DF50917229 /* CBProductsV1.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBProductsV1.swift; path = Chargebee/Classes/Purchase/CBProductsV1.swift; sourceTree = "<group>"; };
 		51825CD8F0558EFA53D9510F0E5BFA16 /* Pods-Runner-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Runner-Info.plist"; sourceTree = "<group>"; };
-		51AB8F6C33A88378410132F39C3604F0 /* CBPlanResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPlanResource.swift; path = Chargebee/Classes/Plan/CBPlanResource.swift; sourceTree = "<group>"; };
-		522FC3F94615332577F1A13DECE0DBC1 /* CBNetworkRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBNetworkRequest.swift; path = Chargebee/Classes/Network/CBNetworkRequest.swift; sourceTree = "<group>"; };
 		5C99D3A1CA10C2BAEFF09ED93C5D1378 /* Flutter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Flutter.release.xcconfig; sourceTree = "<group>"; };
-		5F3374DA810643091C6D31399AFBF39A /* CBAddon.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBAddon.swift; path = Chargebee/Classes/Addon/CBAddon.swift; sourceTree = "<group>"; };
-		6046F5F424B7978DEF441A617437EBEF /* Chargebee.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Chargebee.modulemap; sourceTree = "<group>"; };
+		6119F74C0E12E4647110D6F8FCE7484E /* Chargebee-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Chargebee-dummy.m"; sourceTree = "<group>"; };
+		631E4AF0E9F5262A14AD73D746B5AD45 /* CBAuthenticationResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBAuthenticationResource.swift; path = Chargebee/Classes/Authentication/CBAuthenticationResource.swift; sourceTree = "<group>"; };
 		669E8F25E1897672BDB80B7EB784DA24 /* Pods-Runner */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-Runner"; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		66A5788C0BDDB71BEBDD8439A5F9AEA3 /* CBItemListResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBItemListResource.swift; path = Chargebee/Classes/Item/CBItemListResource.swift; sourceTree = "<group>"; };
+		6997B14B8DEFED80EC0893BD58E7AD54 /* CBAddon.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBAddon.swift; path = Chargebee/Classes/Addon/CBAddon.swift; sourceTree = "<group>"; };
 		69A72E0CA5EF3721C40616A59818E867 /* chargebee_flutter_sdk-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "chargebee_flutter_sdk-umbrella.h"; sourceTree = "<group>"; };
+		6CC674B4236FDA5CF05ACCF06640218A /* CBResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBResult.swift; path = Chargebee/Classes/Result/CBResult.swift; sourceTree = "<group>"; };
+		6DDBC8C35A25D085B97C31BB58024329 /* CBLoggerResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBLoggerResource.swift; path = Chargebee/Classes/Logger/CBLoggerResource.swift; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		74344E487373424725D48B2C1EC64A83 /* chargebee_flutter_sdk */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = chargebee_flutter_sdk; path = chargebee_flutter_sdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		78AEC428ADEFE526ACC7E460AF82A2AF /* CBPlan.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPlan.swift; path = Chargebee/Classes/Plan/CBPlan.swift; sourceTree = "<group>"; };
+		7A9D709574FD6B45A6BB67399549BD88 /* StripeTokenizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StripeTokenizer.swift; path = Chargebee/Classes/Token/Stripe/StripeTokenizer.swift; sourceTree = "<group>"; };
 		7B3C932BD54DBB963102A89E0F9E3948 /* Pods-Runner-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Runner-dummy.m"; sourceTree = "<group>"; };
+		802FF62FF90AB79357784C887FF34804 /* CBSubscriptionResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBSubscriptionResource.swift; path = Chargebee/Classes/Subscription/CBSubscriptionResource.swift; sourceTree = "<group>"; };
 		86DF19F2A047F7182C07562C14041D96 /* FlutterErrorHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FlutterErrorHandler.swift; path = ../../../../../../../ios/Classes/FlutterErrorHandler.swift; sourceTree = "<group>"; };
-		89F0D5234C15100401779BE4A2F59E01 /* CBPurchaseError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPurchaseError.swift; path = Chargebee/Classes/Purchase/CBPurchaseError.swift; sourceTree = "<group>"; };
-		8A94CE191942F03241A3EAD4718572C5 /* CBItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBItem.swift; path = Chargebee/Classes/Item/CBItem.swift; sourceTree = "<group>"; };
-		9510C3416EE66084FE0E3223E1FF7B67 /* CBReceiptValidationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBReceiptValidationManager.swift; path = Chargebee/Classes/ReceiptValidation/CBReceiptValidationManager.swift; sourceTree = "<group>"; };
-		96A20FFCB26BA9386860575D02F30216 /* CBAuthentication.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBAuthentication.swift; path = Chargebee/Classes/Authentication/CBAuthentication.swift; sourceTree = "<group>"; };
+		892AF76C09BDD90D5A119D6C5EFBD6CB /* CBProductsV2.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBProductsV2.swift; path = Chargebee/Classes/Purchase/CBProductsV2.swift; sourceTree = "<group>"; };
+		8DCCF105B02E3DB71C2D67E775688EE6 /* CBTemporaryToken.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBTemporaryToken.swift; path = Chargebee/Classes/Token/CBTemporaryToken.swift; sourceTree = "<group>"; };
+		9172DEFCFE4E3A6B4A927832C5721BF0 /* CBSubscription.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBSubscription.swift; path = Chargebee/Classes/Subscription/CBSubscription.swift; sourceTree = "<group>"; };
 		96BF45FBE2BC9AD7B2D7E56D01B5EE46 /* Pods-Runner-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Runner-umbrella.h"; sourceTree = "<group>"; };
 		9B92EC8AFDE0B6A4868C30E7ABA17C92 /* Flutter.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = Flutter.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		9C479EA52DC1B73615F7BFB551C30C9E /* CBError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBError.swift; path = Chargebee/Classes/Result/CBError.swift; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9E9FCEC64496F1FDC0204983143BC293 /* CBEnvironment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBEnvironment.swift; path = Chargebee/Classes/Configuration/CBEnvironment.swift; sourceTree = "<group>"; };
+		9F1130D2F56EE8173845A948A5689B50 /* Chargebee-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Chargebee-Info.plist"; sourceTree = "<group>"; };
 		9F27B3E978ADA8DF3FD9416768166501 /* chargebee_flutter_sdk-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "chargebee_flutter_sdk-prefix.pch"; sourceTree = "<group>"; };
 		9F79F8269DC34AC56BB3D1D9652C0D86 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		A0A7DC482403D5E0ED67AB7E47EB4F22 /* CBPaymentDetail.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPaymentDetail.swift; path = Chargebee/Classes/Token/CBPaymentDetail.swift; sourceTree = "<group>"; };
 		A9BF8EB686421342614E04C4E10FFAED /* chargebee_flutter_sdk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = chargebee_flutter_sdk.release.xcconfig; sourceTree = "<group>"; };
 		AA6ADB4D8929C5CBFA689EA6E3814B12 /* chargebee_flutter_sdk.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = chargebee_flutter_sdk.modulemap; sourceTree = "<group>"; };
-		B09511119FC9FD3F9D8F5DEF6E3E1D4E /* CBPurchaseManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPurchaseManager.swift; path = Chargebee/Classes/Purchase/CBPurchaseManager.swift; sourceTree = "<group>"; };
-		B44982F26B2C525D7A0E32BB308A352D /* CBPlan.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPlan.swift; path = Chargebee/Classes/Plan/CBPlan.swift; sourceTree = "<group>"; };
-		B5736365B3FBED56DBBCD03188D306A3 /* CBToken.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBToken.swift; path = Chargebee/Classes/Token/CBToken.swift; sourceTree = "<group>"; };
-		B9D7970C412259EBEA324C6DE57E7098 /* Chargebee-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Chargebee-dummy.m"; sourceTree = "<group>"; };
-		BEABEFAC3D6B90450725A5F34B993B6D /* Chargebee.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Chargebee.swift; path = Chargebee/Classes/Configuration/Chargebee.swift; sourceTree = "<group>"; };
-		BF639F0E1418FDFE8F10AB33B777FEE1 /* StripeTokenizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StripeTokenizer.swift; path = Chargebee/Classes/Token/Stripe/StripeTokenizer.swift; sourceTree = "<group>"; };
-		C46720AD3C56AB8F3B4A25FCB758E605 /* CBItemListResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBItemListResource.swift; path = Chargebee/Classes/Item/CBItemListResource.swift; sourceTree = "<group>"; };
+		B7C3D6FF120CDD812E9132CE8067AF68 /* CBItemResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBItemResource.swift; path = Chargebee/Classes/Item/CBItemResource.swift; sourceTree = "<group>"; };
+		BF361E619DC175FFD9075BEB889BB2D2 /* CBNetworkRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBNetworkRequest.swift; path = Chargebee/Classes/Network/CBNetworkRequest.swift; sourceTree = "<group>"; };
 		C6EA98402A94995D022D330B64B5203D /* Pods-Runner-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Runner-acknowledgements.markdown"; sourceTree = "<group>"; };
-		CA90D299701880740B31134186CC670F /* Chargebee.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Chargebee.debug.xcconfig; sourceTree = "<group>"; };
-		CBC241687FB13D9EEC86D90522EE2C21 /* CBLoggerResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBLoggerResource.swift; path = Chargebee/Classes/Logger/CBLoggerResource.swift; sourceTree = "<group>"; };
+		C7279E08A23445DB00DDAB365DD630C2 /* Chargebee.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Chargebee.release.xcconfig; sourceTree = "<group>"; };
+		C95FBE09A7EC77FC8C21EDB26964AD43 /* CBPurchaseError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPurchaseError.swift; path = Chargebee/Classes/Purchase/CBPurchaseError.swift; sourceTree = "<group>"; };
+		CD53AFC26A051AD143FC5E73C61F12F4 /* CBPaymentConfigResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPaymentConfigResource.swift; path = Chargebee/Classes/Token/CBPaymentConfigResource.swift; sourceTree = "<group>"; };
 		CDAECCF4B5E08124ED410F09FD5A5DF9 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
-		CDB30CA128D170B7A07E6EC5DBB1EEA2 /* Chargebee-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Chargebee-prefix.pch"; sourceTree = "<group>"; };
 		D0E615BE285EE8EB76871738A6EC4787 /* chargebee_flutter_sdk.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = chargebee_flutter_sdk.podspec; path = ../../../../../../ios/chargebee_flutter_sdk.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		D2FA70CA298C392CB8332ADEEDD1CE85 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
-		D49FF9FB73484E4EB462E3E17B73C9C0 /* CBPaymentConfigResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPaymentConfigResource.swift; path = Chargebee/Classes/Token/CBPaymentConfigResource.swift; sourceTree = "<group>"; };
 		D4D1F974434C324BF34E8E491F3CC2CC /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../../../../../../LICENSE; sourceTree = "<group>"; };
-		D826A9CDB78A014B4ADF8372037B7AB4 /* CBTemporaryToken.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBTemporaryToken.swift; path = Chargebee/Classes/Token/CBTemporaryToken.swift; sourceTree = "<group>"; };
 		D9F2B4CB813B4BDC4D164C6E0868930A /* Pods-Runner-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Runner-acknowledgements.plist"; sourceTree = "<group>"; };
-		DBF9ABD47C860D8BD6FA340C2700B9B9 /* CBLogger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBLogger.swift; path = Chargebee/Classes/Logger/CBLogger.swift; sourceTree = "<group>"; };
-		DF3248989682D4E8BBF04F2012440829 /* Chargebee-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Chargebee-umbrella.h"; sourceTree = "<group>"; };
-		E220E5B8F4BF3D5A9F4C2FA004D609E1 /* Chargebee.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Chargebee.release.xcconfig; sourceTree = "<group>"; };
-		E479A8074D60362D20611778275B4F91 /* CBEnvironment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBEnvironment.swift; path = Chargebee/Classes/Configuration/CBEnvironment.swift; sourceTree = "<group>"; };
+		DA8522506B3F7A450346BA25BCC64DB2 /* Chargebee.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Chargebee.modulemap; sourceTree = "<group>"; };
+		DE30375B14169DA81E26F7DDDCE18532 /* CBAPIRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBAPIRequest.swift; path = Chargebee/Classes/Network/CBAPIRequest.swift; sourceTree = "<group>"; };
 		EBB4E41E859242F6FCF8E5E59B3BE431 /* SwiftChargebeeFlutterSdkPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SwiftChargebeeFlutterSdkPlugin.swift; path = ../../../../../../../ios/Classes/SwiftChargebeeFlutterSdkPlugin.swift; sourceTree = "<group>"; };
+		EC902ED9E1C3E0A5296E5D032CE4C30B /* CBItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBItem.swift; path = Chargebee/Classes/Item/CBItem.swift; sourceTree = "<group>"; };
+		ED788D57527A5E2BD9FEB79023FF0D89 /* CBAuthentication.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBAuthentication.swift; path = Chargebee/Classes/Authentication/CBAuthentication.swift; sourceTree = "<group>"; };
 		ED7959095E0179286FD47E6151A2EDE0 /* SKProducts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SKProducts.swift; path = ../../../../../../../ios/Classes/SKProducts.swift; sourceTree = "<group>"; };
 		EF457DD596C75A7461A78CB8CA0001A0 /* ChargebeeFlutterSdkPlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ChargebeeFlutterSdkPlugin.m; path = ../../../../../../../ios/Classes/ChargebeeFlutterSdkPlugin.m; sourceTree = "<group>"; };
-		F322FE3333E64A175A3351C535C4DF81 /* CBPaymentDetail.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPaymentDetail.swift; path = Chargebee/Classes/Token/CBPaymentDetail.swift; sourceTree = "<group>"; };
-		F446D7ADF838734EE0BEE8D1FBCA2BC5 /* CBValidateReceiptResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBValidateReceiptResource.swift; path = Chargebee/Classes/ReceiptValidation/CBValidateReceiptResource.swift; sourceTree = "<group>"; };
 		F49C32B3B8CF59AB437BFD7314674868 /* Pods-Runner.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Runner.modulemap"; sourceTree = "<group>"; };
+		F6917FABAC2C58D123386D895D59E3FA /* Chargebee.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Chargebee.swift; path = Chargebee/Classes/Configuration/Chargebee.swift; sourceTree = "<group>"; };
+		F90E9E540D82CA2437DD6117E8A83F9B /* CBReceiptValidationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBReceiptValidationManager.swift; path = Chargebee/Classes/ReceiptValidation/CBReceiptValidationManager.swift; sourceTree = "<group>"; };
+		FA9A1E48983FBA3092C88CC89779EB67 /* CBPlanResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBPlanResource.swift; path = Chargebee/Classes/Plan/CBPlanResource.swift; sourceTree = "<group>"; };
 		FC2E05E7C80899EEE3AA9F474FBB8169 /* chargebee_flutter_sdk-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "chargebee_flutter_sdk-dummy.m"; sourceTree = "<group>"; };
-		FF00D931DCBA7F55E88EB9278DB1BCE7 /* CBAuthenticationResource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CBAuthenticationResource.swift; path = Chargebee/Classes/Authentication/CBAuthenticationResource.swift; sourceTree = "<group>"; };
+		FDF02B702DC30F4F505528622A76EB36 /* Chargebee-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Chargebee-prefix.pch"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		3B1183282870CEE5C8FCCB1514774A6F /* Frameworks */ = {
+		A04A010691D705BAF3E261F11CC58F47 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD9DF1D1E6CF6F8B4EAF6B29ED6E76B7 /* Foundation.framework in Frameworks */,
+				1F658CBB2F030892D75C4E9C400C7A83 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,14 +214,6 @@
 			);
 			name = plugins;
 			path = plugins;
-			sourceTree = "<group>";
-		};
-		0B41F85DF290505F0EB6ECC331610738 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				52913CDBFAB5BF6227ACC74D6383B2FA /* Chargebee */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		13B53511322AFBC601ED340F97F1EA34 /* .. */ = {
@@ -269,43 +259,42 @@
 			path = ../../../../../../ios;
 			sourceTree = "<group>";
 		};
-		52913CDBFAB5BF6227ACC74D6383B2FA /* Chargebee */ = {
+		483B369293A47C4BE0B44D2E664B4AFB /* Chargebee */ = {
 			isa = PBXGroup;
 			children = (
-				5F3374DA810643091C6D31399AFBF39A /* CBAddon.swift */,
-				415C960DBCEF3AEA0FCB95ECC5FB11DA /* CBAddOnResource.swift */,
-				1A6EAADD77310481348864CC92CD735E /* CBAPIRequest.swift */,
-				96A20FFCB26BA9386860575D02F30216 /* CBAuthentication.swift */,
-				FF00D931DCBA7F55E88EB9278DB1BCE7 /* CBAuthenticationResource.swift */,
-				E479A8074D60362D20611778275B4F91 /* CBEnvironment.swift */,
-				9C479EA52DC1B73615F7BFB551C30C9E /* CBError.swift */,
-				8A94CE191942F03241A3EAD4718572C5 /* CBItem.swift */,
-				C46720AD3C56AB8F3B4A25FCB758E605 /* CBItemListResource.swift */,
-				3356CF21830FF59BA0C271D2A745557F /* CBItemResource.swift */,
-				DBF9ABD47C860D8BD6FA340C2700B9B9 /* CBLogger.swift */,
-				CBC241687FB13D9EEC86D90522EE2C21 /* CBLoggerResource.swift */,
-				522FC3F94615332577F1A13DECE0DBC1 /* CBNetworkRequest.swift */,
-				D49FF9FB73484E4EB462E3E17B73C9C0 /* CBPaymentConfigResource.swift */,
-				F322FE3333E64A175A3351C535C4DF81 /* CBPaymentDetail.swift */,
-				B44982F26B2C525D7A0E32BB308A352D /* CBPlan.swift */,
-				51AB8F6C33A88378410132F39C3604F0 /* CBPlanResource.swift */,
-				17BEA379EDCDF5EC5E98C6546FEFCB28 /* CBProductsV1.swift */,
-				45A5D9EFCCD9664645893272DC56D5AD /* CBProductsV2.swift */,
-				89F0D5234C15100401779BE4A2F59E01 /* CBPurchaseError.swift */,
-				B09511119FC9FD3F9D8F5DEF6E3E1D4E /* CBPurchaseManager.swift */,
-				9510C3416EE66084FE0E3223E1FF7B67 /* CBReceiptValidationManager.swift */,
-				2BD03D1B835A98FD9A42F351D1939082 /* CBResult.swift */,
-				1DBDCDE66110723A30936DD73A585B58 /* CBSubscription.swift */,
-				0D921890C199449C106D5978004E4668 /* CBSubscriptionResource.swift */,
-				D826A9CDB78A014B4ADF8372037B7AB4 /* CBTemporaryToken.swift */,
-				B5736365B3FBED56DBBCD03188D306A3 /* CBToken.swift */,
-				29EEEDB8544CBDFA7B8064D6B30DA9D3 /* CBTokenResource.swift */,
-				43321F320D83818C41DE2E2ACBDCD4D4 /* CBTypes.swift */,
-				F446D7ADF838734EE0BEE8D1FBCA2BC5 /* CBValidateReceiptResource.swift */,
-				BEABEFAC3D6B90450725A5F34B993B6D /* Chargebee.swift */,
-				BF639F0E1418FDFE8F10AB33B777FEE1 /* StripeTokenizer.swift */,
-				457714F2FF13083A205A71D5FFDBC1B6 /* StripeTokenResource.swift */,
-				7F80F3BE5306EEF3F86291FF388398D9 /* Support Files */,
+				6997B14B8DEFED80EC0893BD58E7AD54 /* CBAddon.swift */,
+				460C2649F8C292038AD13D3C1D36CB7D /* CBAddOnResource.swift */,
+				DE30375B14169DA81E26F7DDDCE18532 /* CBAPIRequest.swift */,
+				ED788D57527A5E2BD9FEB79023FF0D89 /* CBAuthentication.swift */,
+				631E4AF0E9F5262A14AD73D746B5AD45 /* CBAuthenticationResource.swift */,
+				9E9FCEC64496F1FDC0204983143BC293 /* CBEnvironment.swift */,
+				26647D8014D3EBFDD0215AE18C768713 /* CBError.swift */,
+				EC902ED9E1C3E0A5296E5D032CE4C30B /* CBItem.swift */,
+				66A5788C0BDDB71BEBDD8439A5F9AEA3 /* CBItemListResource.swift */,
+				B7C3D6FF120CDD812E9132CE8067AF68 /* CBItemResource.swift */,
+				1485A4F75191A86D8232E8EF9CF68430 /* CBLogger.swift */,
+				6DDBC8C35A25D085B97C31BB58024329 /* CBLoggerResource.swift */,
+				BF361E619DC175FFD9075BEB889BB2D2 /* CBNetworkRequest.swift */,
+				CD53AFC26A051AD143FC5E73C61F12F4 /* CBPaymentConfigResource.swift */,
+				A0A7DC482403D5E0ED67AB7E47EB4F22 /* CBPaymentDetail.swift */,
+				78AEC428ADEFE526ACC7E460AF82A2AF /* CBPlan.swift */,
+				FA9A1E48983FBA3092C88CC89779EB67 /* CBPlanResource.swift */,
+				4675A4E0E3D3179250AC98DF50917229 /* CBProductsV1.swift */,
+				892AF76C09BDD90D5A119D6C5EFBD6CB /* CBProductsV2.swift */,
+				C95FBE09A7EC77FC8C21EDB26964AD43 /* CBPurchaseError.swift */,
+				35F48FAEEEBC099E7C3065592C3E8B1F /* CBPurchaseManager.swift */,
+				F90E9E540D82CA2437DD6117E8A83F9B /* CBReceiptValidationManager.swift */,
+				6CC674B4236FDA5CF05ACCF06640218A /* CBResult.swift */,
+				9172DEFCFE4E3A6B4A927832C5721BF0 /* CBSubscription.swift */,
+				802FF62FF90AB79357784C887FF34804 /* CBSubscriptionResource.swift */,
+				8DCCF105B02E3DB71C2D67E775688EE6 /* CBTemporaryToken.swift */,
+				167E722084AE6286D5033B2425C44236 /* CBToken.swift */,
+				23C9CBB93DC3E60CBC3DE69114BF05DC /* CBTokenResource.swift */,
+				10E69C3BABB868BCD1B1EC8AEE461DAB /* CBValidateReceiptResource.swift */,
+				F6917FABAC2C58D123386D895D59E3FA /* Chargebee.swift */,
+				7A9D709574FD6B45A6BB67399549BD88 /* StripeTokenizer.swift */,
+				1430079625B40D7E7DD369AF0B20DBD5 /* StripeTokenResource.swift */,
+				749C7DE0CBE0849F3A7B442E22F79C90 /* Support Files */,
 			);
 			name = Chargebee;
 			path = Chargebee;
@@ -372,6 +361,21 @@
 			name = "Development Pods";
 			sourceTree = "<group>";
 		};
+		749C7DE0CBE0849F3A7B442E22F79C90 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				DA8522506B3F7A450346BA25BCC64DB2 /* Chargebee.modulemap */,
+				6119F74C0E12E4647110D6F8FCE7484E /* Chargebee-dummy.m */,
+				9F1130D2F56EE8173845A948A5689B50 /* Chargebee-Info.plist */,
+				FDF02B702DC30F4F505528622A76EB36 /* Chargebee-prefix.pch */,
+				119684204F06F42B658014AF6EE15E2F /* Chargebee-umbrella.h */,
+				2CF663333FA1FCB0CD906BB9F8F7AAC0 /* Chargebee.debug.xcconfig */,
+				C7279E08A23445DB00DDAB365DD630C2 /* Chargebee.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/Chargebee";
+			sourceTree = "<group>";
+		};
 		791C6E4B424AF06279F8918FA67B8ED6 /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -398,19 +402,12 @@
 			path = "Target Support Files/Pods-Runner";
 			sourceTree = "<group>";
 		};
-		7F80F3BE5306EEF3F86291FF388398D9 /* Support Files */ = {
+		7D188CED9C6020CC39D3E693B23C7E1E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				6046F5F424B7978DEF441A617437EBEF /* Chargebee.modulemap */,
-				B9D7970C412259EBEA324C6DE57E7098 /* Chargebee-dummy.m */,
-				28336A813D06984A5779A33A08C20EB9 /* Chargebee-Info.plist */,
-				CDB30CA128D170B7A07E6EC5DBB1EEA2 /* Chargebee-prefix.pch */,
-				DF3248989682D4E8BBF04F2012440829 /* Chargebee-umbrella.h */,
-				CA90D299701880740B31134186CC670F /* Chargebee.debug.xcconfig */,
-				E220E5B8F4BF3D5A9F4C2FA004D609E1 /* Chargebee.release.xcconfig */,
+				483B369293A47C4BE0B44D2E664B4AFB /* Chargebee */,
 			);
-			name = "Support Files";
-			path = "../Target Support Files/Chargebee";
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		8039C9DE2A7620B88530118B638BA469 /* Support Files */ = {
@@ -449,7 +446,7 @@
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				6C7886CCF6A4CD61AE422D7AD9C9E3F8 /* Development Pods */,
 				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
-				0B41F85DF290505F0EB6ECC331610738 /* Pods */,
+				7D188CED9C6020CC39D3E693B23C7E1E /* Pods */,
 				DD35F821DB543296CC1C799A251EFCF5 /* Products */,
 				791C6E4B424AF06279F8918FA67B8ED6 /* Targets Support Files */,
 			);
@@ -498,20 +495,20 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		11ECBE10900A60B9CA84C9156648883E /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				51C381559822A8B43F66594D15632F17 /* Chargebee-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1E2B7006AFE3272C95BF88982849FE6B /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				BBCB6E3C70A163CA34F1BD2F3A185515 /* chargebee_flutter_sdk-umbrella.h in Headers */,
 				E56185CF74127AD4C6739AC9487A5F7F /* ChargebeeFlutterSdkPlugin.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C782D090B69BD745B61BC6801361466F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AF9A1DE74CDC257B905BCB960A312E2 /* Chargebee-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,8 +535,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				AED798D51DD868FFD09BD9ACDF16770A /* PBXTargetDependency */,
-				5FE50C895160883D0AC4987663CEFD9B /* PBXTargetDependency */,
+				6A02CBEB08CBC04F0B9E4F37C43A01AC /* PBXTargetDependency */,
+				2A658436865F32828732276EFF704C59 /* PBXTargetDependency */,
 			);
 			name = chargebee_flutter_sdk;
 			productName = chargebee_flutter_sdk;
@@ -548,12 +545,12 @@
 		};
 		71EE13E200B17216F8F29E73E2F73FFB /* Chargebee */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 96C239F929D888EBCF781CFF0085D154 /* Build configuration list for PBXNativeTarget "Chargebee" */;
+			buildConfigurationList = 33B6FA4C0EDED7F95A797C18A29B7A22 /* Build configuration list for PBXNativeTarget "Chargebee" */;
 			buildPhases = (
-				11ECBE10900A60B9CA84C9156648883E /* Headers */,
-				AAB5AE69621C8384FD0BA649C28A7295 /* Sources */,
-				3B1183282870CEE5C8FCCB1514774A6F /* Frameworks */,
-				85FDE7FC68536222412E69D0724C5A86 /* Resources */,
+				C782D090B69BD745B61BC6801361466F /* Headers */,
+				CDA087A59806A91861EA1635A2C96543 /* Sources */,
+				A04A010691D705BAF3E261F11CC58F47 /* Frameworks */,
+				DA0BA531F73A4AF044E0982DFE1A75F6 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -576,9 +573,9 @@
 			buildRules = (
 			);
 			dependencies = (
-				8AA3C735EB04A76AA78AC2BFCA83871F /* PBXTargetDependency */,
-				F7D6A15EF971A5D3602A8B3949AD5C31 /* PBXTargetDependency */,
-				F5BB0DA36C698405E030405DC885341F /* PBXTargetDependency */,
+				F531E2AB9A4008597CB2142DCFD7935B /* PBXTargetDependency */,
+				0AEA36FCCD9CC97EE771DCBE04D8FFB0 /* PBXTargetDependency */,
+				E5E76A450BC19D158F51FE6EC8D7735F /* PBXTargetDependency */,
 			);
 			name = "Pods-Runner";
 			productName = Pods_Runner;
@@ -616,13 +613,6 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		85FDE7FC68536222412E69D0724C5A86 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9955D4800CA08689B0BA42F8C7120F5A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -631,6 +621,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D4CF10616DEB1B82FB4DEA64071BA4D7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA0BA531F73A4AF044E0982DFE1A75F6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -660,79 +657,78 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AAB5AE69621C8384FD0BA649C28A7295 /* Sources */ = {
+		CDA087A59806A91861EA1635A2C96543 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F28DEC4B113B77ED35025D81B2297729 /* CBAddon.swift in Sources */,
-				B5226B86E9E626EE88A188FD0A5024FF /* CBAddOnResource.swift in Sources */,
-				2C920AE543F9C4E6A6CF619243827EB1 /* CBAPIRequest.swift in Sources */,
-				FE7AA40C06F23D0613BBD893BB6CBCA1 /* CBAuthentication.swift in Sources */,
-				901A9AA0471CB38CDC76DAFB4150399C /* CBAuthenticationResource.swift in Sources */,
-				20110A4C2AD9141274D828C3B236B481 /* CBEnvironment.swift in Sources */,
-				380FB680E97C5A1A907FB671D398DF98 /* CBError.swift in Sources */,
-				05A1537036CE86F9BDBB88AA3664694E /* CBItem.swift in Sources */,
-				5DEF302B8503340F8C6B4D2D2E86CD1A /* CBItemListResource.swift in Sources */,
-				F8681787B35807DD72710961FDC7C584 /* CBItemResource.swift in Sources */,
-				0E0194DA3F57EB2303F6B3F9AE55B2D3 /* CBLogger.swift in Sources */,
-				4195662A9A629AAEF163FA9F4A20F48B /* CBLoggerResource.swift in Sources */,
-				01AB5F9DCF138A386A53860B9570755E /* CBNetworkRequest.swift in Sources */,
-				EE663BF9245C80896208CF0888A75CC6 /* CBPaymentConfigResource.swift in Sources */,
-				D151BD6749389F30108578B2FD185187 /* CBPaymentDetail.swift in Sources */,
-				BA63D0AD81F91CEA28C15690E3D77334 /* CBPlan.swift in Sources */,
-				E772276A49B46376B291728B07545A72 /* CBPlanResource.swift in Sources */,
-				2AF75E9645D99A9DC085B1EE46A0A875 /* CBProductsV1.swift in Sources */,
-				F25F9684FF76DA8D4D7737E110306F67 /* CBProductsV2.swift in Sources */,
-				D2F087C501487A1C5F3BDC80609F3CCB /* CBPurchaseError.swift in Sources */,
-				3DD5B46E5500EF68F507D4C9EE46336D /* CBPurchaseManager.swift in Sources */,
-				F830D5C3588D56A1DE2BD5F0F12D11D0 /* CBReceiptValidationManager.swift in Sources */,
-				79AF80BD280DCCA7C800C4B18D238BF4 /* CBResult.swift in Sources */,
-				7E0A45BC7545D41500C6BB50E8B541D9 /* CBSubscription.swift in Sources */,
-				2B2D7D76D23EA46F16DC7E1837A6A08E /* CBSubscriptionResource.swift in Sources */,
-				81A5DF6DED883D44B501293C4816EBFC /* CBTemporaryToken.swift in Sources */,
-				805A29C0E04D09B30F64D6C80229524C /* CBToken.swift in Sources */,
-				C951D7AD2B8E20CFF1B3CF11F3CD7D20 /* CBTokenResource.swift in Sources */,
-				F51D92B0626659DB4177757536041249 /* CBTypes.swift in Sources */,
-				E8A59F9104E54B57ADDABA65803CA6CB /* CBValidateReceiptResource.swift in Sources */,
-				294775B9EEE82C828635A422473E8F58 /* Chargebee.swift in Sources */,
-				53B67CD29B1405C7FCBC1AA8F429CE5E /* Chargebee-dummy.m in Sources */,
-				D35461BF008F5875EC61193B8B664556 /* StripeTokenizer.swift in Sources */,
-				2540E72A621757BA9D0003505AD43F14 /* StripeTokenResource.swift in Sources */,
+				E5134F536E4089BA9779462B4F86B2FD /* CBAddon.swift in Sources */,
+				2F0697C6FDA05019256CB16D6B49F178 /* CBAddOnResource.swift in Sources */,
+				5262ECE18D5BAB63E1F36DE82CC495C3 /* CBAPIRequest.swift in Sources */,
+				93078B53A2F6E1F0F022FAE80CB3DA17 /* CBAuthentication.swift in Sources */,
+				7AC599A64585067456492FD48190A96C /* CBAuthenticationResource.swift in Sources */,
+				3770665C823E4C3D3697A4AC4B191FF0 /* CBEnvironment.swift in Sources */,
+				58E0E48C8AF2A1E39DC158173532F364 /* CBError.swift in Sources */,
+				D4886AC6344B124B9D0FD60B1379F1CC /* CBItem.swift in Sources */,
+				662511656024FB821D378DE884FCAF8A /* CBItemListResource.swift in Sources */,
+				BF5DC1B9AF13CD6FE41D294935585EFB /* CBItemResource.swift in Sources */,
+				A53159EA842135D7F0866E33F3695A7A /* CBLogger.swift in Sources */,
+				044FDD4A96123B0159965A1503DD8C99 /* CBLoggerResource.swift in Sources */,
+				E488019ED463A11AB9B8EE2E65204B9E /* CBNetworkRequest.swift in Sources */,
+				D1D07BB6BDC76D87A3EAC9E12EAB9C5D /* CBPaymentConfigResource.swift in Sources */,
+				1B5A855FCE15991627659D8745B52D7D /* CBPaymentDetail.swift in Sources */,
+				D584FA8424F412C3D9F9CEF5B6678FF4 /* CBPlan.swift in Sources */,
+				DFD1FD42D574927A7A3E14182E8E3DB6 /* CBPlanResource.swift in Sources */,
+				2FE31217423F64E87FEE2D02EB7F5960 /* CBProductsV1.swift in Sources */,
+				A41648D0E0BC9440DB4E294B61C93BDA /* CBProductsV2.swift in Sources */,
+				A6E892AC4E3D0DDE5E93AE4456EB6717 /* CBPurchaseError.swift in Sources */,
+				280EDA10BFF33D9C6A991BCF247E34B7 /* CBPurchaseManager.swift in Sources */,
+				999B77E80D013C1A6275F889E4055898 /* CBReceiptValidationManager.swift in Sources */,
+				CA627DAE0DC59503BC29CAE843797CAC /* CBResult.swift in Sources */,
+				DBACF29BBD8ED6BEC44B81C1BD8E61C8 /* CBSubscription.swift in Sources */,
+				C54393F7385934B5A0073FC25EC05B9F /* CBSubscriptionResource.swift in Sources */,
+				D09352B15717FB97587ED44A568D1CAB /* CBTemporaryToken.swift in Sources */,
+				EB22ECC920A1CA7FED51827DCA5404ED /* CBToken.swift in Sources */,
+				9462F5D74D6A155FA241EAE53F2EB923 /* CBTokenResource.swift in Sources */,
+				90D5A6ED69E98034DB32D36D340483E8 /* CBValidateReceiptResource.swift in Sources */,
+				ED09EE7894D2116786CE66E07C281B73 /* Chargebee.swift in Sources */,
+				DEDAD57B3B67FEB20A540548987B9DF7 /* Chargebee-dummy.m in Sources */,
+				25101C5E47DE56D51084BEE70278F83E /* StripeTokenizer.swift in Sources */,
+				D0BBDF975D54AFE8D3BBAAB23853DF99 /* StripeTokenResource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		5FE50C895160883D0AC4987663CEFD9B /* PBXTargetDependency */ = {
+		0AEA36FCCD9CC97EE771DCBE04D8FFB0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Flutter;
 			target = 1EFDDC32A34D56D411E640A81DCD9E73 /* Flutter */;
-			targetProxy = 1717A71426D97D77F786D41C762C4F7E /* PBXContainerItemProxy */;
+			targetProxy = 3B837411A5CD2D4352432C41C8FA7B2B /* PBXContainerItemProxy */;
 		};
-		8AA3C735EB04A76AA78AC2BFCA83871F /* PBXTargetDependency */ = {
+		2A658436865F32828732276EFF704C59 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Flutter;
+			target = 1EFDDC32A34D56D411E640A81DCD9E73 /* Flutter */;
+			targetProxy = DEE2A1CB13586B640A89CEDB75030B55 /* PBXContainerItemProxy */;
+		};
+		6A02CBEB08CBC04F0B9E4F37C43A01AC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Chargebee;
 			target = 71EE13E200B17216F8F29E73E2F73FFB /* Chargebee */;
-			targetProxy = 408A863A925922035991CC21BAD68ED9 /* PBXContainerItemProxy */;
+			targetProxy = F4ADF78C0D9A5B608B752A7F9F4C65B9 /* PBXContainerItemProxy */;
 		};
-		AED798D51DD868FFD09BD9ACDF16770A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Chargebee;
-			target = 71EE13E200B17216F8F29E73E2F73FFB /* Chargebee */;
-			targetProxy = 87FB95B70434DEBEFFC99FD54E550CDB /* PBXContainerItemProxy */;
-		};
-		F5BB0DA36C698405E030405DC885341F /* PBXTargetDependency */ = {
+		E5E76A450BC19D158F51FE6EC8D7735F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = chargebee_flutter_sdk;
 			target = 0CA3ACD9CFA84B293CC4DF9783EB1F47 /* chargebee_flutter_sdk */;
-			targetProxy = C8F8AEE15B83565295528BCBCB9A2266 /* PBXContainerItemProxy */;
+			targetProxy = 304F30C99B3532F5D311AF8FBA7A75AD /* PBXContainerItemProxy */;
 		};
-		F7D6A15EF971A5D3602A8B3949AD5C31 /* PBXTargetDependency */ = {
+		F531E2AB9A4008597CB2142DCFD7935B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = Flutter;
-			target = 1EFDDC32A34D56D411E640A81DCD9E73 /* Flutter */;
-			targetProxy = 31F0EAF5317F40615819092A7A9FD611 /* PBXContainerItemProxy */;
+			name = Chargebee;
+			target = 71EE13E200B17216F8F29E73E2F73FFB /* Chargebee */;
+			targetProxy = ECD7A75CB932C27C8D4AC67DF6CCB9FD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -754,10 +750,11 @@
 			};
 			name = Profile;
 		};
-		0EE2FFAF86F8CAF92CD15FD2CC0CB630 /* Profile */ = {
+		1954DCFA4350FCC6444A55F95E1EC3FD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E220E5B8F4BF3D5A9F4C2FA004D609E1 /* Chargebee.release.xcconfig */;
+			baseConfigurationReference = C7279E08A23445DB00DDAB365DD630C2 /* Chargebee.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -769,7 +766,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/Chargebee/Chargebee-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/Chargebee/Chargebee-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -787,9 +784,130 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
+			name = Release;
+		};
+		1A23DEB5CFCCC57970E1DC865730A8D5 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9F79F8269DC34AC56BB3D1D9652C0D86 /* Pods-Runner.profile.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "$(inherited) i386";
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_armv7\"",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Target Support Files/Pods-Runner/Pods-Runner-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Runner/Pods-Runner.modulemap";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					Flutter,
+				);
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				"VALID_ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD)";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
 			name = Profile;
 		};
-		25AD9454612BF454A1E3DC4CD4FA8C6D /* Debug */ = {
+		1A8CEFA4CD857F69EE165A52D69036A5 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9BF8EB686421342614E04C4E10FFAED /* chargebee_flutter_sdk.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "$(inherited) i386";
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_armv7\"",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
+					"$(inherited)",
+				);
+				GCC_PREFIX_HEADER = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk.modulemap";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					Flutter,
+				);
+				PRODUCT_MODULE_NAME = chargebee_flutter_sdk;
+				PRODUCT_NAME = chargebee_flutter_sdk;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				"VALID_ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD)";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Profile;
+		};
+		27A049D271528D31C812A4A83411DCE9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5C99D3A1CA10C2BAEFF09ED93C5D1378 /* Flutter.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2B9E26EAE2CD392AD762421F663075A1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -842,7 +960,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -852,73 +970,6 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
-			};
-			name = Debug;
-		};
-		27A049D271528D31C812A4A83411DCE9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5C99D3A1CA10C2BAEFF09ED93C5D1378 /* Flutter.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		3435B14A74D80F625CFF3805D4CB0B9C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 00CC62C33A87BC9608E81F2A7CFCA069 /* chargebee_flutter_sdk.debug.xcconfig */;
-			buildSettings = {
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "$(inherited) i386";
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios/Flutter.xcframework/ios-arm64_armv7\"",
-					"$(inherited)",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
-					"$(inherited)",
-				);
-				GCC_PREFIX_HEADER = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk.modulemap";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					Flutter,
-				);
-				PRODUCT_MODULE_NAME = chargebee_flutter_sdk;
-				PRODUCT_NAME = chargebee_flutter_sdk;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				"VALID_ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD)";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
@@ -939,7 +990,7 @@
 			};
 			name = Debug;
 		};
-		4AC17E5E5FB9F2FFF05E88EFD49D95C8 /* Profile */ = {
+		5AF1AC88E5F655C93D1E3B5012F6FDC8 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -989,7 +1040,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1001,164 +1052,11 @@
 			};
 			name = Profile;
 		};
-		7D74AFD90C81F137C5E4B151510AD2EF /* Debug */ = {
+		5BF9CDB480E92C0C8CBB73E3DAC14AD2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CDAECCF4B5E08124ED410F09FD5A5DF9 /* Pods-Runner.debug.xcconfig */;
+			baseConfigurationReference = 2CF663333FA1FCB0CD906BB9F8F7AAC0 /* Chargebee.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "$(inherited) i386";
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios/Flutter.xcframework/ios-arm64_armv7\"",
-					"$(inherited)",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "Target Support Files/Pods-Runner/Pods-Runner-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Runner/Pods-Runner.modulemap";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					Flutter,
-				);
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				"VALID_ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD)";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		81B1D955D35D69E134C7232567940DBC /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D2FA70CA298C392CB8332ADEEDD1CE85 /* Pods-Runner.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "$(inherited) i386";
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_armv7\"",
-					"$(inherited)",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "Target Support Files/Pods-Runner/Pods-Runner-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Runner/Pods-Runner.modulemap";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					Flutter,
-				);
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				"VALID_ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD)";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		8891916B094AFEEC994B05E154BEC621 /* Profile */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = A9BF8EB686421342614E04C4E10FFAED /* chargebee_flutter_sdk.release.xcconfig */;
-			buildSettings = {
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "$(inherited) i386";
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_armv7\"",
-					"$(inherited)",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
-					"$(inherited)",
-				);
-				GCC_PREFIX_HEADER = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk.modulemap";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					Flutter,
-				);
-				PRODUCT_MODULE_NAME = chargebee_flutter_sdk;
-				PRODUCT_NAME = chargebee_flutter_sdk;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				"VALID_ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD)";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Profile;
-		};
-		93597FF063A13F1D3D12FF7F6E256B33 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = CA90D299701880740B31134186CC670F /* Chargebee.debug.xcconfig */;
-			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -1170,7 +1068,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/Chargebee/Chargebee-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/Chargebee/Chargebee-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1190,7 +1088,7 @@
 			};
 			name = Debug;
 		};
-		CA547D2C7E9A8A153DC2B27FBE00B112 /* Release */ = {
+		63FAF33E1C55B71A5F5A8B3CC8749F99 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1240,7 +1138,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1252,11 +1150,12 @@
 			};
 			name = Release;
 		};
-		CEA7CDCA80D51BC69D04775D87B60273 /* Profile */ = {
+		A2B33EDA441AA04D171404BAEEBDF420 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9F79F8269DC34AC56BB3D1D9652C0D86 /* Pods-Runner.profile.xcconfig */;
+			baseConfigurationReference = D2FA70CA298C392CB8332ADEEDD1CE85 /* Pods-Runner.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1268,16 +1167,16 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "$(inherited) i386";
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_armv7\"",
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_armv7\"",
 					"$(inherited)",
 				);
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Target Support Files/Pods-Runner/Pods-Runner-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1302,12 +1201,117 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Profile;
+			name = Release;
 		};
-		E86C84178FBF748100D3B4185DB2DAC9 /* Release */ = {
+		C8FF069C3A70BCE5CACCD1284159DCDA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E220E5B8F4BF3D5A9F4C2FA004D609E1 /* Chargebee.release.xcconfig */;
+			baseConfigurationReference = CDAECCF4B5E08124ED410F09FD5A5DF9 /* Pods-Runner.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "$(inherited) i386";
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios/Flutter.xcframework/ios-arm64_armv7\"",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Target Support Files/Pods-Runner/Pods-Runner-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Runner/Pods-Runner.modulemap";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					Flutter,
+				);
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				"VALID_ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD)";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D088460A34B6F32C45796A86BE063899 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 00CC62C33A87BC9608E81F2A7CFCA069 /* chargebee_flutter_sdk.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "$(inherited) i386";
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios/Flutter.xcframework/ios-arm64_armv7\"",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
+					"$(inherited)",
+				);
+				GCC_PREFIX_HEADER = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk.modulemap";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					Flutter,
+				);
+				PRODUCT_MODULE_NAME = chargebee_flutter_sdk;
+				PRODUCT_NAME = chargebee_flutter_sdk;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				"VALID_ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD)";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D616338191AA9460758D08E02D3F500F /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C7279E08A23445DB00DDAB365DD630C2 /* Chargebee.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -1319,7 +1323,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/Chargebee/Chargebee-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/Chargebee/Chargebee-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1337,12 +1341,13 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Profile;
 		};
-		EA0A306CA504AA4106BB893ECE9C05A3 /* Release */ = {
+		E2E1F65FB7B6CACC72FAE23F2ADD6CC0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A9BF8EB686421342614E04C4E10FFAED /* chargebee_flutter_sdk.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1353,17 +1358,17 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "$(inherited) i386";
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_armv7\"",
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_armv7\"",
 					"$(inherited)",
 				);
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
-					"\"/Users/amutha_c/Development/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
+					"\"/Users/cb-it-01-1737/Documents/flutter/bin/cache/artifacts/engine/ios-release/Flutter.xcframework/ios-arm64_x86_64-simulator\"",
 					"$(inherited)",
 				);
 				GCC_PREFIX_HEADER = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/chargebee_flutter_sdk/chargebee_flutter_sdk-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1395,9 +1400,19 @@
 		3271DA6885B5787638D467699984D485 /* Build configuration list for PBXNativeTarget "Pods-Runner" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7D74AFD90C81F137C5E4B151510AD2EF /* Debug */,
-				CEA7CDCA80D51BC69D04775D87B60273 /* Profile */,
-				81B1D955D35D69E134C7232567940DBC /* Release */,
+				C8FF069C3A70BCE5CACCD1284159DCDA /* Debug */,
+				1A23DEB5CFCCC57970E1DC865730A8D5 /* Profile */,
+				A2B33EDA441AA04D171404BAEEBDF420 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		33B6FA4C0EDED7F95A797C18A29B7A22 /* Build configuration list for PBXNativeTarget "Chargebee" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5BF9CDB480E92C0C8CBB73E3DAC14AD2 /* Debug */,
+				D616338191AA9460758D08E02D3F500F /* Profile */,
+				1954DCFA4350FCC6444A55F95E1EC3FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1405,9 +1420,9 @@
 		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				25AD9454612BF454A1E3DC4CD4FA8C6D /* Debug */,
-				4AC17E5E5FB9F2FFF05E88EFD49D95C8 /* Profile */,
-				CA547D2C7E9A8A153DC2B27FBE00B112 /* Release */,
+				2B9E26EAE2CD392AD762421F663075A1 /* Debug */,
+				5AF1AC88E5F655C93D1E3B5012F6FDC8 /* Profile */,
+				63FAF33E1C55B71A5F5A8B3CC8749F99 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1422,22 +1437,12 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		96C239F929D888EBCF781CFF0085D154 /* Build configuration list for PBXNativeTarget "Chargebee" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				93597FF063A13F1D3D12FF7F6E256B33 /* Debug */,
-				0EE2FFAF86F8CAF92CD15FD2CC0CB630 /* Profile */,
-				E86C84178FBF748100D3B4185DB2DAC9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		9B88A9D4A3B7D10D744DACA1F013C65F /* Build configuration list for PBXNativeTarget "chargebee_flutter_sdk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3435B14A74D80F625CFF3805D4CB0B9C /* Debug */,
-				8891916B094AFEEC994B05E154BEC621 /* Profile */,
-				EA0A306CA504AA4106BB893ECE9C05A3 /* Release */,
+				D088460A34B6F32C45796A86BE063899 /* Debug */,
+				1A8CEFA4CD857F69EE165A52D69036A5 /* Profile */,
+				E2E1F65FB7B6CACC72FAE23F2ADD6CC0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

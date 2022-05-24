@@ -19,11 +19,11 @@
 
     ],
     "Chargebee": [
-      "1.0.5"
+      "1.0.8"
     ]
   },
   "platforms": {
-    "ios": "9.0"
+    "ios": "12.0"
   },
   "pod_target_xcconfig": {
     "DEFINES_MODULE": "YES",

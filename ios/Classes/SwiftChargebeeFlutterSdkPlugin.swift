@@ -19,6 +19,24 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             Chargebee.configure(site: args["site_name"] as! String,
                                 apiKey: args["api_key"] as! String,
                                 sdkKey: (args["sdk_key"] as! String))
+        case "retrieveSubscriptions":
+            guard let args = call.arguments as? [String: String] else {
+                return _result("error")
+            }
+
+            Chargebee.shared.retrieveSubscriptions(queryParams: args) { result in
+                switch result {
+                case let .success(list):
+                    debugPrint("Subscription Status Fetched: \(list)")
+                    print(list.compactMap { $0.dict })
+                    _result(list.compactMap { $0.dict })
+                    
+                case let .error(error):
+                    debugPrint("Error Fetched: \(error)")
+                    _result(FlutterError.jsonSerializationError(error.localizedDescription))
+                }
+            }
+
         case "getProducts":
             
             guard let args = call.arguments as? [String: Any] else {
@@ -28,7 +46,6 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
 
     
             let productId = args["product_id"]
-            var array = [Any?]();
             CBPurchase.shared.retrieveProducts(withProductID: productId as! [String], completion: { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -49,31 +66,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                             }
                         }
 
-//                        for cbProduct in products{
-//                            debugPrint("cbProduct: \(cbProduct.product)");
-//
-//                            let map = ["productTitle":cbProduct.product.localizedTitle,
-//                                "productId": cbProduct.product.productIdentifier,
-//                                //"localizedDescription": cbProduct.product.localizedDescription,
-//                               // "productPrice": cbProduct.product.price,
-//                                "product": cbProduct.product
-//
-//                            ] as [String : Any]
-//                            debugPrint("map: \(map)");
-//
-//                            let skuProducts = CBProducts(
-//                                productTitle: cbProduct.product.localizedTitle,
-//                                productId: cbProduct.product.productIdentifier);
-//
-//                            debugPrint("skuProducts: \(skuProducts)");
-//
-//                            array = [skuProducts.toMap]
-//                            debugPrint("array: \(array)");
-//                            //let list =  [skuProducts.toMap()];
-//                        }
-                    
-                       
-                        _result(array)
+                        _result([])
                         
                     case let .failure(error):
                         debugPrint("Error: \(error.localizedDescription)")
@@ -93,3 +86,11 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
     }
 }
 
+extension Encodable {
+
+    var dict : [String: Any]? {
+        guard let data = try? JSONEncoder().encode(self) else { return nil }
+        guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] else { return nil }
+        return json
+    }
+}
