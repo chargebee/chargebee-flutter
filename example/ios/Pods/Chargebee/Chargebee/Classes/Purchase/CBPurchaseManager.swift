@@ -31,7 +31,7 @@ public class CBPurchase: NSObject {
 
 public struct CBProduct {
     public let product: SKProduct
-    init(product: SKProduct) {
+    public init(product: SKProduct) {
         self.product = product
     }
 }
@@ -47,6 +47,15 @@ extension SKProduct {
         CBProduct(product: self)
     }
 }
+
+extension Encodable {
+    var dict : [String: Any]? {
+        guard let data = try? JSONEncoder().encode(self) else { return nil }
+        guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] else { return nil }
+        return json
+    }
+}
+
 
 public extension CBPurchase {
     // MARK: - Public methods

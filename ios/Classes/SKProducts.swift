@@ -15,7 +15,6 @@ struct CBProducts : Decodable {
         return [
           "productId": productId,
           "productTitle": productTitle,
-
         ]
       }
 }

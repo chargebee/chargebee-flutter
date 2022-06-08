@@ -5,6 +5,11 @@ import 'package:chargebee_flutter_sdk/src/model/cb_product.dart';
 import 'package:chargebee_flutter_sdk/src/model/sku_Item.dart';
 import 'package:chargebee_flutter_sdk/src/utils/cb_support.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
+import 'dart:convert' show utf8;
+
+import '../chargebee_flutter_sdk.dart';
+import 'utils/cb_support.dart';
 
 class ChargebeeFlutterMethods {
   static const platform = MethodChannel(Constants.methodChannelName);
@@ -33,62 +38,71 @@ class ChargebeeFlutterMethods {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> getProductIdList(
-      List<String> listID) async {
+  static Future<List<Product>> getProductIdList(List<String> listID) async {
     List<Object?> result = [];
-    List<Map<String, dynamic>> cbProductList = [];
+    List<Product> products = [];
 
     try {
       result = await platform
           .invokeMethod(Constants.mGetProducts, {Constants.productIDs: listID});
 
       if (Platform.isIOS) {
-        print('result  : $result');
-      } else {
         for (var i = 0; i < result.length; i++) {
-          CBProduct output = CBMapper.cbProductsFromJson(result[i].toString());
-
-          Map<String, dynamic> map = output.toJson();
-
-          cbProductList.add(map);
+          var obj = result[i].toString();
+          Product product = Product.fromJson(jsonDecode(obj));
+          products.add(product);
         }
-        print('ProductList  : $cbProductList');
+        return products;
+      } else {
+        // for (var i = 0; i < result.length; i++) {
+        //   CBProduct output = CBMapper.cbProductsFromJson(result[i].toString());
+
+        //   Map<String, dynamic> map = output.toJson();
+
+        //   cbProductList.add(map);
+        // }
+        // print('ProductList  : $cbProductList');
       }
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
     }
-    return cbProductList;
+    return products;
   }
 
-  static Future<Map<dynamic, dynamic>> purchaseProduct(
-      Map<String, dynamic> product, String customerId) async {
-    Map<dynamic, dynamic> result = {};
+  static Future<PurchaseResult> purchaseProduct(
+      Product product, String customerId) async {
+    String jsonString;
 
-    print('product  : $product');
-    print('customerId  : $customerId');
+    if (Platform.isIOS) {
+      jsonString = await platform.invokeMethod(Constants.mPurchaseProduct,
+          {Constants.product: product.id, Constants.customerId: customerId});
+      print(jsonString);
 
-    SkuDetailsWrapper skuProperties = product["skuDetails"];
-    String skuDetails = skuProperties.skuDetails;
-    Map<String, dynamic> map = {
-      "skuDetails": skuDetails,
-      "customerId": customerId
-    };
-
-    try {
-      result = await platform
-          .invokeMethod(Constants.mPurchaseProduct, {Constants.product: map});
-
-      if (Platform.isIOS) {
-        print('result from flutter plugIn: $result');
-      } else {
-        print('result from flutter plugIn  : $result');
-      }
-
-      return result;
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
+      return PurchaseResult.fromJson(jsonDecode(jsonString.toString()));
     }
-    return result;
+
+    // SkuDetailsWrapper skuProperties = product["skuDetails"];
+    // String skuDetails = skuProperties.skuDetails;
+    // Map<String, dynamic> map = {
+    //   "skuDetails": skuDetails,
+    //   "customerId": customerId
+    // };
+
+    // try {
+    //   result = await platform
+    //       .invokeMethod(Constants.mPurchaseProduct, {Constants.product: map});
+
+    //   if (Platform.isIOS) {
+    //     print('result from flutter plugIn: $result');
+    //   } else {
+    //     print('result from flutter plugIn  : $result');
+    //   }
+
+    //   return result;
+    // } on PlatformException catch (e) {
+    //   log('PlatformException : ${e.message}');
+    // }
+    return PurchaseResult("", "failure");
   }
 
   static Future<void> retrieveAllItems() async {
@@ -125,6 +139,33 @@ class ChargebeeFlutterMethods {
       result =
           await platform.invokeMethod('retrieveSubscriptions', queryParams);
       print('result  : $result');
+      return result;
+    } on PlatformException catch (e) {
+      log('PlatformException : ${e.message}');
+    }
+    return result;
+  }
+
+  static Future<Map<String, String>> PurchaseProductNew(queryParams) async {
+    var result = <String, String>{};
+    try {
+      log('PlatformException : $queryParams');
+      result = await platform.invokeMethod('purchaseProduct', queryParams);
+      print('result  : $result');
+      return result;
+    } on PlatformException catch (e) {
+      log('PlatformException : ${e.message}');
+    }
+    return result;
+  }
+
+  static Future<List<Object?>> getProducts(List<String> listID) async {
+    List<Object?> result = [];
+    try {
+      result = await platform
+          .invokeMethod(Constants.mGetProducts, {Constants.productIDs: listID});
+      print('result  : $result');
+      return result;
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
     }

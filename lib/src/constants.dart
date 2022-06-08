@@ -1,6 +1,4 @@
-
-class Constants{
-
+class Constants {
   // Platform channel name
   static const methodChannelName = "chargebee_flutter_sdk";
 
@@ -12,6 +10,7 @@ class Constants{
   static const productIDs = "product_id";
   static const product = "product";
   static const params = "params";
+  static const customerId = "customerId";
 
   // Methods name
   static const mAuthentication = "authentication";
@@ -20,5 +19,4 @@ class Constants{
   static const mGetProducts = 'getProducts';
   static const mPurchaseProduct = 'purchaseProduct';
   static const SubscriptionMethod = 'retrieveSubscriptions';
-
 }

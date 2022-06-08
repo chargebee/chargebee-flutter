@@ -12,7 +12,7 @@ part of 'sku_Item.dart';
 //   );
 // }
 
-Map<String, dynamic> _$SkuDetailsWrapperToJson(SkuDetailsWrapper instance) =>
-    <String, dynamic>{
-      'zza': instance.skuDetails,
-    };
+// Map<String, dynamic> _$SkuDetailsWrapperToJson(SkuDetailsWrapper instance) =>
+//     <String, dynamic>{
+//       'zza': instance.skuDetails,
+//     };

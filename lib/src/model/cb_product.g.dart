@@ -7,19 +7,16 @@ part of 'cb_product.dart';
 // **************************************************************************
 
 CBProduct _$CBProductFromJson(Map<String, dynamic> json) {
-  return CBProduct(
-    json['productId'] as String?,
-    json['productPrice'] as String?,
-    json['productTitle'] as String?,
-    CBMapper.skuPropertiesFromJson(json['skuDetails']),
-     // json['skuDetails'] as Map<String, dynamic>
-  );
+  return CBProduct(json['productId'] as String?,
+      json['productPrice'] as String?, json['productTitle'] as String?
+      // CBMapper.skuPropertiesFromJson(json['skuDetails']),
+      // json['skuDetails'] as Map<String, dynamic>
+      );
 }
 
 Map<String, dynamic> _$CBProductToJson(CBProduct instance) => <String, dynamic>{
       'productId': instance.productId,
       'productPrice': instance.productPrice,
-      'productTitle': instance.productTitle,
-      'skuDetails': instance.skuDetails,
-  //'skuDetails': instance.skuDetails,
+      'productTitle': instance.productTitle
+      //'skuDetails': instance.skuDetails,
     };
