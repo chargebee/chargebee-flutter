@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Constants.dart';
 import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
+
 import 'dart:convert';
 
 void main() => runApp(MyApp());
@@ -42,7 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   late List<String> cbMenu;
 
-  List<Map<String, dynamic>> cbProductList = [];
+  List<Product> cbProductList = [];
+  List<Product> products = [];
 
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController apiKeyController = TextEditingController();
@@ -60,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // For Android
     authentication("cb-imay-test", "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
-        "cb-wpkheixkuzgxbnt23rzslg724y");
+        "cb-njjoibyzbrhyjg7yz4hkwg2ywq");
     // For iOS
     // authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
     //     "cb-njjoibyzbrhyjg7yz4hkwg2ywq");
@@ -110,6 +112,12 @@ class _MyHomePageState extends State<MyHomePage> {
           showSubscriptionDialog(context);
         }
         break;
+      case Constants.purchase:
+        {
+          purchase(cbProductList.first, "12345");
+        }
+        break;
+
       default:
         {
           //statements;
@@ -127,29 +135,30 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> getProductIdList(List<String> productIDsList) async {
-    try {
-      cbProductList =
-          await ChargebeeFlutterMethods.getProductIdList(productIDsList);
+  // Future<void> getProductIdList(List<String> productIDsList) async {
+  //   try {
+  //     cbProductList =
+  //         await ChargebeeFlutterMethods.getProductIdList(productIDsList);
+  //     log('result : ${cbProductList}');
 
-      if (cbProductList.isNotEmpty) {
-        if (mProgressBarUtil.isProgressBarShowing()) {
-          mProgressBarUtil.hideProgressDialog();
-        }
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => ProductListView(cbProductList,
-                  title: 'Google Play-Product List'),
-            ));
-      }
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
-      if (mProgressBarUtil.isProgressBarShowing()) {
-        mProgressBarUtil.hideProgressDialog();
-      }
-    }
-  }
+  //     if (cbProductList.isNotEmpty) {
+  //       if (mProgressBarUtil.isProgressBarShowing()) {
+  //         mProgressBarUtil.hideProgressDialog();
+  //       }
+  //       Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (BuildContext context) => ProductListView(cbProductList,
+  //                 title: 'Google Play-Product List'),
+  //           ));
+  //     }
+  //   } on PlatformException catch (e) {
+  //     log('PlatformException : ${e.message}');
+  //     if (mProgressBarUtil.isProgressBarShowing()) {
+  //       mProgressBarUtil.hideProgressDialog();
+  //     }
+  //   }
+  // }
 
   Future<void> showSkProductDialog(BuildContext context) async {
     return showDialog(
@@ -188,8 +197,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       log('productIDs with comma from user : $productIDs');
                       mProgressBarUtil.showProgressDialog();
 
-                      List<String> listItems = productIDs.split(',');
-                      getProductIdList(listItems);
+                      // List<String> listItems = productIDs.split(',');
+                      // getProductIdList(listItems);
+                      getProducts();
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -256,6 +266,24 @@ class _MyHomePageState extends State<MyHomePage> {
     subscriptionsList = await ChargebeeFlutterMethods.retrieveSubscriptions(
         {"status": "active", "customer_id": "12345"}) as List<Object?>;
     log('Subs List : $subscriptionsList');
+  }
+
+  Future<void> getProducts() async {
+    cbProductList = await ChargebeeFlutterMethods.getProductIdList(
+        ["chargebee.premium.ios"]);
+    log('product List : $cbProductList');
+    print(cbProductList.first.id);
+  }
+
+  Future<void> purchase(Product product, String customerID) async {
+    //Saftey
+    log('Product List : $products');
+    PurchaseResult result;
+
+    result = await ChargebeeFlutterMethods.purchaseProduct(product, customerID);
+
+    print(result.subscriptionId);
+    print(result.status);
   }
 
   Future<void> showAuthenticationDialog(BuildContext context) async {
