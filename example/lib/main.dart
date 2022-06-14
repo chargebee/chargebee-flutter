@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Constants.dart';
 import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
+import 'alertDialog.dart';
 
 import 'dart:convert';
 
@@ -61,8 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     // For Android
-    authentication("cb-imay-test", "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
-        "cb-njjoibyzbrhyjg7yz4hkwg2ywq");
+    authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
+        "cb-wpkheixkuzgxbnt23rzslg724y");
     // For iOS
     // authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
     //     "cb-njjoibyzbrhyjg7yz4hkwg2ywq");
@@ -135,30 +136,44 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // Future<void> getProductIdList(List<String> productIDsList) async {
-  //   try {
-  //     cbProductList =
-  //         await ChargebeeFlutterMethods.getProductIdList(productIDsList);
-  //     log('result : ${cbProductList}');
+  Future<void> getProductIdList(List<String> productIDsList) async {
 
-  //     if (cbProductList.isNotEmpty) {
-  //       if (mProgressBarUtil.isProgressBarShowing()) {
-  //         mProgressBarUtil.hideProgressDialog();
-  //       }
-  //       Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (BuildContext context) => ProductListView(cbProductList,
-  //                 title: 'Google Play-Product List'),
-  //           ));
-  //     }
-  //   } on PlatformException catch (e) {
-  //     log('PlatformException : ${e.message}');
-  //     if (mProgressBarUtil.isProgressBarShowing()) {
-  //       mProgressBarUtil.hideProgressDialog();
-  //     }
-  //   }
-  // }
+    try {
+      cbProductList =
+          await ChargebeeFlutterMethods.getProductIdList(productIDsList);
+      log('result : ${cbProductList}');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      if (cbProductList.isNotEmpty) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ProductListView(cbProductList,
+                  title: 'Google Play-Product List'),
+            ));
+      }else{
+        log('Items not avilable to buy');
+        _showDialog(context);
+      }
+    } on PlatformException catch (e) {
+      log('PlatformException : ${e.message}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
+  }
+
+  _showDialog(BuildContext context) {
+    BaseAlertDialog  alert = BaseAlertDialog("Chargebee","Items not avilable to buy");
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   Future<void> showSkProductDialog(BuildContext context) async {
     return showDialog(
@@ -169,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
             content: TextField(
               onChanged: (value) {
                 setState(() {
-                  productIDs = value;
+                  productIDs = value.trim();
                 });
               },
               controller: productIdTextFieldController,
@@ -197,9 +212,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       log('productIDs with comma from user : $productIDs');
                       mProgressBarUtil.showProgressDialog();
 
-                      // List<String> listItems = productIDs.split(',');
-                      // getProductIdList(listItems);
-                      getProducts();
+                       List<String> listItems = productIDs.split(',');
+                       getProductIdList(listItems);
+                      //getProducts();
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -269,8 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> getProducts() async {
-    cbProductList = await ChargebeeFlutterMethods.getProductIdList(
-        ["chargebee.premium.ios"]);
+    cbProductList = await ChargebeeFlutterMethods.getProductIdList(["chargebee.premium.ios"]);
     log('product List : $cbProductList');
     print(cbProductList.first.id);
   }
@@ -350,5 +364,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           );
         });
+  }
+
+  Completer _myCompleter = Completer();
+  Future startSomething() {
+    // show a user dialog or an image picker or kick off a polling function
+    return _myCompleter.future;
+  }
+  void endSomething() {
+    _myCompleter.complete();
   }
 }
