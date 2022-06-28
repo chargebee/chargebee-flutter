@@ -1,11 +1,10 @@
-package com.chargebee.example
+package com.chargebee.flutter.sdk
 
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
-import com.android.billingclient.api.SkuDetails
 import com.chargebee.android.Chargebee
 import com.chargebee.android.ProgressBarListener
 import com.chargebee.android.billingservice.BillingClientManager
@@ -69,13 +68,14 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
     }
     private fun authentication(args: Map<String, Any>) {
-
         val siteName = args["site_name"] as String
         val apiKey = args["api_key"] as String
         val sdkKey = args["sdk_key"] as String
-        Log.i("ChargebeePlugIn", " $siteName, $apiKey, $sdkKey, ${activity.packageName}")
+        val packageName = args["package_name"] as String
+
+        Log.i("ChargebeePlugIn", " $siteName, $apiKey, $sdkKey, package Name: ${activity.packageName}")
         // Configure with Chargebee SDK
-        Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = activity.packageName)
+        Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = packageName)
 
     }
 

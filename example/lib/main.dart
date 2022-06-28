@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // For Android
     authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
-        "cb-wpkheixkuzgxbnt23rzslg724y");
+        "cb-wpkheixkuzgxbnt23rzslg724y", "com.chargebee.example");
     // For iOS
     // authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
     //     "cb-njjoibyzbrhyjg7yz4hkwg2ywq");
@@ -128,9 +128,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> authentication(
-      String siteName, String apiKey, String sdkKey) async {
+      String siteName, String apiKey, [String? sdkKey, packageName]) async {
     try {
-      await ChargebeeFlutterMethods.authentication(siteName, apiKey, sdkKey);
+      await Chargebee.configure(siteName, apiKey, sdkKey);
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
     }
@@ -140,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     try {
       cbProductList =
-          await ChargebeeFlutterMethods.getProductIdList(productIDsList);
+          await Chargebee.getProductIdList(productIDsList);
       log('result : ${cbProductList}');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
@@ -278,13 +278,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> subscriptionStatus() async {
     List<Object?> subscriptionsList = [];
-    subscriptionsList = await ChargebeeFlutterMethods.retrieveSubscriptions(
+    subscriptionsList = await Chargebee.retrieveSubscriptions(
         {"status": "active", "customer_id": "12345"}) as List<Object?>;
     log('Subs List : $subscriptionsList');
   }
 
   Future<void> getProducts() async {
-    cbProductList = await ChargebeeFlutterMethods.getProductIdList(["chargebee.premium.ios"]);
+    cbProductList = await Chargebee.getProductIdList(["chargebee.premium.ios"]);
     log('product List : $cbProductList');
     print(cbProductList.first.id);
   }
@@ -294,7 +294,7 @@ class _MyHomePageState extends State<MyHomePage> {
     log('Product List : $products');
     PurchaseResult result;
 
-    result = await ChargebeeFlutterMethods.purchaseProduct(product, customerID);
+    result = await Chargebee.purchaseProduct(product, customerID);
 
     print(result.subscriptionId);
     print(result.status);

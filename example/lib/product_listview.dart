@@ -81,26 +81,21 @@ class ProductListViewState extends State<ProductListView> {
 
   Future<void> purchaseProduct(Product product) async {
     try {
-      var result = (await ChargebeeFlutterMethods.purchaseProduct(product, customerId));
+      var result = (await Chargebee.purchaseProduct(product, customerId));
       if (kDebugMode) {
         print("subscription result : $result");
       }
       mProgressBarUtil.hideProgressDialog();
 
-      //print("status : ${result.status}");
-      //print("subscription Id : ${result.subscriptionId}");
-
-      if(result.status !=null && result.status == "true"){
+      if(result.status == "true"){
         _showSuccessDialog(context, "Success");
       }else{
         _showSuccessDialog(context, result.status);
       }
-
     }  catch (e) {
       log('PlatformException : ${e.toString()}');
       mProgressBarUtil.hideProgressDialog();
     }
-
   }
 
   final TextEditingController productIdTextFieldController =

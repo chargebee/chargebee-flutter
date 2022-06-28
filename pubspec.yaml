@@ -34,7 +34,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.chargebee.example
+        package: com.chargebee.flutter.sdk
         pluginClass: ChargebeeFlutterSdkPlugin
       ios:
         pluginClass: ChargebeeFlutterSdkPlugin

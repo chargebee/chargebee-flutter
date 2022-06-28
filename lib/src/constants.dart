@@ -6,6 +6,7 @@ class Constants {
   static const siteName = "site_name";
   static const apiKey = "api_key";
   static const sdkKey = "sdk_key";
+  static const packageName = "package_name";
 
   static const productIDs = "product_id";
   static const product = "product";
@@ -18,5 +19,5 @@ class Constants {
   static const mRetrieveAllPlans = 'retrieveAllPlans';
   static const mGetProducts = 'getProducts';
   static const mPurchaseProduct = 'purchaseProduct';
-  static const SubscriptionMethod = 'retrieveSubscriptions';
+  static const mSubscriptionMethod = 'retrieveSubscriptions';
 }
