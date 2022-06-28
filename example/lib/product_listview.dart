@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
 
 class ProductListView extends StatefulWidget {
-  final List<Map<String, dynamic>> listProducts;
+  final List<Product> listProducts;
 
   const ProductListView(this.listProducts, {Key? key, required this.title})
       : super(key: key);
@@ -17,7 +17,7 @@ class ProductListView extends StatefulWidget {
 }
 
 class ProductListViewState extends State<ProductListView> {
-  late List<Map<String, dynamic>> listProducts;
+  late List<Product> listProducts;
   ProductListViewState(this.listProducts);
 
   late ProgressBarUtil mProgressBarUtil;
@@ -41,11 +41,15 @@ class ProductListViewState extends State<ProductListView> {
           itemBuilder: (context, pos) {
             return Card(
               child: ListTile(
-                title: Text(listProducts[pos]['productTitle'],
+                title: Text(listProducts[pos].id,
                     style: const TextStyle(
-                        color: Colors.cyan,
+                      color: Colors.black54,
                         fontWeight: FontWeight.bold,
                         fontSize: 18)),
+                subtitle: Text(listProducts[pos].price,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 15)),
                 trailing: const Text("Subscribe",
                     style: TextStyle(
                         color: Colors.cyan,
@@ -66,8 +70,7 @@ class ProductListViewState extends State<ProductListView> {
 
   onItemClick(int position) async {
     try {
-      print('position  :$position');
-      Map<String, dynamic> map = listProducts[position];
+      Product map = listProducts[position];
       print('map  :$map');
       _showCustomerIdDialog(context, map);
     } catch (e) {
@@ -76,39 +79,35 @@ class ProductListViewState extends State<ProductListView> {
     }
   }
 
-  // Future<void> purchaseProduct(Map<String, dynamic> product) async {
-  //   print("customerId : $customerId");
+  Future<void> purchaseProduct(Product product) async {
+    try {
+      var result = (await ChargebeeFlutterMethods.purchaseProduct(product, customerId));
+      if (kDebugMode) {
+        print("subscription result : $result");
+      }
+      mProgressBarUtil.hideProgressDialog();
 
-  //   try {
-  //     Map<dynamic, dynamic> result = (await ChargebeeFlutterMethods.purchaseProduct(product, customerId));
-  //     if (kDebugMode) {
-  //       print("subscription result : $result");
-  //     }
-  //     if(mProgressBarUtil.isProgressBarShowing()){
-  //       mProgressBarUtil.hideProgressDialog();
-  //     }
-  //     String status = result["status"].toString();
-  //     print("status : $status");
-  //     if(status !=null && status == "true"){
-  //       _showSuccessDialog(context, "Success");
-  //     }else{
-  //       _showSuccessDialog(context,"Failed");
-  //     }
+      //print("status : ${result.status}");
+      //print("subscription Id : ${result.subscriptionId}");
 
-  //   }  catch (e) {
-  //     log('PlatformException : ${e.toString()}');
-  //     if(mProgressBarUtil.isProgressBarShowing()){
-  //       mProgressBarUtil.hideProgressDialog();
-  //     }
-  //   }
+      if(result.status !=null && result.status == "true"){
+        _showSuccessDialog(context, "Success");
+      }else{
+        _showSuccessDialog(context, result.status);
+      }
 
-  // }
+    }  catch (e) {
+      log('PlatformException : ${e.toString()}');
+      mProgressBarUtil.hideProgressDialog();
+    }
+
+  }
 
   final TextEditingController productIdTextFieldController =
       TextEditingController();
-  late String customerId;
+  String? customerId = "null";
   Future<void> _showCustomerIdDialog(
-      BuildContext context, Map<String, dynamic> product) async {
+      BuildContext context, Product product) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -141,12 +140,9 @@ class ProductListViewState extends State<ProductListView> {
                 onPressed: () {
                   setState(() {
                     Navigator.pop(context);
-
                     mProgressBarUtil.showProgressDialog();
                     try {
-                      log('Customer ID : $customerId');
-
-                      // purchaseProduct(product);
+                       purchaseProduct(product);
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -171,6 +167,7 @@ class ProductListViewState extends State<ProductListView> {
                 textColor: Colors.white,
                 child: const Text('OK'),
                 onPressed: () {
+                  mProgressBarUtil.hideProgressDialog();
                   Navigator.pop(context);
                 },
               ),

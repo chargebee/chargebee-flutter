@@ -58,7 +58,6 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             }
             "purchaseProduct" -> {
                 if (args != null) {
-                    BillingClientManager.mProgressBarListener = activity
                     purchaseProduct(args, result)
                 }
             }
@@ -82,9 +81,6 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
     private fun retrieveProducts(args: Map<String, Any>, result: Result) {
         val productIdList: ArrayList<String> = args["product_id"] as ArrayList<String>
-
-        Log.i(javaClass.simpleName, "productIdList:  $productIdList")
-
         CBPurchase.retrieveProducts(
                 activity,
                 productIdList,
@@ -93,59 +89,65 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                         Log.i(javaClass.simpleName, "Product from Google Play Console:  $productDetails")
                         mSkuProductList.clear()
                         for (product in productDetails) {
-                            val jsonString = Gson().toJson(product)
-                            Log.e(javaClass.simpleName, "Convert CBProduct into jsonString:  $jsonString")
-
-                            mSkuProductList.add(jsonString)
+                            val jsonMapString = Gson().toJson(product.toMap())
+                            mSkuProductList.add(jsonMapString)
                         }
                         result.success(mSkuProductList)
                     }
 
                     override fun onError(error: CBException) {
                         Log.e(javaClass.simpleName, "Error:  ${error.message}")
+                        result.success(error.message)
                     }
                 })
     }
 
     private fun purchaseProduct(args: Map<String, Any>, result: Result) {
-
-        val product: Map<String, Any> = args["product"] as Map<String, Any>
         var customerID = "";
-        if (product.get("customerId")  !=null) {
-             customerID = product.get("customerId") as String
+        if (args["customerId"] != null) {
+            customerID = args["customerId"] as String
         }
-       // Log.i(javaClass.simpleName, "Customer ID:  $customerID")
-        val skuDetailsFromFlutter: String = product.get("skuDetails").toString()
+        val arrayList: ArrayList<String> = ArrayList<String>()
+        arrayList.add(args["product"] as String)
 
-       // Log.i(javaClass.simpleName, "skuDetailsFromFlutter:  $skuDetailsFromFlutter")
+        CBPurchase.retrieveProducts(
+            activity,
+            arrayList,
+           object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
+                override fun onSuccess(productDetails: ArrayList<CBProduct>) {
+                    Log.i(
+                        javaClass.simpleName,
+                        "Product from Google Play Console:  $productDetails"
+                    )
+                    CBPurchase.purchaseProduct(
+                        productDetails.first(),
+                        customerID,
+                        object : CBCallback.PurchaseCallback<String> {
+                            override fun onSuccess(subscriptionID: String, status: Boolean) {
+                                Log.i(javaClass.simpleName, "Subscription ID:  $subscriptionID")
+                                Log.i(javaClass.simpleName, "Status:  $status")
+                                result.success(onResultMap(subscriptionID, "$status"))
+                            }
 
-        val skuDetails = SkuDetails(skuDetailsFromFlutter)
+                            override fun onError(error: CBException) {
+                                Log.i(javaClass.simpleName, "Exception :${error.message}")
+                                result.success(onResultMap("${error.message}", "${error.message}"))
+                            }
+                        })
+                }
 
-        val cbProduct = CBProduct(
-                skuDetails.sku,
-                skuDetails.title,
-                skuDetails.price,
-                skuDetails,
-                false
-        )
-        CBPurchase.purchaseProduct(cbProduct, customerID, object : CBCallback.PurchaseCallback<String> {
-            override fun onSuccess(subscriptionID: String, status: Boolean) {
-                Log.i(javaClass.simpleName, "Subscription ID:  $subscriptionID")
-                Log.i(javaClass.simpleName, "Status:  $status")
-                subscriptionStatus.put("subscriptionId", subscriptionID)
-                subscriptionStatus.put("status", status)
-
-                result.success(subscriptionStatus)
-            }
-
-            override fun onError(error: CBException) {
-                Log.i(javaClass.simpleName, "Exception :${error.message}")
-                subscriptionStatus.put("status", false)
-                result.success(subscriptionStatus)
-            }
-        })
+                override fun onError(error: CBException) {
+                    Log.e(javaClass.simpleName, "Error:  ${error.message}")
+                    result.success(onResultMap("${error.message}", "${error.message}"))
+                }
+            })
     }
 
+    fun onResultMap(id: String, status: String): String{
+        subscriptionStatus.put("id", id)
+        subscriptionStatus.put("status", status)
+        return Gson().toJson(subscriptionStatus)
+    }
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
     }
@@ -167,3 +169,12 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
 
 }
+
+fun CBProduct.toMap(): Map<String, Any> {
+    return mapOf(
+        "productId" to productId,
+        "productPrice" to productPrice,
+        "productTitle" to productTitle
+    )
+}
+

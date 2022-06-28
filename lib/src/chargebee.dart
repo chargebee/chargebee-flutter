@@ -52,17 +52,14 @@ class ChargebeeFlutterMethods {
           Product product = Product.fromJson(jsonDecode(obj));
           products.add(product);
         }
-        return products;
       } else {
-        // for (var i = 0; i < result.length; i++) {
-        //   CBProduct output = CBMapper.cbProductsFromJson(result[i].toString());
-
-        //   Map<String, dynamic> map = output.toJson();
-
-        //   cbProductList.add(map);
-        // }
-        // print('ProductList  : $cbProductList');
+        for (var i = 0; i < result.length; i++) {
+          print(' Result : ${result[i].toString()}');
+          Product product = Product.fromJson(jsonDecode(result[i].toString()));
+          products.add(product);
+        }
       }
+      return products;
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
     }
@@ -70,7 +67,7 @@ class ChargebeeFlutterMethods {
   }
 
   static Future<PurchaseResult> purchaseProduct(
-      Product product, String customerId) async {
+      Product product, [String? customerId]) async {
     String jsonString;
 
     if (Platform.isIOS) {
@@ -79,30 +76,14 @@ class ChargebeeFlutterMethods {
       print(jsonString);
 
       return PurchaseResult.fromJson(jsonDecode(jsonString.toString()));
+    }else{
+      jsonString = await platform.invokeMethod(Constants.mPurchaseProduct,
+          {Constants.product: product.id, Constants.customerId: customerId});
+      print(jsonString);
+      return PurchaseResult.fromJson(jsonDecode(jsonString.toString()));
     }
 
-    // SkuDetailsWrapper skuProperties = product["skuDetails"];
-    // String skuDetails = skuProperties.skuDetails;
-    // Map<String, dynamic> map = {
-    //   "skuDetails": skuDetails,
-    //   "customerId": customerId
-    // };
-
-    // try {
-    //   result = await platform
-    //       .invokeMethod(Constants.mPurchaseProduct, {Constants.product: map});
-
-    //   if (Platform.isIOS) {
-    //     print('result from flutter plugIn: $result');
-    //   } else {
-    //     print('result from flutter plugIn  : $result');
-    //   }
-
-    //   return result;
-    // } on PlatformException catch (e) {
-    //   log('PlatformException : ${e.message}');
-    // }
-    return PurchaseResult("", "failure");
+   // return PurchaseResult("", jsonString);
   }
 
   static Future<void> retrieveAllItems() async {
