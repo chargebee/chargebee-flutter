@@ -25,8 +25,11 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             guard let args = call.arguments as? [String: String] else {
                 return _result("error")
             }
-            
-            Chargebee.shared.retrieveSubscriptions(queryParams: args) { result in
+            let queryParams = args["customerId"] as! String
+
+            let map: [String: String] = ["customer_id": queryParams]
+
+            Chargebee.shared.retrieveSubscriptions(queryParams: map) { result in
                 switch result {
                 case let .success(list):
                     debugPrint("Subscription Status Fetched: \(list)")

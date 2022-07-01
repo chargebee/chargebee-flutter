@@ -9,8 +9,6 @@ import 'Constants.dart';
 import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
 import 'alertDialog.dart';
 
-import 'dart:convert';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -46,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Product> cbProductList = [];
   List<Product> products = [];
+  List<dynamic> subscriptionList = [];
 
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController apiKeyController = TextEditingController();
@@ -62,8 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     // For Android
-    authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
-        "cb-wpkheixkuzgxbnt23rzslg724y", "com.chargebee.example");
+    authentication("cb-imay-test", "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3","cb-wpkheixkuzgxbnt23rzslg724y");
+
     // For iOS
     // authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
     //     "cb-njjoibyzbrhyjg7yz4hkwg2ywq");
@@ -94,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  onItemClick(String menuItem) async {
+  onItemClick(String menuItem) {
     switch (menuItem) {
       case Constants.config:
         {
@@ -113,11 +112,6 @@ class _MyHomePageState extends State<MyHomePage> {
           showSubscriptionDialog(context);
         }
         break;
-      case Constants.purchase:
-        {
-          purchase(cbProductList.first, "12345");
-        }
-        break;
 
       default:
         {
@@ -128,9 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> authentication(
-      String siteName, String apiKey, [String? sdkKey, packageName]) async {
+      String siteName, String apiKey, String sdkKey, [String? packageName=""]) async {
     try {
-      await Chargebee.configure(siteName, apiKey, sdkKey);
+      await Chargebee.configure(siteName, apiKey, sdkKey, packageName);
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
     }
@@ -155,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ));
       }else{
         log('Items not avilable to buy');
-        _showDialog(context);
+        _showDialog(context, "Items not avilable to buy");
       }
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
@@ -165,8 +159,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  _showDialog(BuildContext context) {
-    BaseAlertDialog  alert = BaseAlertDialog("Chargebee","Items not avilable to buy");
+  _showDialog(BuildContext context, String message) {
+    BaseAlertDialog  alert = BaseAlertDialog("Chargebee",message);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -175,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<void> showSkProductDialog(BuildContext context) async {
+  showSkProductDialog(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -214,7 +208,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
                        List<String> listItems = productIDs.split(',');
                        getProductIdList(listItems);
-                      //getProducts();
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -262,9 +255,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       Navigator.pop(context);
                       log('QueryParam from user : $queryParams');
                       mProgressBarUtil.showProgressDialog();
-                      // Map param = json.decode(queryParams);
-                      // ChargebeeFlutterMethods.retrieveSubscriptions( {"status": "is_active"});
-                      subscriptionStatus();
+                       retrieveSubscriptions(queryParams);
+                      //subscriptionStatus();
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -276,29 +268,37 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Future<void> subscriptionStatus() async {
-    List<Object?> subscriptionsList = [];
-    subscriptionsList = await Chargebee.retrieveSubscriptions(
-        {"status": "active", "customer_id": "12345"}) as List<Object?>;
-    log('Subs List : $subscriptionsList');
+  Future<void> retrieveSubscriptions(String customerId) async {
+
+    try {
+      subscriptionList = await Chargebee.retrieveSubscriptions(customerId);
+      log('result : $subscriptionList');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      if (subscriptionList.isNotEmpty) {
+        _showDialog(context,"Subscriptions retrieved successfully!");
+      }else{
+        log('Subscription not found in Chargebee System');
+        _showDialog(context,"Subscription not found in Chargebee System");
+      }
+    } on PlatformException catch (e) {
+      log('PlatformException : ${e.message}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
   }
 
-  Future<void> getProducts() async {
-    cbProductList = await Chargebee.getProductIdList(["chargebee.premium.ios"]);
-    log('product List : $cbProductList');
-    print(cbProductList.first.id);
-  }
+  // Future<void> subscriptionStatus() async {
+  //   List<Object?> subscriptionsList = [];
+  //   subscriptionsList = await Chargebee.retrieveSubscriptions(
+  //       {"status": "active", "customer_id": "12345"}) as List<Object?>;
+  //   log('Subs List : $subscriptionsList');
+  // }
 
-  Future<void> purchase(Product product, String customerID) async {
-    //Saftey
-    log('Product List : $products');
-    PurchaseResult result;
 
-    result = await Chargebee.purchaseProduct(product, customerID);
-
-    print(result.subscriptionId);
-    print(result.status);
-  }
 
   Future<void> showAuthenticationDialog(BuildContext context) async {
     return showDialog(
@@ -366,12 +366,4 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Completer _myCompleter = Completer();
-  Future startSomething() {
-    // show a user dialog or an image picker or kick off a polling function
-    return _myCompleter.future;
-  }
-  void endSomething() {
-    _myCompleter.complete();
-  }
 }

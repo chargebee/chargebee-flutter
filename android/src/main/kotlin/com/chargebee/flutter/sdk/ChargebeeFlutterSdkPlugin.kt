@@ -6,11 +6,13 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
 import com.chargebee.android.Chargebee
+import com.chargebee.android.ErrorDetail
 import com.chargebee.android.ProgressBarListener
 import com.chargebee.android.billingservice.BillingClientManager
 import com.chargebee.android.billingservice.CBCallback
 import com.chargebee.android.billingservice.CBPurchase
 import com.chargebee.android.exceptions.CBException
+import com.chargebee.android.exceptions.ChargebeeResult
 import com.chargebee.android.models.*
 import com.chargebee.android.models.CBProduct.*
 import com.google.gson.Gson
@@ -21,6 +23,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware{
 
@@ -31,6 +34,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     var result: MethodChannel.Result? = null
     var mContext: Context? = null
     var subscriptionStatus = HashMap<String, Any>()
+    var subscriptionsList = ArrayList<String>()
 
     private lateinit var context: Context
     private lateinit var activity: Activity
@@ -60,6 +64,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     purchaseProduct(args, result)
                 }
             }
+            "retrieveSubscriptions" ->{
+                if (args != null) {
+                    retrieveSubscriptions(args, result)
+                }
+            }
             else -> {
                 Log.d(javaClass.simpleName, "Implementation not Found")
                 result.notImplemented()
@@ -75,7 +84,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
         Log.i("ChargebeePlugIn", " $siteName, $apiKey, $sdkKey, package Name: ${activity.packageName}")
         // Configure with Chargebee SDK
-        Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = packageName)
+        Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = "${activity.packageName}")
 
     }
 
@@ -115,10 +124,6 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             arrayList,
            object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
                 override fun onSuccess(productDetails: ArrayList<CBProduct>) {
-                    Log.i(
-                        javaClass.simpleName,
-                        "Product from Google Play Console:  $productDetails"
-                    )
                     CBPurchase.purchaseProduct(
                         productDetails.first(),
                         customerID,
@@ -148,8 +153,32 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         subscriptionStatus.put("status", status)
         return Gson().toJson(subscriptionStatus)
     }
+    private fun retrieveSubscriptions(args: Map<String, Any>, result: Result) {
+        val id = args["customerId"] as String
+        val queryParam = arrayOf(id, Chargebee.channel)
+        Chargebee.retrieveSubscriptions(queryParam) {
+            when(it){
+                is ChargebeeResult.Success -> {
+                    val listSubscriptions = (it.data as CBSubscription).list
+                    subscriptionsList.clear()
+                    for (subscription in  listSubscriptions){
+                        val jsonString = Gson().toJson(subscription)
+                        subscriptionsList.add(jsonString)
+                    }
+                    result.success(subscriptionsList)
+                }
+                is ChargebeeResult.Error ->{
+                    Log.e(javaClass.simpleName, "Exception from server- retrieveSubscription() :  ${it.exp.message}")
+                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+                }
+            }
+        }
+
+    }
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
+        if (channel != null) {
+            channel.setMethodCallHandler(null);
+        }
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
@@ -157,15 +186,14 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
 
     override fun onDetachedFromActivity() {
-
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-
+        onAttachedToActivity(binding);
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-
+        onDetachedFromActivity();
     }
 
 }

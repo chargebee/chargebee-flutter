@@ -16,7 +16,7 @@ class Chargebee {
         final args = {
           Constants.siteName: site,
           Constants.apiKey: publishableApiKey,
-          Constants.sdkKey: sdkKey,
+          Constants.sdkKey: sdkKey
         };
 
         await platform.invokeMethod(Constants.mAuthentication, args);
@@ -69,14 +69,26 @@ class Chargebee {
   }
   /* Get the subscription details from chargebee system */
   static Future<List<Object?>> retrieveSubscriptions(
-      Map<String, dynamic> queryParams) async {
-    List<Object?> result = [];
-    try {
-      result = await platform.invokeMethod(Constants.mSubscriptionMethod, queryParams);
+      String queryParams) async {
+    List<dynamic> result = [];
+    if (Platform.isIOS) {
+      try {
+        result = await platform.invokeMethod(Constants.mSubscriptionMethod,
+            {Constants.customerId: queryParams});
+        log('result : $result');
 
-      return result;
-    } on CBException catch (e) {
-      log('CBException : ${e.message}');
+        return result;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+      }
+    }else{
+      try {
+        result = await platform.invokeMethod(Constants.mSubscriptionMethod, {Constants.customerId: queryParams});
+        log('result : $result');
+        return result;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+      }
     }
     return result;
   }

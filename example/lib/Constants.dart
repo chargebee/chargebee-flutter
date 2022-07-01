@@ -3,9 +3,9 @@ import 'dart:core';
 class Constants {
   static const List<String> menu = [
     "Configure",
-    "Get Product Identifiers",
+    //"Get Product Identifiers",
     "Get Products",
-    "Purchase",
+    //"Purchase",
     "Get Subscription Status"
   ];
 
