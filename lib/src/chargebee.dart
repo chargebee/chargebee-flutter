@@ -2,13 +2,14 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:chargebee_flutter_sdk/src/constants.dart';
 import 'package:chargebee_flutter_sdk/src/utils/cb_exception.dart';
+import 'package:chargebee_flutter_sdk/src/utils/product.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-import '../chargebee_flutter_sdk.dart';
 
 class Chargebee {
   static const platform = MethodChannel(Constants.methodChannelName);
 
+/* Configure the app details with chargebee system */
   static Future<void> configure(
       String site, String publishableApiKey, [String? sdkKey = "", packageName=""]) async {
     try {
@@ -35,7 +36,7 @@ class Chargebee {
   }
 
   /* Get the product/sku details from Play console/ App Store */
-  static Future<List<Product>> getProductIdList(List<String> listID) async {
+  static Future<List<Product>> retrieveProducts(List<String> listID) async {
     List<Object?> result = [];
     List<Product> products = [];
     try {
@@ -89,59 +90,6 @@ class Chargebee {
       } on CBException catch (e) {
         log('CBException : ${e.message}');
       }
-    }
-    return result;
-  }
-
-
-  static Future<void> retrieveAllItems() async {
-    String result;
-    try {
-      await platform.invokeMethod('retrieveAllItems').then((value) {
-        result = value.toString();
-        log('retrieveItems : $result');
-        List<String> listItems = result.split(',');
-      });
-    } on CBException catch (e) {
-      log('CBException : ${e.message}');
-    }
-  }
-
-  Future<void> retrieveAllPlans() async {
-    String result;
-    try {
-      await platform.invokeMethod('retrieveAllPlans').then((value) {
-        result = value.toString();
-        log('retrieveAllPlans : $result');
-        List<String> listItems = result.split(',');
-      });
-    } on CBException catch (e) {
-      log('CBException : ${e.message}');
-    }
-  }
-
-  static Future<Map<String, String>> PurchaseProductNew(queryParams) async {
-    var result = <String, String>{};
-    try {
-      log('PlatformException : $queryParams');
-      result = await platform.invokeMethod('purchaseProduct', queryParams);
-      print('result  : $result');
-      return result;
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
-    }
-    return result;
-  }
-
-  static Future<List<Object?>> getProducts(List<String> listID) async {
-    List<Object?> result = [];
-    try {
-      result = await platform
-          .invokeMethod(Constants.mGetProducts, {Constants.productIDs: listID});
-      print('result  : $result');
-      return result;
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
     }
     return result;
   }

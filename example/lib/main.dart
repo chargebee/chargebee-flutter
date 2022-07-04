@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'Constants.dart';
 import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
 import 'alertDialog.dart';
+import 'package:chargebee_flutter_sdk/src/utils/product.dart';
 
 void main() => runApp(MyApp());
 
@@ -134,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     try {
       cbProductList =
-          await Chargebee.getProductIdList(productIDsList);
+          await Chargebee.retrieveProducts(productIDsList);
       log('result : ${cbProductList}');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
@@ -151,8 +152,8 @@ class _MyHomePageState extends State<MyHomePage> {
         log('Items not avilable to buy');
         _showDialog(context, "Items not avilable to buy");
       }
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
+    }  catch (e) {
+      log('Exception : ${e.toString()}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -269,7 +270,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> retrieveSubscriptions(String customerId) async {
-
     try {
       subscriptionList = await Chargebee.retrieveSubscriptions(customerId);
       log('result : $subscriptionList');
@@ -283,22 +283,13 @@ class _MyHomePageState extends State<MyHomePage> {
         log('Subscription not found in Chargebee System');
         _showDialog(context,"Subscription not found in Chargebee System");
       }
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
+    }  catch (e) {
+      log('Exception : ${e.toString()}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
     }
   }
-
-  // Future<void> subscriptionStatus() async {
-  //   List<Object?> subscriptionsList = [];
-  //   subscriptionsList = await Chargebee.retrieveSubscriptions(
-  //       {"status": "active", "customer_id": "12345"}) as List<Object?>;
-  //   log('Subs List : $subscriptionsList');
-  // }
-
-
 
   Future<void> showAuthenticationDialog(BuildContext context) async {
     return showDialog(

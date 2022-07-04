@@ -3,7 +3,6 @@ import UIKit
 import Chargebee
 import StoreKit
 
-
 public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "chargebee_flutter_sdk", binaryMessenger: registrar.messenger())
@@ -112,7 +111,6 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             print("Default statement")
         }
     }
-    
 }
 
 extension Encodable {
@@ -122,7 +120,6 @@ extension Encodable {
         return json
     }
 }
-
 
 extension SKProduct {
     func toMap() -> [String: Any?] {

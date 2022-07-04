@@ -26,7 +26,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware{
-
     private lateinit var channel: MethodChannel
     var mItemsList = ArrayList<String>()
     var mPlansList = ArrayList<String>()
@@ -35,16 +34,13 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     var mContext: Context? = null
     var subscriptionStatus = HashMap<String, Any>()
     var subscriptionsList = ArrayList<String>()
-
     private lateinit var context: Context
     private lateinit var activity: Activity
-
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "chargebee_flutter_sdk")
         channel.setMethodCallHandler(this)
     }
-
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         val args = call.arguments() as? Map<String, Any>?
 
@@ -74,7 +70,6 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 result.notImplemented()
             }
         }
-
     }
     private fun authentication(args: Map<String, Any>) {
         val siteName = args["site_name"] as String
@@ -82,10 +77,9 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         val sdkKey = args["sdk_key"] as String
         val packageName = args["package_name"] as String
 
-        Log.i("ChargebeePlugIn", " $siteName, $apiKey, $sdkKey, package Name: ${activity.packageName}")
+        Log.i(javaClass.simpleName, " $siteName, $apiKey, $sdkKey, package Name: ${activity.packageName}")
         // Configure with Chargebee SDK
         Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = "${activity.packageName}")
-
     }
 
     private fun retrieveProducts(args: Map<String, Any>, result: Result) {
@@ -95,7 +89,6 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 productIdList,
                 object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
                     override fun onSuccess(productDetails: ArrayList<CBProduct>) {
-                        Log.i(javaClass.simpleName, "Product from Google Play Console:  $productDetails")
                         mSkuProductList.clear()
                         for (product in productDetails) {
                             val jsonMapString = Gson().toJson(product.toMap())
@@ -180,22 +173,17 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             channel.setMethodCallHandler(null);
         }
     }
-
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         activity = binding.activity;
     }
-
     override fun onDetachedFromActivity() {
     }
-
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
         onAttachedToActivity(binding);
     }
-
     override fun onDetachedFromActivityForConfigChanges() {
         onDetachedFromActivity();
     }
-
 }
 
 fun CBProduct.toMap(): Map<String, Any> {

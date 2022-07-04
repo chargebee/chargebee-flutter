@@ -1,7 +1,4 @@
-#
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint chargebee_flutter_sdk.podspec` to validate before publishing.
-#
+
 Pod::Spec.new do |s|
   s.name             = 'chargebee_flutter_sdk'
   s.version          = '1.0.0'
