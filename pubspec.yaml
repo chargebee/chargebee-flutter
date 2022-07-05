@@ -1,7 +1,8 @@
 name: chargebee_flutter_sdk
 description: A new Flutter plugin.
 version: 1.0.0
-homepage:
+homepage: 'https://chargebee.com'
+repository: 'https://github.com/chargebee/chargebee-flutter'
 
 environment:
   sdk: ">=2.15.1 <3.0.0"

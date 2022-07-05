@@ -61,13 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    // For Android
-    authentication("cb-imay-test", "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3","cb-wpkheixkuzgxbnt23rzslg724y");
-
-    // For iOS
-    // authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
-    //     "cb-njjoibyzbrhyjg7yz4hkwg2ywq");
-    //initPlatformState();
+    // For both iOS and android
+    authentication("site", "publishable_api_key","sdk_key");
     super.initState();
   }
 

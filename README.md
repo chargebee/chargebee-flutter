@@ -1,4 +1,4 @@
-# Chargebee Android
+# Chargebee Flutter
 This is Chargebee’s Flutter Software Development Kit (SDK). This SDK makes it efficient and comfortable to build a seamless subscription experience in your Flutter app.
 
 ## Requirements
@@ -10,6 +10,8 @@ The following requirements must be set up before installing Chargebee’s Flutte
 * [Gradle](https://gradle.org/releases/) 6.1.1+
 * [AndroidX](https://developer.android.com/jetpack/androidx/)
 * Java 8+ and Kotlin
+* iOS 12+
+* Swift 5+
 
 ## Installation
 The `Chargebee-Flutter-SDK` SDK can be installed by adding below dependency to the `pubspec.yaml` file:
