@@ -36,12 +36,12 @@ class Chargebee {
   }
 
   /* Get the product/sku details from Play console/ App Store */
-  static Future<List<Product>> retrieveProducts(List<String> listID) async {
+  static Future<List<Product>> retrieveProducts(List<String> listOfGPlayProductIDs) async {
     List<Object?> result = [];
     List<Product> products = [];
     try {
       result = await platform
-          .invokeMethod(Constants.mGetProducts, {Constants.productIDs: listID});
+          .invokeMethod(Constants.mGetProducts, {Constants.productIDs: listOfGPlayProductIDs});
       if(result.isNotEmpty){
         for (var i = 0; i < result.length; i++) {
           var obj = result[i].toString();
@@ -59,12 +59,12 @@ class Chargebee {
   static Future<PurchaseResult> purchaseProduct(
       Product product, [String? customerId]) async {
 
-    String jsonString = await platform.invokeMethod(Constants.mPurchaseProduct,
+    String purchaseResult = await platform.invokeMethod(Constants.mPurchaseProduct,
         {Constants.product: product.id, Constants.customerId: customerId});
-    if(jsonString.isNotEmpty){
-      return PurchaseResult.fromJson(jsonDecode(jsonString.toString()));
+    if(purchaseResult.isNotEmpty){
+      return PurchaseResult.fromJson(jsonDecode(purchaseResult.toString()));
     }else{
-      return PurchaseResult("", jsonString);
+      return PurchaseResult("", purchaseResult);
     }
 
   }
