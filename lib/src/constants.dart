@@ -1,6 +1,6 @@
 class Constants {
   // Platform channel name
-  static const methodChannelName = "chargebee_flutter_sdk";
+  static const methodChannelName = "chargebee_flutter";
 
   // Key params name
   static const siteName = "site_name";

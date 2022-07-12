@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:chargebee_flutter_sdk/src/constants.dart';
-import 'package:chargebee_flutter_sdk/src/utils/cb_exception.dart';
-import 'package:chargebee_flutter_sdk/src/utils/product.dart';
+import 'package:chargebee_flutter/src/constants.dart';
+import 'package:chargebee_flutter/src/utils/cb_exception.dart';
+import 'package:chargebee_flutter/src/utils/product.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 

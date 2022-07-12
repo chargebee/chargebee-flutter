@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:chargebee_flutter_sdk/chargebee_flutter_sdk.dart';
+import 'package:chargebee_flutter/chargebee_flutter.dart';
 import 'package:chargebee_flutter_sdk_example/product_listview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Constants.dart';
-import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
+import 'package:chargebee_flutter/src/utils/progress_bar.dart';
 import 'alertDialog.dart';
-import 'package:chargebee_flutter_sdk/src/utils/product.dart';
+import 'package:chargebee_flutter/src/utils/product.dart';
 
 void main() => runApp(MyApp());
 
@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     // For both iOS and android
-    authentication("site", "publishable_api_key","sdk_key");
+    authentication("cb-imay-test", "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3","cb-wpkheixkuzgxbnt23rzslg724y");
     super.initState();
   }
 

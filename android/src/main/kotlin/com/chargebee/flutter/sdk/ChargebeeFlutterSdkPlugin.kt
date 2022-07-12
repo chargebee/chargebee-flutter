@@ -38,7 +38,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     private lateinit var activity: Activity
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "chargebee_flutter_sdk")
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "chargebee_flutter")
         channel.setMethodCallHandler(this)
     }
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -129,7 +129,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
                             override fun onError(error: CBException) {
                                 Log.i(javaClass.simpleName, "Exception :${error.message}")
-                                result.success(onResultMap("${error.message}", "${error.message}"))
+                                result.success(onResultMap("${error.message}", "false"))
                             }
                         })
                 }

@@ -5,7 +5,7 @@ import StoreKit
 
 public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "chargebee_flutter_sdk", binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: "chargebee_flutter", binaryMessenger: registrar.messenger())
         let instance = SwiftChargebeeFlutterSdkPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }

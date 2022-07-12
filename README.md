@@ -18,7 +18,7 @@ The `Chargebee-Flutter-SDK` SDK can be installed by adding below dependency to t
 
 ```dart
 dependencies:
-  chargebee_flutter_sdk: ^1.0.0
+  chargebee_flutter: ^1.0.0
 ```
 
 ## Example project
@@ -47,7 +47,7 @@ To configure the Chargebee Flutter SDK for completing and managing In-App Purcha
 4. Initialize the SDK with your Chargebee site, **Publishable API Key**, and SDK Key by including the following snippets in your app delegate during app startup.
 
 ```dart
-import 'package:chargebee_flutter_sdk/chargebee_flutter_sdk.dart';
+import 'package:chargebee_flutter/chargebee_flutter.dart';
 
 Chargebee.configure(site: "your-site", apiKey: "publishable_api_key", sdkKey: "ResourceID/SDK Key")
 
@@ -61,9 +61,7 @@ Retrieve the Google IAP Product using the following function.
 ```dart
 try {
   List<Object?> result = await Chargebee.retrieveProducts({productList: "[Product ID's from Google Play Console]"});
-  log('result : ${result}');
 } catch (e) {
-print('CBException : ${e.message}');
   print(e);
 }
             
@@ -78,9 +76,8 @@ customerId - Optional parameter. We need the unique ID of your customer as custo
 ```dart
 try {
   final result = await Chargebee.purchaseProduct(product, customerId);
-  print("subscription result : $result");
 }  catch (e) {
-  print('Exception : ${e.toString()}');
+  print('Exception : $e');
 }
  ```
 The above function will handle the purchase against Google Play Store and send the IAP token for server-side token verification to your Chargebee account. Use the Subscription ID returned by the above function, to check for Subscription status on Chargebee and confirm the access - granted or denied.
@@ -93,10 +90,9 @@ Use query parameters - Customer ID for checking the Subscription status on Charg
 
 ```dart
 try {
-  subscriptionList = await Chargebee.retrieveSubscriptions(customerId);
-  log('result : $subscriptionList');
+  List<dynamic> subscriptionList = await Chargebee.retrieveSubscriptions(customerId);
 }  catch (e) {
-  print('Exception : ${e.toString()}');
+  print('Exception : $e');
 }  
 ```
 For example, query parameters can be passed as **"customer_id" : "id"**.

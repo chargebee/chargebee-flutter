@@ -1,6 +1,6 @@
 
 Pod::Spec.new do |s|
-  s.name             = 'chargebee_flutter_sdk'
+  s.name             = 'chargebee_flutter'
   s.version          = '1.0.0'
   s.summary          = 'A new Flutter plugin.'
   s.description      = <<-DESC
