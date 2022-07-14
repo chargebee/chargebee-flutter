@@ -251,8 +251,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       Navigator.pop(context);
                       log('QueryParam from user : $queryParams');
                       mProgressBarUtil.showProgressDialog();
-                      //Sample queryParam "channel":"app_store", "customerId":"1234"
-                      queryParams["customerId"] = customerID;
+                      //Sample queryParam "channel":"app_store", "customer_id":"1234"
+                      queryParams["customer_id"] = customerID;
                       retrieveSubscriptions(queryParams);
                       //subscriptionStatus();
                     } catch (e) {
