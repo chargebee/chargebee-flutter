@@ -24,23 +24,31 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             guard let args = call.arguments as? [String: String] else {
                 return _result("error")
             }
-            let queryParams = args["customerId"] as! String
- 
-            let map: [String: String] = ["customer_id": queryParams ,"channel":"app_store"]
 
+            var map: [String: String] =  [:]
+
+            if let channel =  args["channel"] {
+                map["channel"] = channel
+            }
+            
+            if let sub =  args["subscriptionId"] {
+                map["subscription_id"] = sub
+            }
+
+            if let customer =  args["customerId"] {
+                map["customer_id"] = customer
+            }
+
+            
             Chargebee.shared.retrieveSubscriptions(queryParams: map) { result in
                 switch result {
                 case let .success(list):
                     debugPrint("Subscription Status Fetched: \(list)")
-                    print(list.compactMap { $0.dict })
-//                    _result(list.compactMap { $0.dict })
-                    
-
-                     if let data = try? JSONSerialization.data(
+                    if let data = try? JSONSerialization.data(
                         withJSONObject:list.compactMap { $0.dict },
                                     options: []) {
                                     if let jsonString = String(data: data,
-                                                               encoding: .ascii) {
+                                                               encoding: .utf8) {
                                         _result(jsonString)
                                     }
                                 }else {
@@ -143,6 +151,7 @@ extension SKProduct {
         return map
     }
 }
+
 
 
 

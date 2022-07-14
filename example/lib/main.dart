@@ -56,8 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController productIdTextFieldController =
       TextEditingController();
   late String productIDs;
-  late String queryParams;
-
+  late Map<String, String> queryParams = {"channel": "app_store"};
+  late String customerID;
   late ProgressBarUtil mProgressBarUtil;
 
   @override
@@ -224,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
             content: TextField(
               onChanged: (value) {
                 setState(() {
-                  queryParams = value;
+                  customerID = value;
                 });
               },
               controller: productIdTextFieldController,
@@ -251,6 +251,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       Navigator.pop(context);
                       log('QueryParam from user : $queryParams');
                       mProgressBarUtil.showProgressDialog();
+                      //Sample queryParam "channel":"app_store", "customerId":"1234"
+                      queryParams["customerId"] = customerID;
                       retrieveSubscriptions(queryParams);
                       //subscriptionStatus();
                     } catch (e) {
@@ -264,16 +266,16 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Future<void> retrieveSubscriptions(String customerId) async {
+  Future<void> retrieveSubscriptions(Map<String, String> queryparam) async {
     try {
       //Should add mapValue
-      final result = await Chargebee.retrieveSubscriptions(customerId);
+      final result = await Chargebee.retrieveSubscriptions(queryparam);
       log('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
-      if (result!.subscriptionId!.isNotEmpty) {
+      if (result.length > 0) {
         _showDialog(context, "Subscriptions retrieved successfully!");
       } else {
         log('Subscription not found in Chargebee System');

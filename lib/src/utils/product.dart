@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'dart:ffi';
+
 class Product {
   String id;
   String price;
@@ -29,7 +33,7 @@ class Subscripton {
   int? activatedAt;
   int? currentTermStart;
   int? currentTermEnd;
-  int? planAmount;
+  String? planAmount;
 
   Subscripton(
       {this.subscriptionId,
@@ -40,29 +44,16 @@ class Subscripton {
       this.currentTermEnd,
       this.planAmount});
 
-  Subscripton.fromJson(dynamic json) {
-    print(json);
-
-    subscriptionId = json['subscription_id'];
-    customerId = json['customer_id'];
-    status = json['status'];
-    activatedAt = json['activated_at'];
-    currentTermStart = json['current_term_start'];
-    currentTermEnd = json['current_term_end'];
-    planAmount = json['plan_amount'];
+  Subscripton.fromJson(Map<String, dynamic> json) {
+    subscriptionId = json['subscription_id'] as String;
+    customerId = json['customer_id'] as String;
+    status = json['status'] as String;
+    activatedAt = json['activated_at'] as int;
+    currentTermStart = json['current_term_start'] as int;
+    currentTermEnd = json['current_term_end'] as int;
+    planAmount = json['plan_amount']
+        .toString(); /*Plan amount sometime we are getting double value sometime Int*/
   }
-
-  // Map<String, dynamic> toJson() {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   data['subscription_id'] = this.subscriptionId;
-  //   data['customer_id'] = this.customerId;
-  //   data['status'] = this.status;
-  //   data['activated_at'] = this.activatedAt;
-  //   data['current_term_start'] = this.currentTermStart;
-  //   data['current_term_end'] = this.currentTermEnd;
-  //   data['plan_amount'] = this.planAmount;
-  //   return data;
-  // }
 }
 
 class SubscriptonList {
@@ -71,12 +62,34 @@ class SubscriptonList {
   SubscriptonList({this.subscripton});
 
   SubscriptonList.fromJson(dynamic json) {
-    print(json);
-
     subscripton = json['cb_subscription'] != null
         ? new Subscripton.fromJson(json['cb_subscription'])
         : null;
   }
+}
+
+class CBSubscriptionWrapper {
+  List<Subscripton>? list;
+
+  CBSubscriptionWrapper({this.list});
+
+  CBSubscriptionWrapper.fromJson(List<dynamic> json) {
+    print(json);
+    List<Subscripton> subsArray = [];
+    for (var value in json) {
+      print(value);
+      subsArray.add(Subscripton.fromJson(value));
+    }
+
+    // if (json['cb_subscription'] != null) {
+    //   list = <Subscripton>[];
+    //   json['cb_subscription'].forEach((v) {
+    //     list!.add(new Subscripton.fromJson(v));
+    //   });
+    // }
+  }
+}
+
 
   // Map<String, dynamic> toJson() {
   //   final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -85,4 +98,4 @@ class SubscriptonList {
   //   }
   //   return data;
   // }
-}
+
