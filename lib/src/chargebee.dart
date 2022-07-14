@@ -10,8 +10,8 @@ class Chargebee {
   static const platform = MethodChannel(Constants.methodChannelName);
 
 /* Configure the app details with chargebee system */
-  static Future<void> configure(
-      String site, String publishableApiKey, [String? sdkKey = "", packageName=""]) async {
+  static Future<void> configure(String site, String publishableApiKey,
+      [String? sdkKey = "", packageName = ""]) async {
     try {
       if (Platform.isIOS) {
         final args = {
@@ -36,13 +36,14 @@ class Chargebee {
   }
 
   /* Get the product/sku details from Play console/ App Store */
-  static Future<List<Product>> retrieveProducts(List<String> listOfGPlayProductIDs) async {
+  static Future<List<Product>> retrieveProducts(
+      List<String> listOfGPlayProductIDs) async {
     List<Object?> result = [];
     List<Product> products = [];
     try {
-      result = await platform
-          .invokeMethod(Constants.mGetProducts, {Constants.productIDs: listOfGPlayProductIDs});
-      if(result.isNotEmpty){
+      result = await platform.invokeMethod(Constants.mGetProducts,
+          {Constants.productIDs: listOfGPlayProductIDs});
+      if (result.isNotEmpty) {
         for (var i = 0; i < result.length; i++) {
           var obj = result[i].toString();
           Product product = Product.fromJson(jsonDecode(obj));
@@ -56,41 +57,44 @@ class Chargebee {
   }
 
   /* Buy the product with/without customer Id */
-  static Future<PurchaseResult> purchaseProduct(
-      Product product, [String? customerId]) async {
-
-    String purchaseResult = await platform.invokeMethod(Constants.mPurchaseProduct,
+  static Future<PurchaseResult> purchaseProduct(Product product,
+      [String? customerId]) async {
+    String purchaseResult = await platform.invokeMethod(
+        Constants.mPurchaseProduct,
         {Constants.product: product.id, Constants.customerId: customerId});
-    if(purchaseResult.isNotEmpty){
+    if (purchaseResult.isNotEmpty) {
       return PurchaseResult.fromJson(jsonDecode(purchaseResult.toString()));
-    }else{
+    } else {
       return PurchaseResult("", purchaseResult);
     }
-
   }
+
   /* Get the subscription details from chargebee system */
-  static Future<List<Object?>> retrieveSubscriptions(
-      String queryParams) async {
-    List<dynamic> result = [];
+  static Future<Subscripton?> retrieveSubscriptions(String queryParams) async {
     if (Platform.isIOS) {
       try {
-        result = await platform.invokeMethod(Constants.mSubscriptionMethod,
-            {Constants.customerId: queryParams});
+        String result = await platform.invokeMethod(
+            Constants.mSubscriptionMethod, {Constants.customerId: queryParams});
         log('result : $result');
-
-        return result;
+        //  if (result.subscriptionId?) {
+        return SubscriptonList.fromJson(jsonDecode(result.toString()))
+            .subscripton;
+        //  }
+        // return result;
       } on CBException catch (e) {
         log('CBException : ${e.message}');
       }
-    }else{
-      try {
-        result = await platform.invokeMethod(Constants.mSubscriptionMethod, {Constants.customerId: queryParams});
-        log('result : $result');
-        return result;
-      } on CBException catch (e) {
-        log('CBException : ${e.message}');
-      }
+    } else {
+      // try {
+      //   result = await platform.invokeMethod(
+      //       Constants.mSubscriptionMethod, {Constants.customerId: queryParams});
+      //   log('result : $result');
+      //   //   return result;
+      // } on CBException catch (e) {
+      //   log('CBException : ${e.message}');
+      // }
     }
-    return result;
+    return null;
+    // return result;
   }
 }

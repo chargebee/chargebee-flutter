@@ -25,15 +25,27 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                 return _result("error")
             }
             let queryParams = args["customerId"] as! String
-
-            let map: [String: String] = ["customer_id": queryParams]
+ 
+            let map: [String: String] = ["customer_id": queryParams ,"channel":"app_store"]
 
             Chargebee.shared.retrieveSubscriptions(queryParams: map) { result in
                 switch result {
                 case let .success(list):
                     debugPrint("Subscription Status Fetched: \(list)")
                     print(list.compactMap { $0.dict })
-                    _result(list.compactMap { $0.dict })
+//                    _result(list.compactMap { $0.dict })
+                    
+
+                     if let data = try? JSONSerialization.data(
+                        withJSONObject:list.compactMap { $0.dict },
+                                    options: []) {
+                                    if let jsonString = String(data: data,
+                                                               encoding: .ascii) {
+                                        _result(jsonString)
+                                    }
+                                }else {
+                                    debugPrint("Serialization Issue");
+                                }
                     
                 case let .error(error):
                     debugPrint("Error Fetched: \(error)")

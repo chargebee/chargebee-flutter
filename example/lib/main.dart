@@ -10,6 +10,8 @@ import 'package:chargebee_flutter/src/utils/progress_bar.dart';
 import 'alertDialog.dart';
 import 'package:chargebee_flutter/src/utils/product.dart';
 
+import 'product_listview.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -45,7 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Product> cbProductList = [];
   List<Product> products = [];
-  List<dynamic> subscriptionList = [];
 
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController apiKeyController = TextEditingController();
@@ -62,7 +63,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     // For both iOS and android
-    authentication("cb-imay-test", "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3","cb-wpkheixkuzgxbnt23rzslg724y");
+    authentication("cb-imay-test", "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
+        "cb-wpkheixkuzgxbnt23rzslg724y");
     super.initState();
   }
 
@@ -117,8 +119,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> authentication(
-      String siteName, String apiKey, String sdkKey, [String? packageName=""]) async {
+  Future<void> authentication(String siteName, String apiKey, String sdkKey,
+      [String? packageName = ""]) async {
     try {
       await Chargebee.configure(siteName, apiKey, sdkKey, packageName);
     } on PlatformException catch (e) {
@@ -127,10 +129,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> getProductIdList(List<String> productIDsList) async {
-
     try {
-      cbProductList =
-          await Chargebee.retrieveProducts(productIDsList);
+      cbProductList = await Chargebee.retrieveProducts(productIDsList);
       log('result : ${cbProductList}');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
@@ -143,11 +143,11 @@ class _MyHomePageState extends State<MyHomePage> {
               builder: (BuildContext context) => ProductListView(cbProductList,
                   title: 'Google Play-Product List'),
             ));
-      }else{
+      } else {
         log('Items not avilable to buy');
         _showDialog(context, "Items not avilable to buy");
       }
-    }  catch (e) {
+    } catch (e) {
       log('Exception : ${e.toString()}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _showDialog(BuildContext context, String message) {
-    BaseAlertDialog  alert = BaseAlertDialog("Chargebee",message);
+    BaseAlertDialog alert = BaseAlertDialog("Chargebee", message);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -202,8 +202,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       log('productIDs with comma from user : $productIDs');
                       mProgressBarUtil.showProgressDialog();
 
-                       List<String> listItems = productIDs.split(',');
-                       getProductIdList(listItems);
+                      List<String> listItems = productIDs.split(',');
+                      getProductIdList(listItems);
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -251,7 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Navigator.pop(context);
                       log('QueryParam from user : $queryParams');
                       mProgressBarUtil.showProgressDialog();
-                       retrieveSubscriptions(queryParams);
+                      retrieveSubscriptions(queryParams);
                       //subscriptionStatus();
                     } catch (e) {
                       log('error : ${e.toString()}');
@@ -266,19 +266,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> retrieveSubscriptions(String customerId) async {
     try {
-      subscriptionList = await Chargebee.retrieveSubscriptions(customerId);
-      log('result : $subscriptionList');
+      //Should add mapValue
+      final result = await Chargebee.retrieveSubscriptions(customerId);
+      log('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
-      if (subscriptionList.isNotEmpty) {
-        _showDialog(context,"Subscriptions retrieved successfully!");
-      }else{
+      if (result!.subscriptionId!.isNotEmpty) {
+        _showDialog(context, "Subscriptions retrieved successfully!");
+      } else {
         log('Subscription not found in Chargebee System');
-        _showDialog(context,"Subscription not found in Chargebee System");
+        _showDialog(context, "Subscription not found in Chargebee System");
       }
-    }  catch (e) {
+    } catch (e) {
       log('Exception : ${e.toString()}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -351,5 +352,4 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         });
   }
-
 }
