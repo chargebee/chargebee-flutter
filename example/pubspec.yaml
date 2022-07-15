@@ -1,5 +1,5 @@
 name: chargebee_flutter_sdk_example
-description: Demonstrates how to use the chargebee_flutter_sdk plugin.
+description: Demonstrates how to use the chargebee_flutter plugin.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -19,7 +19,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  chargebee_flutter_sdk:
+  chargebee_flutter:
     # When depending on this package from a real application you should use:
     #   chargebee_flutter_sdk: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints

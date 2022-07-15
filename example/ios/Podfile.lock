@@ -1,12 +1,12 @@
 PODS:
-  - Chargebee (1.0.8)
-  - chargebee_flutter_sdk (0.0.1):
-    - Chargebee (= 1.0.8)
+  - Chargebee (1.0.9)
+  - chargebee_flutter (1.0.0):
+    - Chargebee (= 1.0.9)
     - Flutter
   - Flutter (1.0.0)
 
 DEPENDENCIES:
-  - chargebee_flutter_sdk (from `.symlinks/plugins/chargebee_flutter_sdk/ios`)
+  - chargebee_flutter (from `.symlinks/plugins/chargebee_flutter/ios`)
   - Flutter (from `Flutter`)
 
 SPEC REPOS:
@@ -14,16 +14,16 @@ SPEC REPOS:
     - Chargebee
 
 EXTERNAL SOURCES:
-  chargebee_flutter_sdk:
-    :path: ".symlinks/plugins/chargebee_flutter_sdk/ios"
+  chargebee_flutter:
+    :path: ".symlinks/plugins/chargebee_flutter/ios"
   Flutter:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  Chargebee: 2cabd5e7d0ef39b24e281073414d8a08dea1c5eb
-  chargebee_flutter_sdk: 0d9f4185d741004d28aee7a18d0a343424718b7d
+  Chargebee: fc3ebe8e3405074eb31b36117b1916cb5ced7e1b
+  chargebee_flutter: 06a5d8a90591a557344bf22183852858c27807da
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
 
-PODFILE CHECKSUM: acde694d6ae6810dd84b0426f046d58dea6e8e56
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
 COCOAPODS: 1.11.3

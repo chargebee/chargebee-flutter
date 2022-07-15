@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:chargebee_flutter_sdk/chargebee_flutter_sdk.dart';
+import 'package:chargebee_flutter/chargebee_flutter.dart';
 import 'package:chargebee_flutter_sdk_example/product_listview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Constants.dart';
-import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
+import 'package:chargebee_flutter/src/utils/progress_bar.dart';
 import 'alertDialog.dart';
+import 'package:chargebee_flutter/src/utils/product.dart';
 
-import 'dart:convert';
+import 'product_listview.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,19 +56,15 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController productIdTextFieldController =
       TextEditingController();
   late String productIDs;
-  late String queryParams;
-
+  late Map<String, String> queryParams = {"channel": "app_store"};
+  late String customerID;
   late ProgressBarUtil mProgressBarUtil;
 
   @override
   void initState() {
-    // For Android
-    authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
+    // For both iOS and android
+    authentication("cb-imay-test", "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
         "cb-wpkheixkuzgxbnt23rzslg724y");
-    // For iOS
-    // authentication("cb-imay-test","test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
-    //     "cb-njjoibyzbrhyjg7yz4hkwg2ywq");
-    //initPlatformState();
     super.initState();
   }
 
@@ -94,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  onItemClick(String menuItem) async {
+  onItemClick(String menuItem) {
     switch (menuItem) {
       case Constants.config:
         {
@@ -113,11 +110,6 @@ class _MyHomePageState extends State<MyHomePage> {
           showSubscriptionDialog(context);
         }
         break;
-      case Constants.purchase:
-        {
-          purchase(cbProductList.first, "12345");
-        }
-        break;
 
       default:
         {
@@ -127,20 +119,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> authentication(
-      String siteName, String apiKey, String sdkKey) async {
+  Future<void> authentication(String siteName, String apiKey, String sdkKey,
+      [String? packageName = ""]) async {
     try {
-      await ChargebeeFlutterMethods.authentication(siteName, apiKey, sdkKey);
+      await Chargebee.configure(siteName, apiKey, sdkKey, packageName);
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
     }
   }
 
   Future<void> getProductIdList(List<String> productIDsList) async {
-
     try {
-      cbProductList =
-          await ChargebeeFlutterMethods.getProductIdList(productIDsList);
+      cbProductList = await Chargebee.retrieveProducts(productIDsList);
       log('result : ${cbProductList}');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
@@ -153,20 +143,20 @@ class _MyHomePageState extends State<MyHomePage> {
               builder: (BuildContext context) => ProductListView(cbProductList,
                   title: 'Google Play-Product List'),
             ));
-      }else{
+      } else {
         log('Items not avilable to buy');
-        _showDialog(context);
+        _showDialog(context, "Items not avilable to buy");
       }
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
+    } catch (e) {
+      log('Exception : ${e.toString()}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
     }
   }
 
-  _showDialog(BuildContext context) {
-    BaseAlertDialog  alert = BaseAlertDialog("Chargebee","Items not avilable to buy");
+  _showDialog(BuildContext context, String message) {
+    BaseAlertDialog alert = BaseAlertDialog("Chargebee", message);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -175,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<void> showSkProductDialog(BuildContext context) async {
+  showSkProductDialog(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -212,9 +202,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       log('productIDs with comma from user : $productIDs');
                       mProgressBarUtil.showProgressDialog();
 
-                       List<String> listItems = productIDs.split(',');
-                       getProductIdList(listItems);
-                      //getProducts();
+                      List<String> listItems = productIDs.split(',');
+                      getProductIdList(listItems);
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -235,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
             content: TextField(
               onChanged: (value) {
                 setState(() {
-                  queryParams = value;
+                  customerID = value;
                 });
               },
               controller: productIdTextFieldController,
@@ -262,9 +251,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       Navigator.pop(context);
                       log('QueryParam from user : $queryParams');
                       mProgressBarUtil.showProgressDialog();
-                      // Map param = json.decode(queryParams);
-                      // ChargebeeFlutterMethods.retrieveSubscriptions( {"status": "is_active"});
-                      subscriptionStatus();
+                      //Sample queryParam "channel":"app_store", "customer_id":"1234"
+                      queryParams["customer_id"] = customerID;
+                      retrieveSubscriptions(queryParams);
+                      //subscriptionStatus();
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -276,28 +266,27 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Future<void> subscriptionStatus() async {
-    List<Object?> subscriptionsList = [];
-    subscriptionsList = await ChargebeeFlutterMethods.retrieveSubscriptions(
-        {"status": "active", "customer_id": "12345"}) as List<Object?>;
-    log('Subs List : $subscriptionsList');
-  }
+  Future<void> retrieveSubscriptions(Map<String, String> queryparam) async {
+    try {
+      //Should add mapValue
+      final result = await Chargebee.retrieveSubscriptions(queryparam);
+      log('result : $result');
 
-  Future<void> getProducts() async {
-    cbProductList = await ChargebeeFlutterMethods.getProductIdList(["chargebee.premium.ios"]);
-    log('product List : $cbProductList');
-    print(cbProductList.first.id);
-  }
-
-  Future<void> purchase(Product product, String customerID) async {
-    //Saftey
-    log('Product List : $products');
-    PurchaseResult result;
-
-    result = await ChargebeeFlutterMethods.purchaseProduct(product, customerID);
-
-    print(result.subscriptionId);
-    print(result.status);
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      if (result.length > 0) {
+        _showDialog(context, "Subscriptions retrieved successfully!");
+      } else {
+        log('Subscription not found in Chargebee System');
+        _showDialog(context, "Subscription not found in Chargebee System");
+      }
+    } catch (e) {
+      log('Exception : ${e.toString()}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
   }
 
   Future<void> showAuthenticationDialog(BuildContext context) async {
@@ -364,14 +353,5 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           );
         });
-  }
-
-  Completer _myCompleter = Completer();
-  Future startSomething() {
-    // show a user dialog or an image picker or kick off a polling function
-    return _myCompleter.future;
-  }
-  void endSomething() {
-    _myCompleter.complete();
   }
 }

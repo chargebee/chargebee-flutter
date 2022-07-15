@@ -9,7 +9,6 @@ class ProgressBarUtil{
   ProgressBarUtil(BuildContext context){
     pr  = ProgressDialog(context);
   }
-
   void showProgressDialog() async {
     pr.style(
         message: 'Loading...',

@@ -1,8 +1,9 @@
-import 'package:chargebee_flutter_sdk/chargebee_flutter_sdk.dart';
+import 'package:chargebee_flutter/chargebee_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
-import 'package:chargebee_flutter_sdk/src/utils/progress_bar.dart';
+import 'package:chargebee_flutter/src/utils/progress_bar.dart';
+import 'package:chargebee_flutter/src/utils/product.dart';
 
 class ProductListView extends StatefulWidget {
   final List<Product> listProducts;
@@ -56,7 +57,6 @@ class ProductListViewState extends State<ProductListView> {
                         fontWeight: FontWeight.bold,
                         fontSize: 18)),
                 onTap: () {
-                  print('onTap() ');
                   onItemClick(pos);
                 },
               ),
@@ -71,7 +71,6 @@ class ProductListViewState extends State<ProductListView> {
   onItemClick(int position) async {
     try {
       Product map = listProducts[position];
-      print('map  :$map');
       _showCustomerIdDialog(context, map);
     } catch (e) {
       log('PlatformException : ${e.toString()}');
@@ -81,31 +80,28 @@ class ProductListViewState extends State<ProductListView> {
 
   Future<void> purchaseProduct(Product product) async {
     try {
-      var result = (await ChargebeeFlutterMethods.purchaseProduct(product, customerId));
+      final result = (await Chargebee.purchaseProduct(product, customerId));
       if (kDebugMode) {
         print("subscription result : $result");
+        print("subscription id : ${result.subscriptionId}");
+        print("subscription status : ${result.status}");
       }
       mProgressBarUtil.hideProgressDialog();
 
-      //print("status : ${result.status}");
-      //print("subscription Id : ${result.subscriptionId}");
-
-      if(result.status !=null && result.status == "true"){
+      if(result.status == "true"){
         _showSuccessDialog(context, "Success");
       }else{
-        _showSuccessDialog(context, result.status);
+        _showSuccessDialog(context, result.subscriptionId);
       }
-
     }  catch (e) {
       log('PlatformException : ${e.toString()}');
       mProgressBarUtil.hideProgressDialog();
     }
-
   }
 
   final TextEditingController productIdTextFieldController =
       TextEditingController();
-  String? customerId = "null";
+  String? customerId = "";
   Future<void> _showCustomerIdDialog(
       BuildContext context, Product product) async {
     return showDialog(

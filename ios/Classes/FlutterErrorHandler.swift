@@ -60,7 +60,7 @@ extension FlutterError {
                         message: "Arguments Parsing Error",
                         details: description)
   }
-  
+
 
   static let noPropertyValue = FlutterError(code: "14",
                                             message: "Could not find property value",
@@ -81,10 +81,10 @@ extension FlutterError {
     return FlutterError(code: "JSONSerialization",
                         message: "JSON Serialization Error",
                         details: description)
-    
+
   }
-  
-  
+
+
   private static func mapChargebeeError(_ error: NSError, errorCode: String, errorMessage: String? = nil) -> FlutterError {
     var message = ""
     

@@ -3,10 +3,9 @@ import UIKit
 import Chargebee
 import StoreKit
 
-
 public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "chargebee_flutter_sdk", binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: "chargebee_flutter", binaryMessenger: registrar.messenger())
         let instance = SwiftChargebeeFlutterSdkPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
@@ -30,8 +29,16 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                 switch result {
                 case let .success(list):
                     debugPrint("Subscription Status Fetched: \(list)")
-                    print(list.compactMap { $0.dict })
-                    _result(list.compactMap { $0.dict })
+                    if let data = try? JSONSerialization.data(
+                        withJSONObject:list.compactMap { $0.dict },
+                                    options: []) {
+                                    if let jsonString = String(data: data,
+                                                               encoding: .utf8) {
+                                        _result(jsonString)
+                                    }
+                                }else {
+                                    debugPrint("Serialization Issue");
+                                }
                     
                 case let .error(error):
                     debugPrint("Error Fetched: \(error)")
@@ -109,7 +116,6 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             print("Default statement")
         }
     }
-    
 }
 
 extension Encodable {
@@ -119,7 +125,6 @@ extension Encodable {
         return json
     }
 }
-
 
 extension SKProduct {
     func toMap() -> [String: Any?] {
@@ -131,6 +136,7 @@ extension SKProduct {
         return map
     }
 }
+
 
 
 

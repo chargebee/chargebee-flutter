@@ -1,0 +1,19 @@
+.DS_Store
+# Files related to Flutter/Dart/Pub
+.packages
+.pub/
+build/
+.idea
+.dart_tool/
+pubspec.lock
+lib/*.jar
+
+# Files are related to Android
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties

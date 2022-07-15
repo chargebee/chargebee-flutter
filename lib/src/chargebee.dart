@@ -1,155 +1,106 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:chargebee_flutter_sdk/src/constants.dart';
-import 'package:chargebee_flutter_sdk/src/model/cb_product.dart';
-import 'package:chargebee_flutter_sdk/src/model/sku_Item.dart';
-import 'package:chargebee_flutter_sdk/src/utils/cb_support.dart';
+import 'package:chargebee_flutter/src/constants.dart';
+import 'package:chargebee_flutter/src/utils/cb_exception.dart';
+import 'package:chargebee_flutter/src/utils/product.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-import 'dart:convert' show utf8;
 
-import '../chargebee_flutter_sdk.dart';
-import 'utils/cb_support.dart';
-
-class ChargebeeFlutterMethods {
+class Chargebee {
   static const platform = MethodChannel(Constants.methodChannelName);
 
-  static Future<void> authentication(
-      String siteName, String apiKey, String sdkKey) async {
+/* Configure the app details with chargebee system */
+  static Future<void> configure(String site, String publishableApiKey,
+      [String? sdkKey = "", packageName = ""]) async {
     try {
       if (Platform.isIOS) {
         final args = {
-          Constants.siteName: siteName,
-          Constants.apiKey: apiKey,
+          Constants.siteName: site,
+          Constants.apiKey: publishableApiKey,
           Constants.sdkKey: sdkKey
         };
 
         await platform.invokeMethod(Constants.mAuthentication, args);
       } else {
         final args = {
-          Constants.siteName: siteName,
-          Constants.apiKey: apiKey,
-          Constants.sdkKey: sdkKey
+          Constants.siteName: site,
+          Constants.apiKey: publishableApiKey,
+          Constants.sdkKey: sdkKey,
+          Constants.packageName: packageName
         };
         await platform.invokeMethod(Constants.mAuthentication, args);
       }
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
+    } on CBException catch (e) {
+      log('CBException : ${e.message}');
     }
   }
 
-  static Future<List<Product>> getProductIdList(List<String> listID) async {
+  /* Get the product/sku details from Play console/ App Store */
+  static Future<List<Product>> retrieveProducts(
+      List<String> listOfGPlayProductIDs) async {
     List<Object?> result = [];
     List<Product> products = [];
-
     try {
-      result = await platform
-          .invokeMethod(Constants.mGetProducts, {Constants.productIDs: listID});
-
-      if (Platform.isIOS) {
+      result = await platform.invokeMethod(Constants.mGetProducts,
+          {Constants.productIDs: listOfGPlayProductIDs});
+      if (result.isNotEmpty) {
         for (var i = 0; i < result.length; i++) {
           var obj = result[i].toString();
           Product product = Product.fromJson(jsonDecode(obj));
           products.add(product);
         }
-      } else {
-        for (var i = 0; i < result.length; i++) {
-          print(' Result : ${result[i].toString()}');
-          Product product = Product.fromJson(jsonDecode(result[i].toString()));
-          products.add(product);
-        }
       }
-      return products;
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
+    } on CBException catch (e) {
+      log('CBException : ${e.message}');
     }
     return products;
   }
 
-  static Future<PurchaseResult> purchaseProduct(
-      Product product, [String? customerId]) async {
-    String jsonString;
+  /* Buy the product with/without customer Id */
+  static Future<PurchaseResult> purchaseProduct(Product product,
+      [String? customerId]) async {
+    String purchaseResult = await platform.invokeMethod(
+        Constants.mPurchaseProduct,
+        {Constants.product: product.id, Constants.customerId: customerId});
+    if (purchaseResult.isNotEmpty) {
+      return PurchaseResult.fromJson(jsonDecode(purchaseResult.toString()));
+    } else {
+      return PurchaseResult("", purchaseResult);
+    }
+  }
+
+  /* Get the subscription details from chargebee system */
+  static Future<List<Subscripton?>> retrieveSubscriptions(
+      Map<String, String> queryParams) async {
+    List<Subscripton> subscriptions = [];
 
     if (Platform.isIOS) {
-      jsonString = await platform.invokeMethod(Constants.mPurchaseProduct,
-          {Constants.product: product.id, Constants.customerId: customerId});
-      print(jsonString);
-
-      return PurchaseResult.fromJson(jsonDecode(jsonString.toString()));
-    }else{
-      jsonString = await platform.invokeMethod(Constants.mPurchaseProduct,
-          {Constants.product: product.id, Constants.customerId: customerId});
-      print(jsonString);
-      return PurchaseResult.fromJson(jsonDecode(jsonString.toString()));
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mSubscriptionMethod, queryParams);
+        log('result : $result');
+        List<dynamic> jsonData = jsonDecode(result.toString());
+        for (var value in jsonData) {
+          var wrapper = SubscriptonList.fromJson(value);
+          subscriptions.add(wrapper.subscripton!);
+        }
+        print(subscriptions.first.subscriptionId);
+        print(subscriptions.first.status);
+        return subscriptions;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+      }
+    } else {
+      // try {
+      //   result = await platform.invokeMethod(
+      //       Constants.mSubscriptionMethod, {Constants.customerId: queryParams});
+      //   log('result : $result');
+      //   //   return result;
+      // } on CBException catch (e) {
+      //   log('CBException : ${e.message}');
+      // }
     }
-
-   // return PurchaseResult("", jsonString);
-  }
-
-  static Future<void> retrieveAllItems() async {
-    String result;
-    try {
-      await platform.invokeMethod('retrieveAllItems').then((value) {
-        result = value.toString();
-        log('retrieveItems : $result');
-        List<String> listItems = result.split(',');
-      });
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
-    }
-  }
-
-  Future<void> retrieveAllPlans() async {
-    String result;
-    try {
-      await platform.invokeMethod('retrieveAllPlans').then((value) {
-        result = value.toString();
-        log('retrieveAllPlans : $result');
-        List<String> listItems = result.split(',');
-      });
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
-    }
-  }
-
-  static Future<List<Object?>> retrieveSubscriptions(
-      Map<String, dynamic> queryParams) async {
-    List<Object?> result = [];
-    try {
-      log('PlatformException : $queryParams');
-      result =
-          await platform.invokeMethod('retrieveSubscriptions', queryParams);
-      print('result  : $result');
-      return result;
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
-    }
-    return result;
-  }
-
-  static Future<Map<String, String>> PurchaseProductNew(queryParams) async {
-    var result = <String, String>{};
-    try {
-      log('PlatformException : $queryParams');
-      result = await platform.invokeMethod('purchaseProduct', queryParams);
-      print('result  : $result');
-      return result;
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
-    }
-    return result;
-  }
-
-  static Future<List<Object?>> getProducts(List<String> listID) async {
-    List<Object?> result = [];
-    try {
-      result = await platform
-          .invokeMethod(Constants.mGetProducts, {Constants.productIDs: listID});
-      print('result  : $result');
-      return result;
-    } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
-    }
-    return result;
+    return subscriptions;
+    // return result;
   }
 }

@@ -1,2 +1,0 @@
-${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Chargebee.framework
-${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/chargebee_flutter_sdk.framework
