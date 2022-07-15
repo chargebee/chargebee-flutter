@@ -1,6 +1,6 @@
 name: chargebee_flutter
-description: A new Flutter plugin.
-version: 1.0.0
+description: This is the official Software Development Kit (SDK) for Chargebee Flutter.
+version: 0.0.1
 homepage: 'https://chargebee.com'
 repository: 'https://github.com/chargebee/chargebee-flutter'
 
