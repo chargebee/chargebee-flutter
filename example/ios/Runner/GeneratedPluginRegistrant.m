@@ -6,10 +6,10 @@
 
 #import "GeneratedPluginRegistrant.h"
 
-#if __has_include(<chargebee_flutter_sdk/ChargebeeFlutterSdkPlugin.h>)
-#import <chargebee_flutter_sdk/ChargebeeFlutterSdkPlugin.h>
+#if __has_include(<chargebee_flutter/ChargebeeFlutterSdkPlugin.h>)
+#import <chargebee_flutter/ChargebeeFlutterSdkPlugin.h>
 #else
-@import chargebee_flutter_sdk;
+@import chargebee_flutter;
 #endif
 
 @implementation GeneratedPluginRegistrant
