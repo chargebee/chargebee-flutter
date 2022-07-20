@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:chargebee_flutter/chargebee_flutter.dart';
@@ -63,9 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    // For both iOS and android
-    authentication("cb-imay-test", "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3",
-        "cb-wpkheixkuzgxbnt23rzslg724y");
+    // For both iOS and Android
+    authentication("your-site", "publishable_api_key", "ResourceID/SDK Key");
     super.initState();
   }
 
@@ -173,9 +171,12 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: const InputDecoration(hintText: "Product ID's"),
             ),
             actions: <Widget>[
-              FlatButton(
-                color: Colors.red,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.red,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -183,9 +184,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
               ),
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.green,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
+
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
@@ -224,9 +229,12 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: const InputDecoration(hintText: "Key value pair"),
             ),
             actions: <Widget>[
-              FlatButton(
-                color: Colors.red,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.red,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -234,9 +242,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
               ),
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.green,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
@@ -323,9 +334,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             actions: <Widget>[
-              FlatButton(
-                color: Colors.red,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.red,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -333,9 +347,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
               ),
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.green,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
                 child: const Text('Initialize'),
                 onPressed: () {
                   Navigator.pop(context);

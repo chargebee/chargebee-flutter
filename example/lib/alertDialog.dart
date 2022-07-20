@@ -13,7 +13,7 @@ class BaseAlertDialog extends StatelessWidget {
           title: new Text(title,style: textStyle,),
           content: new Text(content, style: textStyle,),
           actions: <Widget>[
-            new FlatButton(
+            new TextButton(
               child: new Text("Ok"),
               onPressed: () {
                 Navigator.of(context).pop();

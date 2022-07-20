@@ -23,7 +23,6 @@ class ProductListViewState extends State<ProductListView> {
 
   late ProgressBarUtil mProgressBarUtil;
 
-  @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     throw UnimplementedError();
@@ -119,9 +118,12 @@ class ProductListViewState extends State<ProductListView> {
               decoration: const InputDecoration(hintText: "Customer ID"),
             ),
             actions: <Widget>[
-              FlatButton(
-                color: Colors.red,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.red,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -129,9 +131,12 @@ class ProductListViewState extends State<ProductListView> {
                   });
                 },
               ),
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.green,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
@@ -158,9 +163,12 @@ class ProductListViewState extends State<ProductListView> {
             title: const Text('Chargebee'),
             content: Text(status),
             actions: <Widget>[
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.green,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
                 child: const Text('OK'),
                 onPressed: () {
                   mProgressBarUtil.hideProgressDialog();

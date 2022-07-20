@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'dart:ffi';
 
 class Product {
   String id;
