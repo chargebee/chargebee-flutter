@@ -61,8 +61,9 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
             }
             "retrieveSubscriptions" ->{
-                if (args != null) {
-                    retrieveSubscriptions(args, result)
+                val params = call.arguments() as? Map<String, String>?
+                if (params != null) {
+                    retrieveSubscriptions(params, result)
                 }
             }
             else -> {
@@ -146,19 +147,14 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         subscriptionStatus.put("status", status)
         return Gson().toJson(subscriptionStatus)
     }
-    private fun retrieveSubscriptions(args: Map<String, Any>, result: Result) {
-        val id = args["customerId"] as String
-        val queryParam = arrayOf(id, Chargebee.channel)
-        Chargebee.retrieveSubscriptions(queryParam) {
+    private fun retrieveSubscriptions(queryParams: Map<String, String>, result: Result) {
+        Chargebee.retrieveSubscriptions(queryParams) {
             when(it){
                 is ChargebeeResult.Success -> {
                     val listSubscriptions = (it.data as CBSubscription).list
-                    subscriptionsList.clear()
-                    for (subscription in  listSubscriptions){
-                        val jsonString = Gson().toJson(subscription)
-                        subscriptionsList.add(jsonString)
-                    }
-                    result.success(subscriptionsList)
+                    val jsonString = Gson().toJson(listSubscriptions)
+
+                    result.success(jsonString)
                 }
                 is ChargebeeResult.Error ->{
                     Log.e(javaClass.simpleName, "Exception from server- retrieveSubscription() :  ${it.exp.message}")

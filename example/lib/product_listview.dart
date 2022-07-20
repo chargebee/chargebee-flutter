@@ -1,8 +1,8 @@
 import 'package:chargebee_flutter/chargebee_flutter.dart';
+import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
-import 'package:chargebee_flutter/src/utils/progress_bar.dart';
 import 'package:chargebee_flutter/src/utils/product.dart';
 
 class ProductListView extends StatefulWidget {
@@ -35,7 +35,7 @@ class ProductListViewState extends State<ProductListView> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Google Play-Product List'),
+          title: const Text('Product List'),
         ),
         body: ListView.builder(
           itemCount: listProducts.length,

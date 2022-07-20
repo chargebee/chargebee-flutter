@@ -1,12 +1,13 @@
 import 'dart:async';
+import 'dart:collection';
+import 'dart:convert';
 import 'dart:developer';
 import 'package:chargebee_flutter/chargebee_flutter.dart';
 import 'package:chargebee_flutter_sdk_example/product_listview.dart';
-import 'package:flutter/foundation.dart';
+import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Constants.dart';
-import 'package:chargebee_flutter/src/utils/progress_bar.dart';
 import 'alertDialog.dart';
 import 'package:chargebee_flutter/src/utils/product.dart';
 
@@ -57,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       TextEditingController();
   late String productIDs;
   late Map<String, String> queryParams = {"channel": "app_store"};
-  late String customerID;
+  late String userInput;
   late ProgressBarUtil mProgressBarUtil;
 
   @override
@@ -94,27 +95,18 @@ class _MyHomePageState extends State<MyHomePage> {
   onItemClick(String menuItem) {
     switch (menuItem) {
       case Constants.config:
-        {
-          showAuthenticationDialog(context);
-        }
+        showAuthenticationDialog(context);
         break;
 
       case Constants.getProducts:
-        {
-          showSkProductDialog(context);
-        }
+        showSkProductDialog(context);
         break;
 
       case Constants.getSubscriptionStatus:
-        {
-          showSubscriptionDialog(context);
-        }
+        showSubscriptionDialog(context);
         break;
 
       default:
-        {
-          //statements;
-        }
         break;
     }
   }
@@ -131,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> getProductIdList(List<String> productIDsList) async {
     try {
       cbProductList = await Chargebee.retrieveProducts(productIDsList);
-      log('result : ${cbProductList}');
+      log('result : $cbProductList');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -204,6 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                       List<String> listItems = productIDs.split(',');
                       getProductIdList(listItems);
+                      productIdTextFieldController.clear();
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -224,11 +217,11 @@ class _MyHomePageState extends State<MyHomePage> {
             content: TextField(
               onChanged: (value) {
                 setState(() {
-                  customerID = value;
+                  userInput = value;
                 });
               },
               controller: productIdTextFieldController,
-              decoration: const InputDecoration(hintText: " key value pair"),
+              decoration: const InputDecoration(hintText: "Key value pair"),
             ),
             actions: <Widget>[
               FlatButton(
@@ -252,9 +245,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       log('QueryParam from user : $queryParams');
                       mProgressBarUtil.showProgressDialog();
                       //Sample queryParam "channel":"app_store", "customer_id":"1234"
-                      queryParams["customer_id"] = customerID;
-                      retrieveSubscriptions(queryParams);
-                      //subscriptionStatus();
+                      Map<String, dynamic> queryMap = jsonDecode(userInput.toString().trim());
+                      log('queryMap : $queryMap');
+
+                      retrieveSubscriptions(queryMap);
+                      productIdTextFieldController.clear();
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -266,9 +261,8 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Future<void> retrieveSubscriptions(Map<String, String> queryparam) async {
+  Future<void> retrieveSubscriptions(Map<String, dynamic> queryparam) async {
     try {
-      //Should add mapValue
       final result = await Chargebee.retrieveSubscriptions(queryparam);
       log('result : $result');
 

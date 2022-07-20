@@ -71,7 +71,7 @@ class Chargebee {
 
   /* Get the subscription details from chargebee system */
   static Future<List<Subscripton?>> retrieveSubscriptions(
-      Map<String, String> queryParams) async {
+      Map<String, dynamic> queryParams) async {
     List<Subscripton> subscriptions = [];
 
     if (Platform.isIOS) {
@@ -91,16 +91,23 @@ class Chargebee {
         log('CBException : ${e.message}');
       }
     } else {
-      // try {
-      //   result = await platform.invokeMethod(
-      //       Constants.mSubscriptionMethod, {Constants.customerId: queryParams});
-      //   log('result : $result');
-      //   //   return result;
-      // } on CBException catch (e) {
-      //   log('CBException : ${e.message}');
-      // }
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mSubscriptionMethod, queryParams);
+        log('result : $result');
+
+        List<dynamic> jsonData = jsonDecode(result);
+        for (var value in jsonData) {
+          var wrapper = SubscriptonList.fromJsonAndroid(value);
+          subscriptions.add(wrapper.subscripton!);
+        }
+        print(subscriptions.first.subscriptionId);
+        print(subscriptions.first.status);
+        return subscriptions;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+      }
     }
     return subscriptions;
-    // return result;
   }
 }
