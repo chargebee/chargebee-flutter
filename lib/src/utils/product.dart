@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'dart:ffi';
 
 class Product {
   String id;
@@ -34,6 +31,9 @@ class Subscripton {
   int? currentTermStart;
   int? currentTermEnd;
   String? planAmount;
+  String? activatedAtString;
+  String? currentTermEndString;
+  String? currentTermStartString;
 
   Subscripton(
       {this.subscriptionId,
@@ -54,6 +54,14 @@ class Subscripton {
     planAmount = json['plan_amount']
         .toString(); /*Plan amount sometime we are getting double value sometime Int*/
   }
+  Subscripton.fromJsonAndroid(Map<String, dynamic> json) {
+    activatedAtString = json['activated_at'].toString();
+    currentTermEndString = json['current_term_end'].toString();
+    currentTermStartString = json['current_term_start'].toString();
+    customerId = json['customer_id'] as String;
+    planAmount = json['plan_amount'].toString();
+    status = json['status'] as String;
+  }
 }
 
 class SubscriptonList {
@@ -64,6 +72,11 @@ class SubscriptonList {
   SubscriptonList.fromJson(dynamic json) {
     subscripton = json['cb_subscription'] != null
         ? new Subscripton.fromJson(json['cb_subscription'])
+        : null;
+  }
+  SubscriptonList.fromJsonAndroid(dynamic json) {
+    subscripton = json['cb_subscription'] != null
+        ? new Subscripton.fromJsonAndroid(json['cb_subscription'])
         : null;
   }
 }
@@ -81,21 +94,5 @@ class CBSubscriptionWrapper {
       subsArray.add(Subscripton.fromJson(value));
     }
 
-    // if (json['cb_subscription'] != null) {
-    //   list = <Subscripton>[];
-    //   json['cb_subscription'].forEach((v) {
-    //     list!.add(new Subscripton.fromJson(v));
-    //   });
-    // }
   }
 }
-
-
-  // Map<String, dynamic> toJson() {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   if (this.subscripton != null) {
-  //     data['cb_subscription'] = this.subscripton!.toJson();
-  //   }
-  //   return data;
-  // }
-

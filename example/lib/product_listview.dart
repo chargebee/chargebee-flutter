@@ -1,8 +1,8 @@
 import 'package:chargebee_flutter/chargebee_flutter.dart';
+import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
-import 'package:chargebee_flutter/src/utils/progress_bar.dart';
 import 'package:chargebee_flutter/src/utils/product.dart';
 
 class ProductListView extends StatefulWidget {
@@ -23,7 +23,6 @@ class ProductListViewState extends State<ProductListView> {
 
   late ProgressBarUtil mProgressBarUtil;
 
-  @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     throw UnimplementedError();
@@ -35,7 +34,7 @@ class ProductListViewState extends State<ProductListView> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Google Play-Product List'),
+          title: const Text('Product List'),
         ),
         body: ListView.builder(
           itemCount: listProducts.length,
@@ -119,9 +118,12 @@ class ProductListViewState extends State<ProductListView> {
               decoration: const InputDecoration(hintText: "Customer ID"),
             ),
             actions: <Widget>[
-              FlatButton(
-                color: Colors.red,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.red,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -129,9 +131,12 @@ class ProductListViewState extends State<ProductListView> {
                   });
                 },
               ),
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.green,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
@@ -158,9 +163,12 @@ class ProductListViewState extends State<ProductListView> {
             title: const Text('Chargebee'),
             content: Text(status),
             actions: <Widget>[
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.green,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
                 child: const Text('OK'),
                 onPressed: () {
                   mProgressBarUtil.hideProgressDialog();
