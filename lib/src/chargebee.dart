@@ -11,13 +11,13 @@ class Chargebee {
 
 /* Configure the app details with chargebee system */
   static Future<void> configure(String site, String publishableApiKey,
-      [String? sdkKey = "", packageName = ""]) async {
+      [String? iosSdkKey = "", androidSdkKey = ""]) async {
     try {
       if (Platform.isIOS) {
         final args = {
           Constants.siteName: site,
           Constants.apiKey: publishableApiKey,
-          Constants.sdkKey: sdkKey
+          Constants.sdkKey: iosSdkKey
         };
 
         await platform.invokeMethod(Constants.mAuthentication, args);
@@ -25,8 +25,7 @@ class Chargebee {
         final args = {
           Constants.siteName: site,
           Constants.apiKey: publishableApiKey,
-          Constants.sdkKey: sdkKey,
-          Constants.packageName: packageName
+          Constants.sdkKey: androidSdkKey,
         };
         await platform.invokeMethod(Constants.mAuthentication, args);
       }

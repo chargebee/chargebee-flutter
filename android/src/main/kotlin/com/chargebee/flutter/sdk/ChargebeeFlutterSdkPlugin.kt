@@ -76,7 +76,6 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         val siteName = args["site_name"] as String
         val apiKey = args["api_key"] as String
         val sdkKey = args["sdk_key"] as String
-        val packageName = args["package_name"] as String
 
         Log.i(javaClass.simpleName, " $siteName, $apiKey, $sdkKey, package Name: ${activity.packageName}")
         // Configure with Chargebee SDK
