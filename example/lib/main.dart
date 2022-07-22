@@ -51,7 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController apiKeyController = TextEditingController();
   final TextEditingController sdkKeyController = TextEditingController();
-  late String siteNameText, apiKeyText, sdkKeyText;
+  final TextEditingController iosDdkKeyController = TextEditingController();
+  late String siteName="", apiKey="", androidSdkKey="", iosSdkKey = "";
 
   final TextEditingController productIdTextFieldController =
       TextEditingController();
@@ -63,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     // For both iOS and Android
-    authentication("your-site", "publishable_api_key", "ResourceID/SDK Key");
+    authentication("your-site", "publishable_api_key", "iOS ResourceID/SDK Key", "Android ResourceID/SDK Key");
     super.initState();
   }
 
@@ -101,7 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
 
       case Constants.getSubscriptionStatus:
-        showSubscriptionDialog(context);
+        mProgressBarUtil.showProgressDialog();
+        retrieveSubscriptions(queryParams);
         break;
 
       default:
@@ -109,10 +111,10 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> authentication(String siteName, String apiKey, String sdkKey,
-      [String? packageName = ""]) async {
+  Future<void> authentication(String siteName, String apiKey, [String? iosSdkKey="",
+      String? androidSdkKey = ""]) async {
     try {
-      await Chargebee.configure(siteName, apiKey, sdkKey, packageName);
+      await Chargebee.configure(siteName, apiKey, iosSdkKey, androidSdkKey);
     } on PlatformException catch (e) {
       log('PlatformException : ${e.message}');
     }
@@ -213,64 +215,6 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Future<void> showSubscriptionDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Please enter the queryParameters'),
-            content: TextField(
-              onChanged: (value) {
-                setState(() {
-                  userInput = value;
-                });
-              },
-              controller: productIdTextFieldController,
-              decoration: const InputDecoration(hintText: "Key value pair"),
-            ),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    backgroundColor: Colors.red,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
-                child: Text('CANCEL'),
-                onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                  });
-                },
-              ),
-              TextButton(
-                style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    backgroundColor: Colors.green,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
-                child: Text('OK'),
-                onPressed: () {
-                  setState(() {
-                    try {
-                      Navigator.pop(context);
-                      log('QueryParam from user : $queryParams');
-                      mProgressBarUtil.showProgressDialog();
-                      //Sample queryParam "channel":"app_store", "customer_id":"1234"
-                      Map<String, dynamic> queryMap = jsonDecode(userInput.toString().trim());
-                      log('queryMap : $queryMap');
-
-                      retrieveSubscriptions(queryMap);
-                      productIdTextFieldController.clear();
-                    } catch (e) {
-                      log('error : ${e.toString()}');
-                    }
-                  });
-                },
-              ),
-            ],
-          );
-        });
-  }
 
   Future<void> retrieveSubscriptions(Map<String, dynamic> queryparam) async {
     try {
@@ -307,7 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextField(
                   onChanged: (value) {
                     setState(() {
-                      siteNameText = value;
+                      siteName = value;
                     });
                   },
                   controller: siteNameController,
@@ -316,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextField(
                   onChanged: (value) {
                     setState(() {
-                      apiKeyText = value;
+                      apiKey = value;
                     });
                   },
                   controller: apiKeyController,
@@ -325,11 +269,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextField(
                   onChanged: (value) {
                     setState(() {
-                      sdkKeyText = value;
+                      iosSdkKey = value;
+                    });
+                  },
+                  controller: iosDdkKeyController,
+                  decoration: const InputDecoration(hintText: "iOS SDK Key"),
+                ),
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      androidSdkKey = value;
                     });
                   },
                   controller: sdkKeyController,
-                  decoration: const InputDecoration(hintText: "SDK Key"),
+                  decoration: const InputDecoration(hintText: "Android SDK Key"),
                 ),
               ],
             ),
@@ -356,12 +309,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Text('Initialize'),
                 onPressed: () {
                   Navigator.pop(context);
-                  log('app details : $siteNameText, $apiKeyText, $sdkKeyText');
-                  authentication(siteNameText, apiKeyText, sdkKeyText);
-                  //});
-                },
-              ),
-            ],
+                  log('app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey');
+                  authentication(siteName, apiKey, iosSdkKey, androidSdkKey);
+                }
+              )
+            ]
           );
         });
   }
