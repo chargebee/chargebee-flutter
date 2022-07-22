@@ -1,5 +1,11 @@
-# Chargebee Flutter
-This is Chargebee’s Flutter Software Development Kit (SDK). This SDK makes it efficient and comfortable to build a seamless subscription experience in your Flutter app.
+# Flutter SDK
+Chargebee’s SDK for Flutter enables you to build a seamless and efficient customer experience for your subscription business.
+
+Post-installation, initialization, and authentication with the Chargebee site, this SDK will support the following process.
+
+1. **Sync In-App Subscriptions with Chargebee for iOS:** [Integrate](https://www.chargebee.com/docs/2.0/mobile-app-store-connect.html) with [Apple Store Connect](https://appstoreconnect.apple.com/login) to process in-app purchase subscriptions, and track them on your Chargebee account for a single source of truth for subscriptions across the Web and Apple App Store. Use this if you are selling digital goods or services or are REQUIRED to use Apple's in-app purchases as per their [app review guidelines](https://developer.apple.com/app-store/review/guidelines/). **For SDK methods to work, ensure that** [prerequisites](https://www.chargebee.com/docs/2.0/mobile-app-store-product-iap.html#configure-prerequisites) **are configured in Chargebee.** To import products configured in Apple App Store and existing subscriptions, Read [more](https://www.chargebee.com/docs/2.0/mobile-app-store-product-iap.html#import-products).
+
+2. **Sync In-App Subscriptions with Chargebee for Android:** [Integrate](https://www.chargebee.com/docs/2.0/mobile-playstore-connect.html#chargebee-configuration) Chargebee with Google Play Store to process in-app purchase subscriptions, and track them on your Chargebee account for a single source of truth for subscriptions across the Web and Google Play Store. Use this if you are selling digital goods or services, or are REQUIRED to use Google Play's in-app purchases as per their [app review guidelines](https://support.google.com/googleplay/android-developer/answer/9858738). **For SDK methods to work, ensure that [prerequisites](https://www.chargebee.com/docs/2.0/mobile-playstore-connect.html#prerequisites-configuration) are configured in Chargebee.**
 
 ## Requirements
 The following requirements must be set up before installing Chargebee’s Flutter SDK.
@@ -14,55 +20,57 @@ The following requirements must be set up before installing Chargebee’s Flutte
 * Swift 5+
 
 ## Installation
-The `Chargebee-Flutter-SDK` SDK can be installed by adding below dependency to the `pubspec.yaml` file:
+To use Chargebee SDK in your Flutter app, follow these steps:
+
+1. Add Chargebee as a dependency in your [pubspec.yaml](https://docs.flutter.dev/development/packages-and-plugins/using-packages) file
 
 ```dart
 dependencies:
-  chargebee_flutter: ^1.0.0
+  chargebee_flutter: ^0.0.2
+```
+2. Install dependency
+```dart
+  flutter pub get
 ```
 
-## Example project
-This is an optional step that helps you verify the SDK implementation using this example project. You can download or clone the example project via GitHub.
+##Configuring SDK
 
-To run the example project, follow these steps.
+##Prerequisites
 
-1. Clone the repo - https://github.com/chargebee/chargebee-android.
+Before configuring the Chargebee Flutter SDK for completing and managing In-App Purchases, follow these steps.
 
-2. Run build.gradle from the Example directory.
+  1. **iOS:** [Integrate](https://www.chargebee.com/docs/2.0/mobile-app-store-connect.html) the [Apple Store Connect](https://appstoreconnect.apple.com/login) with your [Chargebee site](https://app.chargebee.com/login).
+     **Android:** [Integrate](https://www.chargebee.com/docs/2.0/mobile-playstore-connect.html#chargebee-configuration) Google Play Store with your [Chargebee site](https://app.chargebee.com/login).
 
-## Configuration
+  2. **iOS:** On the **Sync Overview** page of the web app, click **View Keys** and use the value of generated [App ID](https://www.chargebee.com/docs/1.0/mobile-app-store-product-iap.html#app-id) as the **SDK Key**.
+     **Android:** On the **Sync Overview** page of the web app, click **Set up notifications** and use the generated [App ID](https://www.chargebee.com/docs/1.0/mobile-playstore-notifications.html#app-id) value as **SDK Key**.
 
-* Configuration for In-App Purchases
+  3. On the Chargebee site, navigate to **Configure Chargebee >** [API Keys](https://www.chargebee.com/docs/2.0/api_keys.html#create-an-api-key) to create a new **Publishable API Key** or use an existing [Publishable API Key](https://www.chargebee.com/docs/2.0/api_keys.html#types-of-api-keys_publishable-key).
+     **Note:** During the publishable API key creation you must allow **read-only** access to plans/items otherwise this key will not work in the following snippet. Read [more](https://www.chargebee.com/docs/2.0/api_keys.html#types-of-api-keys_publishable-key).
 
-### Configuration for In-App Purchases
-To configure the Chargebee Flutter SDK for completing and managing In-App Purchases, follow these steps.
-
-1. [Integrate](https://www.chargebee.com/docs/2.0/mobile-playstore-connect.html) Google Play Store with your [Chargebee site](https://app.chargebee.com/sites/select).
-
-2. On the **Sync Overview** page of the web app, click **Set up notifications** and use the generated [App ID](https://www.chargebee.com/docs/1.0/mobile-playstore-notifications.html#app-id) value as **SDK Key**.
-
-3. On the Chargebee site, navigate to **Settings** > **Configure Chargebee** > [API Keys](https://www.chargebee.com/docs/2.0/api_keys.html#create-an-api-key) to create a new [Publishable API Key](https://www.chargebee.com/docs/2.0/api_keys.html#types-of-api-keys_publishable-key) or use an existing Publishable API Key.
-   **Note:** During the publishable API key creation you must allow **read-only** access to plans/items otherwise this key will not work in the following step. Read [more](https://www.chargebee.com/docs/2.0/api_keys.html#types-of-api-keys_publishable-key).
-
-4. Initialize the SDK with your Chargebee site, **Publishable API Key**, and SDK Key by including the following snippets in your app delegate during app startup.
+Initialize the Chargebee Flutter SDK with your Chargebee site, Publishable API Key, and SDK Key by including the following snippets in your app delegate during app startup.
 
 ```dart
 import 'package:chargebee_flutter/chargebee_flutter.dart';
 
-Chargebee.configure(site: "your-site", apiKey: "publishable_api_key", sdkKey: "ResourceID/SDK Key")
+try {
+    await Chargebee.configure("SITE_NAME", "API-KEY", "iOS SDK Key", "Android SDK Key");
+} on PlatformException catch (error) {
+    log('PlatformException : ${error.message}');
+}
 
 ```
 ### Integrating In-App Purchases
-The following section describes how to use the SDK to integrate In-App Purchase information. For details on In-App Purchase, read more [here](https://www.chargebee.com/docs/2.0/mobile-in-app-purchases.html).
+The section describes how to use the SDK to integrate In-App Purchase information. For details on In-App Purchase, Read [more](https://www.chargebee.com/docs/2.0/mobile-in-app-purchases.html).
 
 ### Get IAP Products
-Retrieve the Google IAP Product using the following function.
+Retrieve the IAP Product objects with Product IDs using the following function.
 
 ```dart
 try {
-  List<Object?> result = await Chargebee.retrieveProducts({productList: "[Product ID's from Google Play Console]"});
-} catch (e) {
-  print(e);
+    List<Product> products = await Chargebee.retrieveProducts({productList: "[Product ID's from Google or Apple]"});
+} catch (error) {
+    print(error);
 }
             
 ```
@@ -76,23 +84,24 @@ customerId - Optional parameter. We need the unique ID of your customer as custo
 ```dart
 try {
   final result = await Chargebee.purchaseProduct(product, customerId);
-}  catch (e) {
-  print('Exception : $e');
+  print("subscription id : ${result.subscriptionId}");
+  print("subscription status : ${result.status}");
+}  catch (error) {
+  print('Exception : $error');
 }
  ```
 The above function will handle the purchase against Google Play Store and send the IAP token for server-side token verification to your Chargebee account. Use the Subscription ID returned by the above function, to check for Subscription status on Chargebee and confirm the access - granted or denied.
 
-### Get Subscription Status for Existing Subscribers
-The following are methods for checking the subscription status of a subscriber who already purchased the product.
-
 ### Get Subscription Status for Existing Subscribers using Query Parameters
-Use query parameters - Customer ID for checking the Subscription status on Chargebee and confirm the access - granted or denied.
+Use this method to check the subscription status of a subscriber who has already purchased the product.
+
+Use query parameters - Subscription ID, Customer ID, or Status for checking the Subscription status on Chargebee and confirm the access - granted or denied.
 
 ```dart
 try {
-  List<dynamic> subscriptionList = await Chargebee.retrieveSubscriptions(customerId);
-}  catch (e) {
-  print('Exception : $e');
+  final result = await Chargebee.retrieveSubscriptions(customerId);
+}  catch (error) {
+  print('Exception : $error');
 }  
 ```
 For example, query parameters can be passed as **"customer_id" : "id"**.
