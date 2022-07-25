@@ -25,9 +25,8 @@ To use Chargebee SDK in your Flutter app, follow these steps:
 
 1.  Add Chargebee as a dependency in your [pubspec.yaml](https://flutter.io/platform-plugins/ "https://flutter.io/platform-plugins/")file.
 
-    ```swift
+    ```dart
     dependencies: 
-    
      chargebee_flutter: ^0.0.2
     ```
     
@@ -51,7 +50,7 @@ Before configuring the Chargebee Flutter SDK for syncing In-App Purchases, follo
 
 Initialize the Chargebee Flutter SDK with your Chargebee site, Publishable API Key, and SDK Keys by including the following snippets in your app delegate during app startup.
 
-```swift
+```dart
 import 'package:chargebee_flutter/chargebee_flutter.dart';
 
  try {
