@@ -52,12 +52,11 @@ Initialize the Chargebee Flutter SDK with your Chargebee site, Publishable API K
 
 ```dart
 import 'package:chargebee_flutter/chargebee_flutter.dart';
-
- try {
-      await Chargebee.configure("SITE_NAME", "API-KEY", "iOS SDK Key", "Android SDK Key");
-    } on PlatformException catch (error) {
-      log('PlatformException : ${error.message}');
-    }
+try {
+  await Chargebee.configure("SITE_NAME", "API-KEY", "iOS SDK Key", "Android SDK Key");
+} on PlatformException catch (error) {
+  log('PlatformException : ${error.message}');
+}
 ```
 
 ## Integrating In-App Purchases
