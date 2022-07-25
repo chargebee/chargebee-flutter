@@ -17,7 +17,7 @@ The following requirements must be set up before installing Chargebee’s Flutte
 * iOS 12+
 * Swift 5+
 
-## Installation
+### Installation
 To use Chargebee SDK in your Flutter app, follow these steps:
 
 1. Add Chargebee as a dependency in your [pubspec.yaml](https://docs.flutter.dev/development/packages-and-plugins/using-packages) file
@@ -97,7 +97,7 @@ Use query parameters - Subscription ID, Customer ID, or Status for checking the 
 
 ```dart
 try {
-  final result = await Chargebee.retrieveSubscriptions(customerId);
+  final result = await Chargebee.retrieveSubscriptions(queryParams);
 }  catch (error) {
   print('Exception : $error');
 }  
