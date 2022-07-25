@@ -79,6 +79,7 @@ You can present any of the above products to your users for them to purchase.
 #### Buy or Subscribe Product
 
 Pass the product and customer identifier to the following function when your customer chooses the product to purchase.
+
 `customerId`: This is an optional parameter. Chargebee requires the unique ID of your customer as customerId. If a unique list of customers is present in your database or a third-party system, send the unique customer ID to Chargebee from that source.
 
 ```swift
