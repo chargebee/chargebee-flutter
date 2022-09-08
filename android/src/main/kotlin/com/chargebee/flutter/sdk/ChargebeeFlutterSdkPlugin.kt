@@ -78,6 +78,8 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         val sdkKey = args["sdk_key"] as String
 
         Log.i(javaClass.simpleName, " $siteName, $apiKey, $sdkKey, package Name: ${activity.packageName}")
+        // Added chargebee logger support for flutter android sdk
+        Chargebee.environment = "cb_flutter_android_sdk"
         // Configure with Chargebee SDK
         Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = "${activity.packageName}")
     }
