@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:chargebee_flutter/chargebee_flutter.dart';
+import 'package:chargebee_flutter_sdk_example/product_ids_listview.dart';
 import 'package:chargebee_flutter_sdk_example/product_listview.dart';
 import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/material.dart';
@@ -93,17 +94,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   onItemClick(String menuItem) {
     switch (menuItem) {
-      case Constants.config:
+      case Constants.CONFIG:
         showAuthenticationDialog(context);
         break;
 
-      case Constants.getProducts:
+      case Constants.GET_PRODUCTS:
         showSkProductDialog(context);
         break;
 
-      case Constants.getSubscriptionStatus:
+      case Constants.GET_SUBSCRIPTION_STATUS:
         mProgressBarUtil.showProgressDialog();
         retrieveSubscriptions(queryParams);
+        break;
+      case Constants.GET_PRODUCT_IDENTIFIERS:
+        mProgressBarUtil.showProgressDialog();
+        retrieveProductIdentifers("100");
+        break;
+      case Constants.GET_ENTITLEMENTS:
+        mProgressBarUtil.showProgressDialog();
+
         break;
 
       default:
@@ -317,4 +326,34 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         });
   }
+
+  Future<void> retrieveProductIdentifers(String limit) async {
+    try {
+      final result = await Chargebee.retrieveProductIdentifers(limit);
+      log('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+
+      if (result.isNotEmpty) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ProductIdentifiersView(result,
+                  title: 'Product Identifiers List'),
+            ));
+      } else {
+        log('Product Ids not avilable in chargebee');
+        _showDialog(context, "Product Ids not avilable in chargebee");
+      }
+
+    } catch (e) {
+      log('Exception : ${e.toString()}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
+  }
+
 }

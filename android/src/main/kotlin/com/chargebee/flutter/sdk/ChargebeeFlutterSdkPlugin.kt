@@ -8,6 +8,7 @@ import com.chargebee.android.Chargebee
 import com.chargebee.android.billingservice.CBCallback
 import com.chargebee.android.billingservice.CBPurchase
 import com.chargebee.android.exceptions.CBException
+import com.chargebee.android.exceptions.CBProductIDResult
 import com.chargebee.android.exceptions.ChargebeeResult
 import com.chargebee.android.models.*
 import com.chargebee.android.models.CBProduct.*
@@ -61,6 +62,12 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 val params = call.arguments() as? Map<String, String>?
                 if (params != null) {
                     retrieveSubscriptions(params, result)
+                }
+            }
+            "retrieveProductIdentifers" ->{
+                val params = call.arguments() as? String?
+                if (params != null) {
+                    retrieveProductIdentifers(params, result)
                 }
             }
             else -> {
@@ -163,6 +170,26 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         }
 
     }
+
+    private fun retrieveProductIdentifers(limit: String, result: Result) {
+        val queryParams = arrayOf(limit)
+        CBPurchase.retrieveProductIdentifers(queryParams) {
+            when (it) {
+                is CBProductIDResult.ProductIds -> {
+                    Log.i(javaClass.simpleName, "List of Product Identifiers:  $it")
+                    if (it.IDs.isNotEmpty()) {
+                        val jsonString = Gson().toJson(it.IDs)
+                        result.success(jsonString)
+                    }
+                }
+                is CBProductIDResult.Error -> {
+                    Log.e(javaClass.simpleName, " ${it.exp.message}")
+                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+                }
+            }
+        }
+    }
+
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         if (channel != null) {
             channel.setMethodCallHandler(null);
@@ -188,4 +215,5 @@ fun CBProduct.toMap(): Map<String, Any> {
         "productTitle" to productTitle
     )
 }
+
 
