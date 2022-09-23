@@ -65,7 +65,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
             }
             "retrieveProductIdentifers" ->{
-                val params = call.arguments() as? String?
+                val params = call.arguments() as? Map<String, String>?
                 if (params != null) {
                     retrieveProductIdentifers(params, result)
                 }
@@ -171,9 +171,9 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
     }
 
-    private fun retrieveProductIdentifers(limit: String, result: Result) {
-        val queryParams = arrayOf(limit)
-        CBPurchase.retrieveProductIdentifers(queryParams) {
+    private fun retrieveProductIdentifers(queryParams: Map<String, String>, result: Result) {
+        val queryParam = arrayOf(queryParams["limit"] as String)
+        CBPurchase.retrieveProductIdentifers(queryParam) {
             when (it) {
                 is CBProductIDResult.ProductIds -> {
                     Log.i(javaClass.simpleName, "List of Product Identifiers:  $it")

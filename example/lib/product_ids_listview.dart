@@ -30,6 +30,12 @@ class ProductIdentifiersViewState extends State<ProductIdentifiersView> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
           title: const Text('Product Identifiers List'),
         ),
         body: ListView.builder(

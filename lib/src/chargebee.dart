@@ -112,7 +112,7 @@ class Chargebee {
 
   /* Get Apple/Google Product ID's from chargebee system */
   static Future<List<dynamic>> retrieveProductIdentifers(
-      String queryParams) async {
+      Map<String, String> queryParams) async {
     List<dynamic> productIdList = [];
 
     if (Platform.isIOS) {

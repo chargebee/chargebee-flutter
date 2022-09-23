@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case Constants.GET_PRODUCT_IDENTIFIERS:
         mProgressBarUtil.showProgressDialog();
-        retrieveProductIdentifers("100");
+        retrieveProductIdentifers();
         break;
       case Constants.GET_ENTITLEMENTS:
         mProgressBarUtil.showProgressDialog();
@@ -327,9 +327,10 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Future<void> retrieveProductIdentifers(String limit) async {
+  Future<void> retrieveProductIdentifers() async {
     try {
-      final result = await Chargebee.retrieveProductIdentifers(limit);
+      Map<String, String> queryparam = {"limit":"100"};
+      final result = await Chargebee.retrieveProductIdentifers(queryparam);
       log('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
