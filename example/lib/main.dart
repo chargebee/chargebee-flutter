@@ -110,10 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         mProgressBarUtil.showProgressDialog();
         retrieveProductIdentifers();
         break;
-      case Constants.GET_ENTITLEMENTS:
-        mProgressBarUtil.showProgressDialog();
 
-        break;
 
       default:
         break;

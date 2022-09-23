@@ -136,8 +136,8 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                                 _result(jsonString)
                             }
                         }else {
-                            debugPrint("Serialization Issue");
-                            _result(FlutterError.jsonSerializationError(error.localizedDescription))
+                            debugPrint("Serialization Issue")
+                            _result(FlutterError.jsonSerializationError("Serialization Issue"))
                         }
                     case let .failure(error):
                         debugPrint("Error: \(error.localizedDescription)")

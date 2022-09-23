@@ -5,8 +5,7 @@ class Constants {
     "Configure",
     "Get Products",
     "Get Subscription Status",
-    "Get Product Identifiers",
-    "Get Entitlements"
+    "Get Product Identifiers"
   ];
 
   static const String CONFIG = "Configure";
