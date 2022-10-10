@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
 import com.chargebee.android.Chargebee
+import com.chargebee.android.ErrorDetail
 import com.chargebee.android.billingservice.CBCallback
 import com.chargebee.android.billingservice.CBPurchase
 import com.chargebee.android.exceptions.CBException
@@ -68,6 +69,12 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 val params = call.arguments() as? Map<String, String>?
                 if (params != null) {
                     retrieveProductIdentifers(params, result)
+                }
+            }
+            "retrieveEntitlements" ->{
+                val params = call.arguments() as? Map<String, String>?
+                if (params != null) {
+                    retrieveEntitlements(params, result)
                 }
             }
             else -> {
@@ -188,6 +195,30 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
             }
         }
+    }
+    private fun retrieveEntitlements(queryParams: Map<String, String>, result: Result) {
+        val subscriptionId=queryParams["subscriptionId"] as String
+        Chargebee.retrieveEntitlements(subscriptionId) {
+            when(it){
+                is ChargebeeResult.Success -> {
+                    Log.i(
+                        javaClass.simpleName,
+                        "entitlements response:  ${(it.data)}"
+                    )
+                    if ((it.data as CBEntitlements).list.isNotEmpty()) {
+                        val jsonString = Gson().toJson((it.data as CBEntitlements).list)
+                        result.success(jsonString)
+                    }
+                }
+                is ChargebeeResult.Error ->{
+                    Log.e(javaClass.simpleName, "Exception from server- retrieveEntitlements() :  ${it.exp.message}")
+                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+
+                }
+            }
+        }
+
+
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {

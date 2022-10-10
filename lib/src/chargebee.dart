@@ -140,4 +140,35 @@ class Chargebee {
     }
     return productIdList;
   }
+
+  /* Get entitlement details from chargebee system */
+  static Future<List<dynamic>> retrieveEntitlements(
+      Map<String, String> queryParams) async {
+    List<dynamic> entitlementsList = [];
+
+    if (Platform.isIOS) {
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mGetEntitlements, queryParams);
+        log('result : $result');
+        entitlementsList = jsonDecode(result);
+
+        return entitlementsList;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+      }
+    } else {
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mGetEntitlements, queryParams);
+        print("result : $result");
+        entitlementsList = jsonDecode(result);
+
+        return entitlementsList;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+      }
+    }
+    return entitlementsList;
+  }
 }

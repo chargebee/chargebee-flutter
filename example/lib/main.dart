@@ -110,7 +110,10 @@ class _MyHomePageState extends State<MyHomePage> {
         mProgressBarUtil.showProgressDialog();
         retrieveProductIdentifers();
         break;
-
+      case Constants.GET_ENTITLEMENTS:
+        mProgressBarUtil.showProgressDialog();
+        retrieveEntitlements();
+        break;
 
       default:
         break;
@@ -344,6 +347,31 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         log('Product Ids not avilable in chargebee');
         _showDialog(context, "Product Ids not avilable in chargebee");
+      }
+
+    } catch (e) {
+      log('Exception : ${e.toString()}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
+  }
+
+  Future<void> retrieveEntitlements() async {
+    try {
+      Map<String, String> queryparam = {"subscriptionId":"AzZlGJTC9U3tw4nF"};
+      final result = await Chargebee.retrieveEntitlements(queryparam);
+      log('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+
+      if (result.isNotEmpty) {
+        _showDialog(context, "entitlements retrieved successfully!");
+      } else {
+        log('Entitlements not found in system');
+        _showDialog(context, "Entitlements not found in system");
       }
 
     } catch (e) {

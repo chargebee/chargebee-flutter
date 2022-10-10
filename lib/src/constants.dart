@@ -21,5 +21,5 @@ class Constants {
   static const mPurchaseProduct = 'purchaseProduct';
   static const mSubscriptionMethod = 'retrieveSubscriptions';
   static const mProductIdentifiers = 'retrieveProductIdentifers';
-  static const mGetEntitlements = 'getEntitlements';
+  static const mGetEntitlements = 'retrieveEntitlements';
 }
