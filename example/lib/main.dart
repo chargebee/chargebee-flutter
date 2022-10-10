@@ -59,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
       TextEditingController();
   late String productIDs;
   late Map<String, String> queryParams = {"channel": "app_store"};
+  Map<String, String> params = {"subscriptionId":"AzZlGJTC9U3tw4nF"};
   late String userInput;
   late ProgressBarUtil mProgressBarUtil;
 
@@ -112,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case Constants.GET_ENTITLEMENTS:
         mProgressBarUtil.showProgressDialog();
-        retrieveEntitlements();
+        retrieveEntitlements(params);
         break;
 
       default:
@@ -357,9 +358,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> retrieveEntitlements() async {
+  Future<void> retrieveEntitlements(Map<String, String> queryparam) async {
     try {
-      Map<String, String> queryparam = {"subscriptionId":"AzZlGJTC9U3tw4nF"};
       final result = await Chargebee.retrieveEntitlements(queryparam);
       log('result : $result');
 

@@ -150,12 +150,13 @@ class Chargebee {
       try {
         String result = await platform.invokeMethod(
             Constants.mGetEntitlements, queryParams);
-        log('result : $result');
+        print("result : $result");
         entitlementsList = jsonDecode(result);
 
         return entitlementsList;
       } on CBException catch (e) {
         log('CBException : ${e.message}');
+        print("result : ${e.message}");
       }
     } else {
       try {
@@ -167,6 +168,7 @@ class Chargebee {
         return entitlementsList;
       } on CBException catch (e) {
         log('CBException : ${e.message}');
+        print("result : ${e.message}");
       }
     }
     return entitlementsList;

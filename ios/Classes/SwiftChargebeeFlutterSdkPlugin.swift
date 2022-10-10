@@ -18,7 +18,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                 return _result("error")
             }
             // Added chargebee logger support for flutter ios sdk
-            Chargebee.environment = "cb_flutter_ios_sdk"
+            
             Chargebee.configure(site: args["site_name"] as! String,
                                 apiKey: args["api_key"] as! String,
                                 sdkKey: (args["sdk_key"] as! String))
@@ -145,7 +145,31 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     }
                 }
             })
-
+            case "retrieveEntitlements":
+                guard let args = call.arguments as? [String: String] else {
+                                return _result("error")
+                }
+                var subscriptionId = args["subscriptionId"]
+                Chargebee.shared.retrieveEntitlements(forSubscriptionID: subscriptionId ?? "AzZlGJTC9U3tw4nF") { result in
+                    switch result {
+                        case let .success(entitlements):
+                            debugPrint("entitlements: \(entitlements.list)")
+                            if let data = try? JSONSerialization.data(
+                            withJSONObject:entitlements.list.compactMap { $0.dict },
+                            options: []) {
+                            if let jsonString = String(data: data,
+                                                   encoding: .ascii) {
+                                _result(jsonString)
+                                }
+                            }else {
+                        debugPrint("Serialization Issue")
+                        _result(FlutterError.jsonSerializationError("Serialization Issue"))
+                            }
+                        case let .error(error):
+                            debugPrint("Error: \(error.localizedDescription)")
+                        _result(FlutterError.jsonSerializationError(error.localizedDescription))
+               }
+            }
         default:
             print("Default statement")
         }
