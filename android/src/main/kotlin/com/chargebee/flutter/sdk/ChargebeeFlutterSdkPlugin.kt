@@ -66,6 +66,18 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     retrieveSubscriptions(params, result)
                 }
             }
+            "retrieveAllItems" ->{
+                val params = call.arguments() as? Map<String, String>?
+                if (params != null) {
+                    retrieveAllItems(params, result)
+                }
+            }
+            "retrieveAllPlans" ->{
+                val params = call.arguments() as? Map<String, String>?
+                if (params != null) {
+                    retrieveAllPlans(params, result)
+                }
+            }
             else -> {
                 Log.d(javaClass.simpleName, "Implementation not Found")
                 result.notImplemented()
@@ -163,6 +175,39 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         }
 
     }
+
+    private fun retrieveAllItems(queryParams: Map<String, String>, result: Result) {
+        val queryParam = arrayOf(queryParams["limit"] as String, queryParams["sort_by[desc]"] as String, Chargebee.channel)
+        Chargebee.retrieveAllItems(queryParam) {
+            when (it) {
+                is ChargebeeResult.Success -> {
+                    val jsonString = Gson().toJson((it.data as ItemsWrapper).list)
+                    result.success(jsonString)
+                }
+                is ChargebeeResult.Error -> {
+                    Log.d(javaClass.simpleName, "exception :  ${it.exp.message}")
+                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+                }
+            }
+        }
+    }
+    private fun retrieveAllPlans(queryParams: Map<String, String>, result: Result) {
+        val queryParam = arrayOf(queryParams["sort_by[desc]"] as String, "app_store")
+        Chargebee.retrieveAllPlans(queryParam) {
+            when (it) {
+                is ChargebeeResult.Success -> {
+                    Log.i(javaClass.simpleName, "list plans :  ${(it.data as PlansWrapper).list}")
+                    val jsonString = Gson().toJson((it.data as PlansWrapper).list)
+                    result.success(jsonString)
+                }
+                is ChargebeeResult.Error -> {
+                    Log.d(javaClass.simpleName, "exception :  ${it.exp.message}")
+                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+                }
+            }
+        }
+    }
+
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         if (channel != null) {
             channel.setMethodCallHandler(null);

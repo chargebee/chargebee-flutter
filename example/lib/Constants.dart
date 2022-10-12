@@ -3,10 +3,10 @@ import 'dart:core';
 class Constants {
   static const List<String> menu = [
     "Configure",
-    //"Get Product Identifiers",
     "Get Products",
-    //"Purchase",
-    "Get Subscription Status"
+    "Get Subscription Status",
+    "Get Plans",
+    "Get Items"
   ];
 
   static const String config = "Configure";
@@ -15,4 +15,6 @@ class Constants {
   static const String purchase = "Purchase";
 
   static const String getSubscriptionStatus = "Get Subscription Status";
+  static const String getPlans = "Get Plans";
+  static const String getItems = "Get Items";
 }

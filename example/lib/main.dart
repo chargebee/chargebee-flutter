@@ -10,6 +10,7 @@ import 'Constants.dart';
 import 'alertDialog.dart';
 import 'package:chargebee_flutter/src/utils/product.dart';
 
+import 'items_listview.dart';
 import 'product_listview.dart';
 
 void main() => runApp(MyApp());
@@ -57,7 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController productIdTextFieldController =
       TextEditingController();
   late String productIDs;
-  late Map<String, String> queryParams = {"channel": "app_store"};
+  late Map<String, String> queryParams = {"channel": "app_store","customer_id":"imay-flutter"};
+  late Map<String, String> itemsQueryParams = {"limit": "10","sort_by[desc]": "Standard","channel[is]": "play_store"};
+  late Map<String, String> plansQueryParams = {"sort_by[desc]": "Standard","channel[is]": "app_store"};
   late String userInput;
   late ProgressBarUtil mProgressBarUtil;
 
@@ -104,6 +107,14 @@ class _MyHomePageState extends State<MyHomePage> {
       case Constants.getSubscriptionStatus:
         mProgressBarUtil.showProgressDialog();
         retrieveSubscriptions(queryParams);
+        break;
+      case Constants.getPlans:
+        mProgressBarUtil.showProgressDialog();
+        retrieveAllPlans(plansQueryParams);
+        break;
+      case Constants.getItems:
+        mProgressBarUtil.showProgressDialog();
+        retrieveAllItems(itemsQueryParams);
         break;
 
       default:
@@ -316,5 +327,67 @@ class _MyHomePageState extends State<MyHomePage> {
             ]
           );
         });
+  }
+
+  Future<void> retrieveAllPlans(Map<String, dynamic> queryparam) async {
+    try {
+      final result = await Chargebee.retrieveAllPlans(queryparam);
+      log('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      // if (result !=null) {
+      //   Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (BuildContext context) => ItemsView(result,
+      //             title: 'List Plans'),
+      //       ));
+      // } else {
+      //   log('Plans not avilable in chargebee');
+      //   _showDialog(context, "Plans not avilable in chargebee");
+      // }
+
+    } catch (e) {
+      log('Exception : ${e.toString()}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
+  }
+
+  Future<void> retrieveAllItems(Map<String, dynamic> queryparam) async {
+    try {
+      final result = await Chargebee.retrieveAllItems(queryparam);
+      print('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+
+      List<String> name = [];
+      if (result.isNotEmpty) {
+        for (var cbItem in result) {
+          name.add(cbItem != null? cbItem.name!: "null");
+        }
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ItemsView(name,
+                  title: 'List Items'),
+            ));
+      } else {
+        log('Items not avilable in chargebee');
+        _showDialog(context, "Items not avilable in chargebee");
+      }
+
+    } catch (e) {
+      log('Exception : ${e.toString()}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
   }
 }
