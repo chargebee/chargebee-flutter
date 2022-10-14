@@ -10,12 +10,13 @@ class ItemsView extends StatefulWidget {
   final String title;
 
   @override
-  ItemnsViewState createState() => ItemnsViewState(itemsList);
+  ItemnsViewState createState() => ItemnsViewState(itemsList, title);
 }
 
 class ItemnsViewState extends State<ItemsView> {
   late List<dynamic> itemsList;
-  ItemnsViewState(this.itemsList);
+  late String title;
+  ItemnsViewState(this.itemsList, this.title);
 
   late ProgressBarUtil mProgressBarUtil;
 
@@ -36,7 +37,7 @@ class ItemnsViewState extends State<ItemsView> {
             },
             icon: Icon(Icons.arrow_back),
           ),
-          title: const Text('List Items'),
+          title: Text(title),
         ),
         body: ListView.builder(
           itemCount: itemsList.length,

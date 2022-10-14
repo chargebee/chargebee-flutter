@@ -1,5 +1,4 @@
-
-import 'dart:ffi';
+import 'dart:core';
 
 class CBPlan{
   String? id;
@@ -12,21 +11,21 @@ class CBPlan{
   int? freeQuantity;
   int? setup_cost;
   String? status;
-  Bool? enabledInHostedPages;
-  Bool? enabledInPortal;
+  bool? enabledInHostedPages;
+  bool? enabledInPortal;
   String? addonApplicability;
-  Bool? isShippable;
+  bool? isShippable;
   int? updatedAt;
-  Bool? giftable;
+  bool? giftable;
   String? channel;
   int? resourceVersion;
-  String? `object;
+  String? object;
   String? chargeModel;
-  Bool? taxable;
+  bool? taxable;
   String? currencyCode;
-  Bool? showDescriptionInInvoices;
-  Bool? showDescriptionInQuotes;
-  //String? metaData;
+  bool? showDescriptionInInvoices;
+  bool? showDescriptionInQuotes;
+  String? metaData;
 
   CBPlan(
       {this.id,
@@ -52,7 +51,9 @@ class CBPlan{
         this.currencyCode,
         this.showDescriptionInInvoices,
         this.showDescriptionInQuotes,
+        this.metaData,
         });
+
 
   CBPlan.fromJson(Map<String, dynamic> json) {
     id = json['id'] as String;
@@ -62,48 +63,50 @@ class CBPlan{
   }
 
   CBPlan.fromJsonAndroid(Map<String, dynamic> json) {
-    id = json['channel'] as String;
-    name = json['id'] as String;
-    invoiceName = json['name'] as String;
-    price = json['status'] as int;
-    period = json['channel'] as int;
-    periodUnit = json['id'] as String;
-    pricingModel = json['name'] as int;
-    freeQuantity = json['status'] as int;
-    setup_cost = json['channel'] as int;
-    status = json['id'] as String;
-    enabledInHostedPages = json['name'] as Bool;
-    enabledInPortal = json['status'] as Bool;
-    addonApplicability = json['channel'] as String;
-    isShippable = json['id'] as Bool;
-    updatedAt = json['name'] as int;
-    giftable = json['status'] as Bool;
-    channel = json['id'] as String;
-    resourceVersion = json['name'] as int;
-    object = json['status'] as String;
-    chargeModel = json['channel'] as String;
-    taxable = json['id'] as Bool;
-    currencyCode = json['name'] as String;
-    showDescriptionInInvoices = json['status'] as Bool;
-    showDescriptionInQuotes = json['status'] as Bool;
+    addonApplicability = json['addonApplicability'] as String;
+    channel = json['channel'] as String;
+    chargeModel = json['chargeModel'] as String;
+    currencyCode = json['currencyCode'] as String;
+    enabledInHostedPages = json['enabledInHostedPages'] as bool;
+    enabledInPortal = json['enabledInPortal'] as bool;
+    freeQuantity = json['freeQuantity'] as int;
+    giftable = json['giftable'] as bool;
+    id = json['id'] as String;
+    invoiceName = json['invoiceName'] as String;
+    isShippable = json['isShippable'] as bool;
+    name = json['name'] as String;
+    object = json['object'] as String;
+    period = json['period'] as int;
+    periodUnit = json['periodUnit'] as String;
+    price = json['price'] as int;
+    pricingModel = json['pricingModel'] as String;
+    resourceVersion = json['resourceVersion'] as int;
+    setup_cost = json['setup_cost'] as int;
+    showDescriptionInInvoices = json['showDescriptionInInvoices'] as bool;
+    showDescriptionInQuotes = json['showDescriptionInQuotes'] as bool;
+    status = json['status'] as String;
+    taxable = json['taxable'] as bool;
+    updatedAt = json['updatedAt'] as int;
+    metaData = json['metaData'] !=null ? json['metaData'].toString() : null ;
   }
+
 
 }
 
 class CBPlansList {
-  CBPlan? cbItem;
+  CBPlan? cbPlan;
 
-  CBPlansList({this.cbItem});
+  CBPlansList({this.cbPlan});
 
   CBPlansList.fromJson(dynamic json) {
-    cbItem = json['plan'] != null
-        ? new CBPlan.fromJsonAndroid(json['item'])
+    cbPlan = json['plan'] != null
+        ? new CBPlan.fromJson(json['plan'])
         : null;
   }
 
   CBPlansList.fromJsonAndroid(dynamic json) {
-    cbItem = json['plan'] != null
-        ? new CBPlan.fromJsonAndroid(json['item'])
+    cbPlan = json['plan'] != null
+        ? new CBPlan.fromJsonAndroid(json['plan'])
         : null;
   }
 
@@ -124,5 +127,6 @@ class CBPlanWrapper {
 
   }
 }
+
 
 

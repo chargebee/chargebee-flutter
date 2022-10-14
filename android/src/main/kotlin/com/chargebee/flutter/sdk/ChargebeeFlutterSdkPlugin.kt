@@ -15,6 +15,7 @@ import com.chargebee.android.exceptions.CBException
 import com.chargebee.android.exceptions.ChargebeeResult
 import com.chargebee.android.models.*
 import com.chargebee.android.models.CBProduct.*
+import com.chargebee.android.network.ReceiptDetail
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.*
@@ -133,10 +134,10 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                         productDetails.first(),
                         customerID,
                         object : CBCallback.PurchaseCallback<String> {
-                            override fun onSuccess(subscriptionID: String, status: Boolean) {
-                                Log.i(javaClass.simpleName, "Subscription ID:  $subscriptionID")
+                            override fun onSuccess(receiptDetail: ReceiptDetail, status: Boolean) {
+                                Log.i(javaClass.simpleName, "Subscription ID:  ${receiptDetail.subscription_id}")
                                 Log.i(javaClass.simpleName, "Status:  $status")
-                                result.success(onResultMap(subscriptionID, "$status"))
+                                result.success(onResultMap(receiptDetail.subscription_id, "$status"))
                             }
 
                             override fun onError(error: CBException) {

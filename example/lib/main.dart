@@ -337,23 +337,28 @@ class _MyHomePageState extends State<MyHomePage> {
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
-      // if (result !=null) {
-      //   Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (BuildContext context) => ItemsView(result,
-      //             title: 'List Plans'),
-      //       ));
-      // } else {
-      //   log('Plans not avilable in chargebee');
-      //   _showDialog(context, "Plans not avilable in chargebee");
-      // }
+      List<String> name = [];
+      if (result.isNotEmpty) {
+        for (var cbPlan in result) {
+          name.add(cbPlan != null? cbPlan.name!: "null");
+        }
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ItemsView(name,
+                  title: 'List Plans'),
+            ));
+      } else {
+        log('Plans not avilable in chargebee');
+        _showDialog(context, "Plans not avilable in chargebee");
+      }
 
     } catch (e) {
       log('Exception : ${e.toString()}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
+      _showDialog(context, e.toString());
     }
   }
 
@@ -388,6 +393,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
+      _showDialog(context, e.toString());
     }
   }
 }
