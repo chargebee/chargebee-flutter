@@ -123,34 +123,20 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                 DispatchQueue.main.async {
                     switch result {
                     case let .success(itemLst):
-
-                        //debugPrint("items: \(itemLst.list)")
-                        var items  = [String]()
-                        for item in itemLst.list {
-
-                            debugPrint("items: \(item)")
-
-                             if let theJSONData = try? JSONSerialization.data(
-                                withJSONObject: item.item.toMap(),
-                                options: []) {
-                                if let jsonString = String(data: theJSONData,
-                                                           encoding: .ascii) {
-                                    items.append(jsonString)
-                                }
-                            }
-                        }
-
-                         if let data = try? JSONSerialization.data(
-                            withJSONObject:items,
+                        
+                        debugPrint("items: \(itemLst.list)")
+                        
+                        if let data = try? JSONSerialization.data(
+                            withJSONObject:itemLst.list.compactMap { $0.dict },
                             options: []) {
                             if let jsonString = String(data: data,
-                                                       encoding: .ascii) {
+                                                       encoding: .utf8) {
                                 _result(jsonString)
                             }
                         }else {
-                            debugPrint("Serialization Issue")
-                            _result(FlutterError.jsonSerializationError("Serialization Issue"))
+                            debugPrint("Serialization Issue");
                         }
+
                     case let .error(error):
                         debugPrint("Error: \(error.localizedDescription)")
                         _result(FlutterError.jsonSerializationError("Serialization Issue"))
@@ -163,26 +149,26 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             }
                         
             print("List All Plans")
-            print(params)
             Chargebee.shared.retrieveAllPlans(queryParams: params) { result in
                 switch result {
                 case let .success(plansList):
+                    debugPrint("plans: \(plansList.list)")
                     
-                     //var plans: [CBPlan] = []
-                    var plans  = [CBPlan]()
-                    for plan in  plansList.list {
-                        plans.append(plan.plan)
+                    if let data = try? JSONSerialization.data(
+                        withJSONObject:plansList.list.compactMap { $0.dict },
+                        options: []) {
+                        if let jsonString = String(data: data,
+                                                   encoding: .utf8) {
+                            _result(jsonString)
+                        }
+                    }else {
+                        debugPrint("Serialization Issue");
                     }
-                    
-                    self.plans = plans
-                    debugPrint("items: \(self.plans)")
 
                 case let .error(error):
                     debugPrint("Error: \(error.localizedDescription)")
                 }
             }
-
-
         default:
             print("Default statement")
         }
@@ -203,57 +189,6 @@ extension SKProduct {
             "productId": productIdentifier,
             "productPrice": price.description,
             "productTitle": localizedTitle,
-        ]
-        return map
-    }
-}
-
-extension CBPlan{
-    func toMap() -> [String: Any?] {
-        let map: [String: Any?] = [
-            "addonApplicability": addonApplicability,
-            "chargeModel": chargeModel,
-            "currencyCode": currencyCode,
-            "enabledInHostedPages": enabledInHostedPages,
-            "enabledInPortal": enabledInPortal,
-            "freeQuantity": freeQuantity,
-            "giftable": giftable,
-            "id": id,
-            "invoiceName": invoiceName,
-            "isShippable": isShippable,
-            "name": name,
-            "object": object,
-            "period": period,
-            "periodUnit": periodUnit,
-            "price": price,
-            "pricingModel": pricingModel,
-            "resourceVersion": resourceVersion,
-            "status": status,
-            "taxable": taxable,
-            "updatedAt": updatedAt,
-            "metadata" : metadata,
-        ]
-        return map
-    }
-}
-
-extension CBItem{
-    func toMap() -> [String: Any?] {
-        let map: [String: Any?] = [
-            "id": id,
-            "name": name,
-            "description": description,
-            "status": status,
-            "resourceVersion": resourceVersion,
-            "updatedAt": updatedAt,
-            "itemFamilyId": itemFamilyId,
-            "type": type,
-            "isShippable": isShippable,
-            "isGiftable": isGiftable,
-            "enabledForCheckout": enabledForCheckout,
-            "enabledInPortal": enabledInPortal,
-            "metered": metered,
-            "object": object,
         ]
         return map
     }

@@ -384,7 +384,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   title: 'List Items'),
             ));
       } else {
-        log('Items not avilable in chargebee');
+        log('Items not found in chargebee');
         _showDialog(context, "Items not avilable in chargebee");
       }
 

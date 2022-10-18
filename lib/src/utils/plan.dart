@@ -57,6 +57,23 @@ class CBPlan{
 
   CBPlan.fromJson(Map<String, dynamic> json) {
     id = json['id'] as String;
+    chargeModel = json['charge_model'] as String;
+    resourceVersion = json['resource_version'] as int;
+    enabledInPortal = json['enabled_in_portal'] as bool;
+    freeQuantity = json['free_quantity'] as int;
+    period = json['period'] as int;
+    taxable = json['taxable'] as bool;
+    pricingModel = json['pricing_model'] as String;
+    isShippable = json['is_shippable'] as bool;
+    currencyCode = json['currency_code'] as String;
+    addonApplicability = json['addon_applicability'] as String;
+    periodUnit = json['period_unit'] as String;
+    giftable = json['giftable'] as bool;
+    enabledInHostedPages = json['enabled_in_hosted_pages'] as bool;
+    object = json['object'] as String;
+    price = json['price'] as int;
+    updatedAt = json['updated_at'] as int;
+    status = json['status'] as String;
     name = json['name'] as String;
 
 

@@ -31,11 +31,19 @@ class CBItem{
     this.object});
 
   CBItem.fromJson(Map<String, dynamic> json) {
-    id = json['channel'] as String;
-    name = json['id'] as String;
-    description = json['name'] as String;
+    id = json['id'] as String;
+    resourceVersion = json['resource_version'];
+    enabledInPortal = json['enabled_in_portal'] as bool;
+    status = json['item_family_id'] as String;
+    isShippable = json['is_shippable'] as bool;
+    type = json['type'];
+    object = json['object'] as String;
+    metered = json['metered'] as bool;
+    updatedAt = json['updated_at'] as int;
+    enabledForCheckout = json['enabled_for_checkout'];
+    isGiftable = json['is_giftable'] as bool;
     status = json['status'] as String;
-
+    name = json['name'] as String;
   }
 
   CBItem.fromJsonAndroid(Map<String, dynamic> json) {
