@@ -111,6 +111,71 @@ class Chargebee {
     }
     return subscriptions;
   }
+
+  /* Get Apple/Google Product ID's from chargebee system */
+  static Future<List<dynamic>> retrieveProductIdentifers(
+      Map<String, String> queryParams) async {
+    List<dynamic> productIdList = [];
+
+    if (Platform.isIOS) {
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mProductIdentifiers, queryParams);
+        log('result : $result');
+        productIdList = jsonDecode(result);
+
+        return productIdList;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+      }
+    } else {
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mProductIdentifiers, queryParams);
+        print("result : $result");
+        productIdList = jsonDecode(result);
+
+        return productIdList;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+      }
+    }
+    return productIdList;
+  }
+
+  /* Get entitlement details from chargebee system */
+  static Future<List<dynamic>> retrieveEntitlements(
+      Map<String, String> queryParams) async {
+    List<dynamic> entitlementsList = [];
+
+    if (Platform.isIOS) {
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mGetEntitlements, queryParams);
+        print("result : $result");
+        entitlementsList = jsonDecode(result);
+
+        return entitlementsList;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+        print("result : ${e.message}");
+      }
+    } else {
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mGetEntitlements, queryParams);
+        print("result : $result");
+        entitlementsList = jsonDecode(result);
+
+        return entitlementsList;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+        print("result : ${e.message}");
+      }
+    }
+    return entitlementsList;
+  }
+
   /* Get the list of items from chargebee system */
   static Future<List<CBItem?>> retrieveAllItems(
       Map<String, dynamic> queryParams) async {
@@ -191,4 +256,5 @@ class Chargebee {
     }
     return listPlans;
   }
+
 }

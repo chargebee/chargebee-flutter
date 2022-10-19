@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:chargebee_flutter/chargebee_flutter.dart';
+import 'package:chargebee_flutter_sdk_example/product_ids_listview.dart';
 import 'package:chargebee_flutter_sdk_example/product_listview.dart';
 import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController productIdTextFieldController =
       TextEditingController();
   late String productIDs;
-  late Map<String, String> queryParams = {"channel": "app_store","customer_id":"imay-flutter"};
+  late Map<String, String> queryParams = {"channel": "app_store", "customer_id":"imay-flutter"};
+  Map<String, String> params = {"subscriptionId":"AzZlGJTC9U3tw4nF"};
   late Map<String, String> itemsQueryParams = {"limit": "10","sort_by[desc]": "Standard","channel[is]": "play_store"};
   late Map<String, String> plansQueryParams = {"sort_by[desc]": "Standard","channel[is]": "app_store"};
   late String userInput;
@@ -96,17 +98,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   onItemClick(String menuItem) {
     switch (menuItem) {
-      case Constants.config:
+      case Constants.CONFIG:
         showAuthenticationDialog(context);
         break;
 
-      case Constants.getProducts:
+      case Constants.GET_PRODUCTS:
         showSkProductDialog(context);
         break;
 
-      case Constants.getSubscriptionStatus:
+      case Constants.GET_SUBSCRIPTION_STATUS:
         mProgressBarUtil.showProgressDialog();
         retrieveSubscriptions(queryParams);
+        break;
+      case Constants.GET_PRODUCT_IDENTIFIERS:
+        mProgressBarUtil.showProgressDialog();
+        retrieveProductIdentifers();
+        break;
+      case Constants.GET_ENTITLEMENTS:
+        mProgressBarUtil.showProgressDialog();
+        retrieveEntitlements(params);
         break;
       case Constants.getPlans:
         mProgressBarUtil.showProgressDialog();
@@ -116,7 +126,6 @@ class _MyHomePageState extends State<MyHomePage> {
         mProgressBarUtil.showProgressDialog();
         retrieveAllItems(itemsQueryParams);
         break;
-
       default:
         break;
     }
@@ -329,6 +338,60 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  Future<void> retrieveProductIdentifers() async {
+    try {
+      Map<String, String> queryparam = {"limit":"100"};
+      final result = await Chargebee.retrieveProductIdentifers(queryparam);
+      log('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+
+      if (result.isNotEmpty) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ProductIdentifiersView(result,
+                  title: 'Product Identifiers List'),
+            ));
+      } else {
+        log('Product Ids not avilable in chargebee');
+        _showDialog(context, "Product Ids not avilable in chargebee");
+      }
+
+    } catch (e) {
+      log('Exception : ${e.toString()}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
+  }
+
+  Future<void> retrieveEntitlements(Map<String, String> queryparam) async {
+    try {
+      final result = await Chargebee.retrieveEntitlements(queryparam);
+      log('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+
+      if (result.isNotEmpty) {
+        _showDialog(context, "entitlements retrieved successfully!");
+      } else {
+        log('Entitlements not found in system');
+        _showDialog(context, "Entitlements not found in system");
+      }
+
+    } catch (e) {
+      log('Exception : ${e.toString()}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
+  }
+
   Future<void> retrieveAllPlans(Map<String, dynamic> queryparam) async {
     try {
       final result = await Chargebee.retrieveAllPlans(queryparam);
@@ -396,4 +459,5 @@ class _MyHomePageState extends State<MyHomePage> {
       _showDialog(context, e.toString());
     }
   }
+
 }

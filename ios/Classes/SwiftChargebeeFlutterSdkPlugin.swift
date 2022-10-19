@@ -18,6 +18,8 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             guard let args = call.arguments as? [String: Any] else {
                 return _result("error")
             }
+            // Added chargebee logger support for flutter ios sdk
+            CBEnvironment.environment = "cb_flutter_ios_sdk"
             Chargebee.configure(site: args["site_name"] as! String,
                                 apiKey: args["api_key"] as! String,
                                 sdkKey: (args["sdk_key"] as! String))
@@ -113,62 +115,118 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     }
                 }
             })
-        case "retrieveAllItems":
-            guard let params = call.arguments as? [String: String] else {
-                return _result("error")
-            }
+        case "retrieveProductIdentifers":
+            guard let args = call.arguments as? [String: String] else {
+                            return _result("error")
+                        }
 
-            print("All items:")
-            Chargebee.shared.retrieveAllItems(queryParams: params, completion: { result in
+            let limitValue = args["limit"]
+            var params = args ?? [String: String]()
+            params["limit"] = limitValue
+            CBPurchase.shared.retrieveProductIdentifers(queryParams: params, completion: { result in
                 DispatchQueue.main.async {
                     switch result {
-                    case let .success(itemLst):
-                        
-                        debugPrint("items: \(itemLst.list)")
-                        
+                    case let .success(dataWrapper):
+                        debugPrint("items: \(dataWrapper)")
+                        print(dataWrapper.ids)
                         if let data = try? JSONSerialization.data(
-                            withJSONObject:itemLst.list.compactMap { $0.dict },
+                            withJSONObject:dataWrapper.ids,
                             options: []) {
                             if let jsonString = String(data: data,
-                                                       encoding: .utf8) {
+                                                       encoding: .ascii) {
                                 _result(jsonString)
                             }
                         }else {
-                            debugPrint("Serialization Issue");
+                            debugPrint("Serialization Issue")
+                            _result(FlutterError.jsonSerializationError("Serialization Issue"))
                         }
-
-                    case let .error(error):
+                    case let .failure(error):
                         debugPrint("Error: \(error.localizedDescription)")
-                        _result(FlutterError.jsonSerializationError("Serialization Issue"))
+                        _result(FlutterError.jsonSerializationError(error.localizedDescription))
                     }
                 }
             })
-        case "retrieveAllPlans":
-            guard let params = call.arguments as? [String: String] else {
-                return _result("error")
-            }
-                        
-            print("List All Plans")
-            Chargebee.shared.retrieveAllPlans(queryParams: params) { result in
-                switch result {
-                case let .success(plansList):
-                    debugPrint("plans: \(plansList.list)")
-                    
-                    if let data = try? JSONSerialization.data(
-                        withJSONObject:plansList.list.compactMap { $0.dict },
-                        options: []) {
-                        if let jsonString = String(data: data,
-                                                   encoding: .utf8) {
-                            _result(jsonString)
-                        }
-                    }else {
-                        debugPrint("Serialization Issue");
-                    }
-
-                case let .error(error):
-                    debugPrint("Error: \(error.localizedDescription)")
+            case "retrieveEntitlements":
+                guard let args = call.arguments as? [String: String] else {
+                                return _result("error")
                 }
+                var subscriptionId = args["subscriptionId"]
+                Chargebee.shared.retrieveEntitlements(forSubscriptionID: subscriptionId ?? "AzZlGJTC9U3tw4nF") { result in
+                    switch result {
+                        case let .success(entitlements):
+                            debugPrint("entitlements: \(entitlements.list)")
+                            if let data = try? JSONSerialization.data(
+                            withJSONObject:entitlements.list.compactMap { $0.dict },
+                            options: []) {
+                            if let jsonString = String(data: data,
+                                                   encoding: .ascii) {
+                                _result(jsonString)
+                                }
+                            }else {
+                        debugPrint("Serialization Issue")
+                        _result(FlutterError.jsonSerializationError("Serialization Issue"))
+                            }
+                        case let .error(error):
+                            debugPrint("Error: \(error.localizedDescription)")
+                        _result(FlutterError.jsonSerializationError(error.localizedDescription))
+               }
             }
+             case "retrieveAllItems":
+                        guard let params = call.arguments as? [String: String] else {
+                            return _result("error")
+                        }
+
+                        print("All items:")
+                        Chargebee.shared.retrieveAllItems(queryParams: params, completion: { result in
+                            DispatchQueue.main.async {
+                                switch result {
+                                case let .success(itemLst):
+
+                                    debugPrint("items: \(itemLst.list)")
+
+                                    if let data = try? JSONSerialization.data(
+                                        withJSONObject:itemLst.list.compactMap { $0.dict },
+                                        options: []) {
+                                        if let jsonString = String(data: data,
+                                                                   encoding: .utf8) {
+                                            _result(jsonString)
+                                        }
+                                    }else {
+                                        debugPrint("Serialization Issue");
+                                    }
+
+                                case let .error(error):
+                                    debugPrint("Error: \(error.localizedDescription)")
+                                    _result(FlutterError.jsonSerializationError("Serialization Issue"))
+                                }
+                            }
+                        })
+                    case "retrieveAllPlans":
+                        guard let params = call.arguments as? [String: String] else {
+                            return _result("error")
+                        }
+
+                        print("List All Plans")
+                        Chargebee.shared.retrieveAllPlans(queryParams: params) { result in
+                            switch result {
+                            case let .success(plansList):
+                                debugPrint("plans: \(plansList.list)")
+
+                                if let data = try? JSONSerialization.data(
+                                    withJSONObject:plansList.list.compactMap { $0.dict },
+                                    options: []) {
+                                    if let jsonString = String(data: data,
+                                                               encoding: .utf8) {
+                                        _result(jsonString)
+                                    }
+                                }else {
+                                    debugPrint("Serialization Issue");
+                                }
+
+                            case let .error(error):
+                                debugPrint("Error: \(error.localizedDescription)")
+                            }
+                        }
         default:
             print("Default statement")
         }
