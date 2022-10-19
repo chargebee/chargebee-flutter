@@ -5,9 +5,11 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
 import com.chargebee.android.Chargebee
+import com.chargebee.android.ErrorDetail
 import com.chargebee.android.billingservice.CBCallback
 import com.chargebee.android.billingservice.CBPurchase
 import com.chargebee.android.exceptions.CBException
+import com.chargebee.android.exceptions.CBProductIDResult
 import com.chargebee.android.exceptions.ChargebeeResult
 import com.chargebee.android.models.*
 import com.chargebee.android.models.CBProduct.*
@@ -61,6 +63,18 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 val params = call.arguments() as? Map<String, String>?
                 if (params != null) {
                     retrieveSubscriptions(params, result)
+                }
+            }
+            "retrieveProductIdentifers" ->{
+                val params = call.arguments() as? Map<String, String>?
+                if (params != null) {
+                    retrieveProductIdentifers(params, result)
+                }
+            }
+            "retrieveEntitlements" ->{
+                val params = call.arguments() as? Map<String, String>?
+                if (params != null) {
+                    retrieveEntitlements(params, result)
                 }
             }
             else -> {
@@ -163,6 +177,50 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         }
 
     }
+
+    private fun retrieveProductIdentifers(queryParams: Map<String, String>, result: Result) {
+        val queryParam = arrayOf(queryParams["limit"] as String)
+        CBPurchase.retrieveProductIdentifers(queryParam) {
+            when (it) {
+                is CBProductIDResult.ProductIds -> {
+                    Log.i(javaClass.simpleName, "List of Product Identifiers:  $it")
+                    if (it.IDs.isNotEmpty()) {
+                        val jsonString = Gson().toJson(it.IDs)
+                        result.success(jsonString)
+                    }
+                }
+                is CBProductIDResult.Error -> {
+                    Log.e(javaClass.simpleName, " ${it.exp.message}")
+                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+                }
+            }
+        }
+    }
+    private fun retrieveEntitlements(queryParams: Map<String, String>, result: Result) {
+        val subscriptionId=queryParams["subscriptionId"] as String
+        Chargebee.retrieveEntitlements(subscriptionId) {
+            when(it){
+                is ChargebeeResult.Success -> {
+                    Log.i(
+                        javaClass.simpleName,
+                        "entitlements response:  ${(it.data)}"
+                    )
+                    if ((it.data as CBEntitlements).list.isNotEmpty()) {
+                        val jsonString = Gson().toJson((it.data as CBEntitlements).list)
+                        result.success(jsonString)
+                    }
+                }
+                is ChargebeeResult.Error ->{
+                    Log.e(javaClass.simpleName, "Exception from server- retrieveEntitlements() :  ${it.exp.message}")
+                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+
+                }
+            }
+        }
+
+
+    }
+
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         if (channel != null) {
             channel.setMethodCallHandler(null);
@@ -188,4 +246,5 @@ fun CBProduct.toMap(): Map<String, Any> {
         "productTitle" to productTitle
     )
 }
+
 
