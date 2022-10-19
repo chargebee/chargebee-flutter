@@ -17,6 +17,8 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             guard let args = call.arguments as? [String: Any] else {
                 return _result("error")
             }
+            // Added chargebee logger support for flutter ios sdk
+            CBEnvironment.environment = "cb_flutter_ios_sdk"
             Chargebee.configure(site: args["site_name"] as! String,
                                 apiKey: args["api_key"] as! String,
                                 sdkKey: (args["sdk_key"] as! String))
