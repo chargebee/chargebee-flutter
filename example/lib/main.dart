@@ -118,11 +118,11 @@ class _MyHomePageState extends State<MyHomePage> {
         mProgressBarUtil.showProgressDialog();
         retrieveEntitlements(params);
         break;
-      case Constants.getPlans:
+      case Constants.GET_PLANS:
         mProgressBarUtil.showProgressDialog();
         retrieveAllPlans(plansQueryParams);
         break;
-      case Constants.getItems:
+      case Constants.GET_ITEMS:
         mProgressBarUtil.showProgressDialog();
         retrieveAllItems(itemsQueryParams);
         break;
