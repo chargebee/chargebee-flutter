@@ -1,6 +1,6 @@
 # Flutter SDK
 
-Chargebee's SDK for Flutter enables you to build a seamless and efficient customer experience for your subscription business.
+Chargebee's Flutter SDK enables you to build a seamless and efficient customer experience for your subscription business.
 
 Post-installation, initialization, and authentication with the Chargebee site, this SDK will support the following process.
 
@@ -32,7 +32,7 @@ To use Chargebee SDK in your Flutter app, follow these steps:
     
 2.  Install dependency.
 
-    ```swift
+    ```dart
     flutter pub get
     ```
 
@@ -64,11 +64,24 @@ try {
 
 This section describes how to use the SDK to integrate In-App Purchase information. For details on In-App Purchase, read [more](https://www.chargebee.com/docs/2.0/mobile_subscriptions.html "https://www.chargebee.com/docs/2.0/mobile_subscriptions.html").
 
+#### Get all IAP Product Identifiers from Chargebee
+
+Every In-App Purchase subscription product that you configure in your account, can be configured in Chargebee as a Plan. Start by retrieving the IAP Product IDs from your Chargebee account using the following function.
+
+```dart
+try {
+final result = await Chargebee.retrieveProductIdentifers(queryparam);
+} catch (error) {
+print('Exception : $error');
+}
+```
+For example, query parameters can be passed as **"limit": "100"**.
+
 #### Get IAP Products
 
 Retrieve the IAP Product objects with Product IDs using the following function.
 
-```swift
+```dart
 try {
   List<Product> products = await Chargebee.retrieveProducts({productList: "[Product ID's from Google or Apple]"});
 } catch (error) {
@@ -83,7 +96,7 @@ Pass the product and customer identifier to the following function when your cus
 
 `customerId`: This is an optional parameter. Chargebee requires the unique ID of your customer as customerId. If a unique list of customers is present in your database or a third-party system, send the unique customer ID to Chargebee from that source.
 
-```swift
+```dart
 try {
   final result = await Chargebee.purchaseProduct(product, customerId);
     print("subscription id : ${result.subscriptionId}");
@@ -101,7 +114,7 @@ Use this method to check the subscription status of a subscriber who has already
 
 Use query parameters - Subscription ID, Customer ID, or Status for checking the Subscription status on Chargebee and confirm the access - granted or denied.
 
-```swift
+```dart
 try {
   final result = await Chargebee.retrieveSubscriptions(queryparam);
 } catch (error) {
@@ -111,7 +124,47 @@ try {
 
 For example, query parameters can be passed as **"customer_id" : "id"**, **"subscription_id": "id"**, or **"status": "active"**.
 
-License
--------
+#### Retrieve Entitlements of a Subscription
+
+Use the query parameter - Subscription ID for retrieving the list of [entitlements](https://www.chargebee.com/docs/2.0/entitlements.html) associated with the subscription.
+
+```dart
+try {
+final result = await Chargebee.retrieveEntitlements(queryparam);
+} catch (error) {
+print('Exception : $error');
+}
+```
+For example, query parameters can be passed as **"subscriptionId": "id"**.
+
+**Note**: Entitlements feature is available only if your Chargebee site is on [Product Catalog 2.0](https://www.chargebee.com/docs/2.0/product-catalog.html).
+
+#### Get all items
+
+If your Chargebee site is configured to Product Catalog 2.0, use the following functions to retrieve the item list.
+
+```dart
+try {
+final result = await Chargebee.retrieveAllItems(queryparam);
+} catch (error) {
+print('Exception : $error');
+}
+```
+For example, query parameters can be passed as **"sort_by[desc]" : "name"** or **"limit": "100"**.
+
+#### Get All Plans
+
+If your Chargebee site is configured to Product Catalog 1.0, use the relevant functions to retrieve the plan list.
+
+```dart
+try {
+final result = await Chargebee.retrieveAllPlans(queryparam);
+} catch (error) {
+print('Exception : $error');
+}
+```
+For example, query parameters can be passed as **"sort_by[desc]" : "name"** or **"limit": "100"**.
+
+## License
 
 Chargebee is available under the [MIT license](https://opensource.org/licenses/MIT "https://opensource.org/licenses/MIT"). For more information, see the LICENSE file.
