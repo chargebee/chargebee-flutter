@@ -4,6 +4,7 @@ import Chargebee
 import StoreKit
 
 public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
+    private var plans: [CBPlan] = []
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "chargebee_flutter", binaryMessenger: registrar.messenger())
         let instance = SwiftChargebeeFlutterSdkPlugin()
@@ -170,6 +171,62 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         _result(FlutterError.jsonSerializationError(error.localizedDescription))
                }
             }
+             case "retrieveAllItems":
+                        guard let params = call.arguments as? [String: String] else {
+                            return _result("error")
+                        }
+
+                        print("All items:")
+                        Chargebee.shared.retrieveAllItems(queryParams: params, completion: { result in
+                            DispatchQueue.main.async {
+                                switch result {
+                                case let .success(itemLst):
+
+                                    debugPrint("items: \(itemLst.list)")
+
+                                    if let data = try? JSONSerialization.data(
+                                        withJSONObject:itemLst.list.compactMap { $0.dict },
+                                        options: []) {
+                                        if let jsonString = String(data: data,
+                                                                   encoding: .utf8) {
+                                            _result(jsonString)
+                                        }
+                                    }else {
+                                        debugPrint("Serialization Issue");
+                                    }
+
+                                case let .error(error):
+                                    debugPrint("Error: \(error.localizedDescription)")
+                                    _result(FlutterError.jsonSerializationError("Serialization Issue"))
+                                }
+                            }
+                        })
+                    case "retrieveAllPlans":
+                        guard let params = call.arguments as? [String: String] else {
+                            return _result("error")
+                        }
+
+                        print("List All Plans")
+                        Chargebee.shared.retrieveAllPlans(queryParams: params) { result in
+                            switch result {
+                            case let .success(plansList):
+                                debugPrint("plans: \(plansList.list)")
+
+                                if let data = try? JSONSerialization.data(
+                                    withJSONObject:plansList.list.compactMap { $0.dict },
+                                    options: []) {
+                                    if let jsonString = String(data: data,
+                                                               encoding: .utf8) {
+                                        _result(jsonString)
+                                    }
+                                }else {
+                                    debugPrint("Serialization Issue");
+                                }
+
+                            case let .error(error):
+                                debugPrint("Error: \(error.localizedDescription)")
+                            }
+                        }
         default:
             print("Default statement")
         }

@@ -11,6 +11,7 @@ import 'Constants.dart';
 import 'alertDialog.dart';
 import 'package:chargebee_flutter/src/utils/product.dart';
 
+import 'items_listview.dart';
 import 'product_listview.dart';
 
 void main() => runApp(MyApp());
@@ -58,8 +59,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController productIdTextFieldController =
       TextEditingController();
   late String productIDs;
-  late Map<String, String> queryParams = {"channel": "app_store"};
+  late Map<String, String> queryParams = {"channel": "app_store", "customer_id":"imay-flutter"};
   Map<String, String> params = {"subscriptionId":"AzZlGJTC9U3tw4nF"};
+  late Map<String, String> itemsQueryParams = {"limit": "10","sort_by[desc]": "Standard","channel[is]": "play_store"};
+  late Map<String, String> plansQueryParams = {"sort_by[desc]": "Standard","channel[is]": "app_store"};
   late String userInput;
   late ProgressBarUtil mProgressBarUtil;
 
@@ -115,7 +118,14 @@ class _MyHomePageState extends State<MyHomePage> {
         mProgressBarUtil.showProgressDialog();
         retrieveEntitlements(params);
         break;
-
+      case Constants.GET_PLANS:
+        mProgressBarUtil.showProgressDialog();
+        retrieveAllPlans(plansQueryParams);
+        break;
+      case Constants.GET_ITEMS:
+        mProgressBarUtil.showProgressDialog();
+        retrieveAllItems(itemsQueryParams);
+        break;
       default:
         break;
     }
@@ -379,6 +389,74 @@ class _MyHomePageState extends State<MyHomePage> {
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
+    }
+  }
+
+  Future<void> retrieveAllPlans(Map<String, dynamic> queryparam) async {
+    try {
+      final result = await Chargebee.retrieveAllPlans(queryparam);
+      log('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      List<String> name = [];
+      if (result.isNotEmpty) {
+        for (var cbPlan in result) {
+          name.add(cbPlan != null? cbPlan.name!: "null");
+        }
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ItemsView(name,
+                  title: 'List Plans'),
+            ));
+      } else {
+        log('Plans not avilable in chargebee');
+        _showDialog(context, "Plans not avilable in chargebee");
+      }
+
+    } catch (e) {
+      log('Exception : ${e.toString()}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      _showDialog(context, e.toString());
+    }
+  }
+
+  Future<void> retrieveAllItems(Map<String, dynamic> queryparam) async {
+    try {
+      final result = await Chargebee.retrieveAllItems(queryparam);
+      print('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+
+      List<String> name = [];
+      if (result.isNotEmpty) {
+        for (var cbItem in result) {
+          name.add(cbItem != null? cbItem.name!: "null");
+        }
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ItemsView(name,
+                  title: 'List Items'),
+            ));
+      } else {
+        log('Items not found in chargebee');
+        _showDialog(context, "Items not avilable in chargebee");
+      }
+
+    } catch (e) {
+      log('Exception : ${e.toString()}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      _showDialog(context, e.toString());
     }
   }
 

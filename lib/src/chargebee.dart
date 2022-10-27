@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:chargebee_flutter/src/constants.dart';
 import 'package:chargebee_flutter/src/utils/cb_exception.dart';
+import 'package:chargebee_flutter/src/utils/item.dart';
+import 'package:chargebee_flutter/src/utils/plan.dart';
 import 'package:chargebee_flutter/src/utils/product.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -77,7 +79,7 @@ class Chargebee {
       try {
         String result = await platform.invokeMethod(
             Constants.mSubscriptionMethod, queryParams);
-        log('result : $result');
+        print('result : $result');
         List<dynamic> jsonData = jsonDecode(result.toString());
         for (var value in jsonData) {
           var wrapper = SubscriptonList.fromJson(value);
@@ -173,4 +175,86 @@ class Chargebee {
     }
     return entitlementsList;
   }
+
+  /* Get the list of items from chargebee system */
+  static Future<List<CBItem?>> retrieveAllItems(
+      Map<String, dynamic> queryParams) async {
+    List<dynamic> itemsFromServer = [];
+    List<CBItem> listItems = [];
+    if (Platform.isIOS) {
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mRetrieveAllItems, queryParams);
+        print('result : $result');
+
+        itemsFromServer = jsonDecode(result);
+        for (var value in itemsFromServer) {
+          var wrapper = CBItemsList.fromJson(value);
+          listItems.add(wrapper.cbItem!);
+        }
+        return listItems;
+      } on CBException catch (e) {
+        print('CBException : ${e.message}');
+      }
+    } else {
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mRetrieveAllItems, queryParams);
+        print("result : $result");
+        itemsFromServer = jsonDecode(result);
+        for (var value in itemsFromServer) {
+          var wrapper = CBItemsList.fromJsonAndroid(value);
+          listItems.add(wrapper.cbItem!);
+        }
+        print(listItems.first.name);
+        print(listItems.first.status);
+
+        return listItems;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+      }
+    }
+    return listItems;
+  }
+  /* Get the list of plans from chargebee system */
+  static Future<List<CBPlan?>> retrieveAllPlans(
+      Map<String, dynamic> queryParams) async {
+    List<dynamic> plansFromServer = [];
+    List<CBPlan> listPlans = [];
+
+    if (Platform.isIOS) {
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mRetrieveAllPlans, queryParams);
+        print('result : $result');
+        plansFromServer = jsonDecode(result);
+        for (var value in plansFromServer) {
+          var wrapper = CBPlansList.fromJson(value);
+          listPlans.add(wrapper.cbPlan!);
+        }
+        return listPlans;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+      }
+    } else {
+      try {
+        String result = await platform.invokeMethod(
+            Constants.mRetrieveAllPlans, queryParams);
+        print("result : $result");
+        plansFromServer = jsonDecode(result);
+        for (var value in plansFromServer) {
+          var wrapper = CBPlansList.fromJsonAndroid(value);
+          listPlans.add(wrapper.cbPlan!);
+        }
+        print(listPlans.first.name);
+        print(listPlans.first.status);
+
+        return listPlans;
+      } on CBException catch (e) {
+        log('CBException : ${e.message}');
+      }
+    }
+    return listPlans;
+  }
+
 }

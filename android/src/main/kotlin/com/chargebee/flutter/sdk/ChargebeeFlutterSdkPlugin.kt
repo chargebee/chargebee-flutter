@@ -65,6 +65,18 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     retrieveSubscriptions(params, result)
                 }
             }
+            "retrieveAllItems" ->{
+                val params = call.arguments() as? Map<String, String>?
+                if (params != null) {
+                    retrieveAllItems(params, result)
+                }
+            }
+            "retrieveAllPlans" ->{
+                val params = call.arguments() as? Map<String, String>?
+                if (params != null) {
+                    retrieveAllPlans(params, result)
+                }
+            }
             "retrieveProductIdentifers" ->{
                 val params = call.arguments() as? Map<String, String>?
                 if (params != null) {
@@ -134,11 +146,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                         productIDs.first(),
                         customerID,
                         object : CBCallback.PurchaseCallback<String> {
-                            override fun onSuccess(response: ReceiptDetail, status:Boolean) {
-                                Log.i(javaClass.simpleName, "Subscription ID:  ${response.subscription_id}")
+                            override fun onSuccess(receiptDetail: ReceiptDetail, status: Boolean) {
+                                Log.i(javaClass.simpleName, "Subscription ID:  ${receiptDetail.subscription_id}")
                                 Log.i(javaClass.simpleName, "Status:  $status")
-                                Log.i(javaClass.simpleName, "Plan ID:  ${response.plan_id}")
-                                result.success(onResultMap(response.subscription_id, "$status"))
+                                Log.i(javaClass.simpleName, "Plan ID:  ${receiptDetail.plan_id}")
+                                result.success(onResultMap(receiptDetail.subscription_id, "$status"))
                             }
 
                             override fun onError(error: CBException) {
@@ -176,6 +188,38 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             }
         }
 
+    }
+
+    private fun retrieveAllItems(queryParams: Map<String, String>, result: Result) {
+        val queryParam = arrayOf(queryParams["limit"] as String, queryParams["sort_by[desc]"] as String, Chargebee.channel)
+        Chargebee.retrieveAllItems(queryParam) {
+            when (it) {
+                is ChargebeeResult.Success -> {
+                    val jsonString = Gson().toJson((it.data as ItemsWrapper).list)
+                    result.success(jsonString)
+                }
+                is ChargebeeResult.Error -> {
+                    Log.d(javaClass.simpleName, "exception :  ${it.exp.message}")
+                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+                }
+            }
+        }
+    }
+    private fun retrieveAllPlans(queryParams: Map<String, String>, result: Result) {
+        val queryParam = arrayOf(queryParams["sort_by[desc]"] as String, "app_store")
+        Chargebee.retrieveAllPlans(queryParam) {
+            when (it) {
+                is ChargebeeResult.Success -> {
+                    Log.i(javaClass.simpleName, "list plans :  ${(it.data as PlansWrapper).list}")
+                    val jsonString = Gson().toJson((it.data as PlansWrapper).list)
+                    result.success(jsonString)
+                }
+                is ChargebeeResult.Error -> {
+                    Log.d(javaClass.simpleName, "exception :  ${it.exp.message}")
+                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+                }
+            }
+        }
     }
 
     private fun retrieveProductIdentifers(queryParams: Map<String, String>, result: Result) {
@@ -217,8 +261,6 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
             }
         }
-
-
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {

@@ -6,7 +6,9 @@ class Constants {
     "Get Products",
     "Get Subscription Status",
     "Get Product Identifiers",
-    "Get Entitlements"
+    "Get Entitlements",
+    "Get Plans",
+    "Get Items"
   ];
 
   static const String CONFIG = "Configure";
@@ -14,7 +16,8 @@ class Constants {
   static const String PURCHASE = "Purchase";
 
   static const String GET_SUBSCRIPTION_STATUS = "Get Subscription Status";
-
   static const String GET_PRODUCT_IDENTIFIERS = "Get Product Identifiers";
   static const String GET_ENTITLEMENTS= "Get Entitlements";
+  static const String GET_PLANS = "Get Plans";
+  static const String GET_ITEMS = "Get Items";
 }
