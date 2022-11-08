@@ -247,6 +247,7 @@ extension SKProduct {
             "productId": productIdentifier,
             "productPrice": price.description,
             "productTitle": localizedTitle,
+            "currencyCode": priceLocale.currencyCode
         ]
         return map
     }

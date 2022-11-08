@@ -59,7 +59,8 @@ class Chargebee {
 
   /* Buy the product with/without customer Id */
   static Future<PurchaseResult> purchaseProduct(Product product,
-      [String? customerId]) async {
+      [String? customerId=""]) async {
+    if (customerId == null) customerId = ""; else customerId = customerId;
     String purchaseResult = await platform.invokeMethod(
         Constants.mPurchaseProduct,
         {Constants.product: product.id, Constants.customerId: customerId});
