@@ -130,41 +130,57 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
 
     private fun purchaseProduct(args: Map<String, Any>, result: Result) {
-        var customerID = "";
-        if (args["customerId"] != null) {
-            customerID = args["customerId"] as String
+        try {
+            val customerID = args["customerId"] as String
+            val arrayList: ArrayList<String> = ArrayList<String>()
+            arrayList.add(args["product"] as String)
+
+            CBPurchase.retrieveProducts(
+                activity,
+                arrayList,
+                object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
+                    override fun onSuccess(productIDs: ArrayList<CBProduct>) {
+                        CBPurchase.purchaseProduct(
+                            productIDs.first(),
+                            customerID,
+                            object : CBCallback.PurchaseCallback<String> {
+                                override fun onSuccess(
+                                    receiptDetail: ReceiptDetail,
+                                    status: Boolean
+                                ) {
+                                    Log.i(
+                                        javaClass.simpleName,
+                                        "Subscription ID:  ${receiptDetail.subscription_id}"
+                                    )
+                                    Log.i(javaClass.simpleName, "Status:  $status")
+                                    Log.i(
+                                        javaClass.simpleName,
+                                        "Plan ID:  ${receiptDetail.plan_id}"
+                                    )
+                                    result.success(
+                                        onResultMap(
+                                            receiptDetail.subscription_id,
+                                            "$status"
+                                        )
+                                    )
+                                }
+
+                                override fun onError(error: CBException) {
+                                    Log.i(javaClass.simpleName, "Exception :${error.message}")
+                                    result.success(onResultMap("${error.message}", "false"))
+                                }
+                            })
+                    }
+
+                    override fun onError(error: CBException) {
+                        Log.e(javaClass.simpleName, "Error:  ${error.message}")
+                        result.success(onResultMap("${error.message}", "${error.message}"))
+                    }
+                })
+        }catch (exp: Exception){
+            Log.e(javaClass.simpleName, "Exception:  ${exp.message}")
+            result.success(onResultMap("${exp.message}", "${exp.message}"))
         }
-        val arrayList: ArrayList<String> = ArrayList<String>()
-        arrayList.add(args["product"] as String)
-
-        CBPurchase.retrieveProducts(
-            activity,
-            arrayList,
-           object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
-                override fun onSuccess(productIDs: ArrayList<CBProduct>) {
-                    CBPurchase.purchaseProduct(
-                        productIDs.first(),
-                        customerID,
-                        object : CBCallback.PurchaseCallback<String> {
-                            override fun onSuccess(receiptDetail: ReceiptDetail, status: Boolean) {
-                                Log.i(javaClass.simpleName, "Subscription ID:  ${receiptDetail.subscription_id}")
-                                Log.i(javaClass.simpleName, "Status:  $status")
-                                Log.i(javaClass.simpleName, "Plan ID:  ${receiptDetail.plan_id}")
-                                result.success(onResultMap(receiptDetail.subscription_id, "$status"))
-                            }
-
-                            override fun onError(error: CBException) {
-                                Log.i(javaClass.simpleName, "Exception :${error.message}")
-                                result.success(onResultMap("${error.message}", "false"))
-                            }
-                        })
-                }
-
-                override fun onError(error: CBException) {
-                    Log.e(javaClass.simpleName, "Error:  ${error.message}")
-                    result.success(onResultMap("${error.message}", "${error.message}"))
-                }
-            })
     }
 
     fun onResultMap(id: String, status: String): String{
@@ -285,7 +301,8 @@ fun CBProduct.toMap(): Map<String, Any> {
     return mapOf(
         "productId" to productId,
         "productPrice" to productPrice,
-        "productTitle" to productTitle
+        "productTitle" to productTitle,
+        "currencyCode" to skuDetails.priceCurrencyCode
     )
 }
 
