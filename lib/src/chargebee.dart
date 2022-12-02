@@ -1,21 +1,24 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:chargebee_flutter/src/constants.dart';
 import 'package:chargebee_flutter/src/utils/cb_exception.dart';
 import 'package:chargebee_flutter/src/utils/item.dart';
 import 'package:chargebee_flutter/src/utils/plan.dart';
 import 'package:chargebee_flutter/src/utils/product.dart';
 import 'package:flutter/services.dart';
+import 'package:platform/platform.dart';
 import 'dart:convert';
 
 class Chargebee {
   static const platform = MethodChannel(Constants.methodChannelName);
 
-/* Configure the app details with chargebee system */
+  static Platform localPlatform = LocalPlatform();
+  static bool get _isIOS => localPlatform.isIOS;
+
+  /* Configure the app details with chargebee system */
   static Future<void> configure(String site, String publishableApiKey,
       [String? iosSdkKey = "", androidSdkKey = ""]) async {
     try {
-      if (Platform.isIOS) {
+      if (_isIOS) {
         final args = {
           Constants.siteName: site,
           Constants.apiKey: publishableApiKey,
@@ -59,8 +62,11 @@ class Chargebee {
 
   /* Buy the product with/without customer Id */
   static Future<PurchaseResult> purchaseProduct(Product product,
-      [String? customerId=""]) async {
-    if (customerId == null) customerId = ""; else customerId = customerId;
+      [String? customerId = ""]) async {
+    if (customerId == null)
+      customerId = "";
+    else
+      customerId = customerId;
     String purchaseResult = await platform.invokeMethod(
         Constants.mPurchaseProduct,
         {Constants.product: product.id, Constants.customerId: customerId});
@@ -76,7 +82,7 @@ class Chargebee {
       Map<String, dynamic> queryParams) async {
     List<Subscripton> subscriptions = [];
 
-    if (Platform.isIOS) {
+    if (_isIOS) {
       try {
         String result = await platform.invokeMethod(
             Constants.mSubscriptionMethod, queryParams);
@@ -118,7 +124,7 @@ class Chargebee {
       Map<String, String> queryParams) async {
     List<dynamic> productIdList = [];
 
-    if (Platform.isIOS) {
+    if (_isIOS) {
       try {
         String result = await platform.invokeMethod(
             Constants.mProductIdentifiers, queryParams);
@@ -149,7 +155,7 @@ class Chargebee {
       Map<String, String> queryParams) async {
     List<dynamic> entitlementsList = [];
 
-    if (Platform.isIOS) {
+    if (_isIOS) {
       try {
         String result = await platform.invokeMethod(
             Constants.mGetEntitlements, queryParams);
@@ -182,7 +188,7 @@ class Chargebee {
       Map<String, dynamic> queryParams) async {
     List<dynamic> itemsFromServer = [];
     List<CBItem> listItems = [];
-    if (Platform.isIOS) {
+    if (_isIOS) {
       try {
         String result = await platform.invokeMethod(
             Constants.mRetrieveAllItems, queryParams);
@@ -217,13 +223,14 @@ class Chargebee {
     }
     return listItems;
   }
+
   /* Get the list of plans from chargebee system */
   static Future<List<CBPlan?>> retrieveAllPlans(
       Map<String, dynamic> queryParams) async {
     List<dynamic> plansFromServer = [];
     List<CBPlan> listPlans = [];
 
-    if (Platform.isIOS) {
+    if (_isIOS) {
       try {
         String result = await platform.invokeMethod(
             Constants.mRetrieveAllPlans, queryParams);
@@ -257,5 +264,4 @@ class Chargebee {
     }
     return listPlans;
   }
-
 }
