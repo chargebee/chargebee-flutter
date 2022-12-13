@@ -1,5 +1,4 @@
-import 'dart:io';
-import 'dart:math';
+import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:chargebee_flutter/src/chargebee.dart';
@@ -61,6 +60,42 @@ void main() {
           },
         )
       ]);
+    });
+  });
+
+  group('retrieveProductIdentifers', () {
+    test('returns the list of Product Identifiers on iOS', () async {
+      final productIdentifiersString =
+          """["chargebee.price.change","chargebee.premium.android","merchant.start.android"]""";
+      channelResponse = productIdentifiersString;
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      Map<String, String> queryparam = {"limit": "100"};
+      final productIdentifiers =
+          await Chargebee.retrieveProductIdentifers(queryparam);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mProductIdentifiers,
+          arguments: queryparam,
+        )
+      ]);
+      expect(productIdentifiers, jsonDecode(productIdentifiersString));
+    });
+
+    test('returns the list of Product Identifiers on Android', () async {
+      final productIdentifiersString =
+          """["chargebee.price.change","chargebee.premium.android","merchant.start.android"]""";
+      channelResponse = productIdentifiersString;
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      Map<String, String> queryparam = {"limit": "100"};
+      final productIdentifiers =
+          await Chargebee.retrieveProductIdentifers(queryparam);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mProductIdentifiers,
+          arguments: queryparam,
+        )
+      ]);
+      expect(productIdentifiers, jsonDecode(productIdentifiersString));
     });
   });
 }
