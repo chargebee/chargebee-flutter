@@ -62,6 +62,16 @@ void main() {
         )
       ]);
     });
+
+    test('handles exception', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(code: "Dummy");
+      });
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      await expectLater(() => Chargebee.configure(siteName, apiKey, iosSDKKey),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
+    });
   });
 
   group('retrieveProductIdentifers', () {
