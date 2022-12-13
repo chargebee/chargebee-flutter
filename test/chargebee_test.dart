@@ -218,4 +218,85 @@ void main() {
       channel.setMockMethodCallHandler(null);
     });
   });
+
+  group('retrieveSubscriptions', () {
+    final Map<String, dynamic> getSubsQueryParams = {
+      "channel": "app_store",
+      "customer_id": "imay-flutter"
+    };
+    final subscriptionsListAndroidString = """
+        [
+          {
+            "cb_subscription": {
+              "activated_at": "1657543430",
+              "current_term_end": "1670946599",
+              "current_term_start": "1670860199",
+              "customer_id": "imay-flutter",
+              "plan_amount": "399.0",
+              "status": "ACTIVE"
+            }
+          }
+        ]
+    """;
+    final subscriptionsListiOSString = """
+        [
+          {
+            "cb_subscription": {
+              "activated_at": 1657543430,
+              "current_term_end": 1670946599,
+              "current_term_start": 1670860199,
+              "customer_id": "imay-flutter",
+              "plan_amount": "399.0",
+              "status": "ACTIVE",
+              "subscription_id": "2000000102582433"
+            }
+          }
+        ]
+    """;
+    test('retrieves subscriptions successfully on iOS', () async {
+      channelResponse = subscriptionsListiOSString;
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      final result = await Chargebee.retrieveSubscriptions(getSubsQueryParams);
+      expect(callStack, <Matcher>[
+        isMethodCall(Constants.mSubscriptionMethod,
+            arguments: getSubsQueryParams)
+      ]);
+      // we have 1 item in subscriptionsListString above
+      expect(result.length, 1);
+    });
+
+    test('handles exception on iOS', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw CBException(code: "PlatformError", message: "An error occured");
+      });
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      await expectLater(
+          () => Chargebee.retrieveSubscriptions(getSubsQueryParams),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
+    });
+
+    test('retrieves subscriptions successfully on Android', () async {
+      channelResponse = subscriptionsListAndroidString;
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      final result = await Chargebee.retrieveSubscriptions(getSubsQueryParams);
+      expect(callStack, <Matcher>[
+        isMethodCall(Constants.mSubscriptionMethod,
+            arguments: getSubsQueryParams)
+      ]);
+      // we have 1 item in subscriptionsListString above
+      expect(result.length, 1);
+    });
+
+    test('handles exception on Android', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw CBException(code: "PlatformError", message: "An error occured");
+      });
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      await expectLater(
+          () => Chargebee.retrieveSubscriptions(getSubsQueryParams),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
+    });
+  });
 }
