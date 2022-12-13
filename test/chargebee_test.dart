@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:chargebee_flutter/src/utils/cb_exception.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:chargebee_flutter/src/chargebee.dart';
@@ -81,21 +82,15 @@ void main() {
       expect(productIdentifiers, jsonDecode(productIdentifiersString));
     });
 
-    test('returns the list of Product Identifiers on iOS', () async {
-      final productIdentifiersString =
-          """["chargebee.price.change","chargebee.premium.android","merchant.start.android"]""";
-      channelResponse = productIdentifiersString;
+    test('handles exception on iOS', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw CBException(code: "PlatformError", message: "An error occured");
+      });
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
       Map<String, String> queryparam = {"limit": "100"};
-      final productIdentifiers =
-          await Chargebee.retrieveProductIdentifers(queryparam);
-      expect(callStack, <Matcher>[
-        isMethodCall(
-          Constants.mProductIdentifiers,
-          arguments: queryparam,
-        )
-      ]);
-      expect(productIdentifiers, jsonDecode(productIdentifiersString));
+      await expectLater(() => Chargebee.retrieveProductIdentifers(queryparam),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
     });
 
     test('returns the list of Product Identifiers on Android', () async {
@@ -113,6 +108,17 @@ void main() {
         )
       ]);
       expect(productIdentifiers, jsonDecode(productIdentifiersString));
+    });
+
+    test('handles exception on Android', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw CBException(code: "PlatformError", message: "An error occured");
+      });
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      Map<String, String> queryparam = {"limit": "100"};
+      await expectLater(() => Chargebee.retrieveProductIdentifers(queryparam),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
     });
   });
 
