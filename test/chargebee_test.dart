@@ -162,6 +162,21 @@ void main() {
       expect(result.length, 1);
     });
 
+    test('handles exception on iOS', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw CBException(code: "PlatformError", message: "An error occured");
+      });
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      final Map<String, dynamic> itemsQueryParams = {
+        "limit": "10",
+        "sort_by[desc]": "Standard",
+        "channel[is]": "app_store"
+      };
+      await expectLater(() => Chargebee.retrieveAllItems(itemsQueryParams),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
+    });
+
     test('returns the list of items on Android', () async {
       channelResponse = itemsString;
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
@@ -176,6 +191,21 @@ void main() {
       ]);
       // we have 1 item in itemsString above
       expect(result.length, 1);
+    });
+
+    test('handles exception on Android', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw CBException(code: "PlatformError", message: "An error occured");
+      });
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      final Map<String, dynamic> itemsQueryParams = {
+        "limit": "10",
+        "sort_by[desc]": "Standard",
+        "channel[is]": "app_store"
+      };
+      await expectLater(() => Chargebee.retrieveAllItems(itemsQueryParams),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
     });
   });
 }
