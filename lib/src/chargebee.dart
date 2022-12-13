@@ -128,7 +128,6 @@ class Chargebee {
       try {
         String result = await platform.invokeMethod(
             Constants.mProductIdentifiers, queryParams);
-        log('result : $result');
         productIdList = jsonDecode(result);
 
         return productIdList;
@@ -192,13 +191,12 @@ class Chargebee {
       try {
         String result = await platform.invokeMethod(
             Constants.mRetrieveAllItems, queryParams);
-        print('result : $result');
-
         itemsFromServer = jsonDecode(result);
         for (var value in itemsFromServer) {
           var wrapper = CBItemsList.fromJson(value);
           listItems.add(wrapper.cbItem!);
         }
+
         return listItems;
       } on CBException catch (e) {
         print('CBException : ${e.message}');
@@ -207,14 +205,11 @@ class Chargebee {
       try {
         String result = await platform.invokeMethod(
             Constants.mRetrieveAllItems, queryParams);
-        print("result : $result");
         itemsFromServer = jsonDecode(result);
         for (var value in itemsFromServer) {
           var wrapper = CBItemsList.fromJsonAndroid(value);
           listItems.add(wrapper.cbItem!);
         }
-        print(listItems.first.name);
-        print(listItems.first.status);
 
         return listItems;
       } on CBException catch (e) {
