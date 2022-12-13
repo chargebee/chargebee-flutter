@@ -98,4 +98,45 @@ void main() {
       expect(productIdentifiers, jsonDecode(productIdentifiersString));
     });
   });
+
+  group('retrieveAllItems', () {
+    final itemsString = """[
+  {
+    "item": {
+      "channel": "app_store",
+      "enabled_for_checkouts": false,
+      "enabled_in_portal": false,
+      "external_name": "monthly.120",
+      "id": "monthly.120",
+      "is_giftable": false,
+      "is_shippable": false,
+      "itemApplicability": "restricted",
+      "item_family_id": "apple-app-store",
+      "metered": false,
+      "name": "monthly.120",
+      "object": "item",
+      "resource_version": 1668687472606,
+      "status": "active",
+      "type": "plan",
+      "updated_at": 1668687472,
+      "description": "test_description"
+    }
+  }
+]""";
+    test('works on iOS', () async {
+      channelResponse = itemsString;
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      final Map<String, dynamic> itemsQueryParams = {
+        "limit": "10",
+        "sort_by[desc]": "Standard",
+        "channel[is]": "play_store"
+      };
+      final result = await Chargebee.retrieveAllItems(itemsQueryParams);
+      expect(callStack, <Matcher>[
+        isMethodCall(Constants.mRetrieveAllItems, arguments: itemsQueryParams)
+      ]);
+      // we have 1 item in itemsString above
+      expect(result.length, 1);
+    });
+  });
 }
