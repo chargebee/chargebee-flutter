@@ -299,4 +299,74 @@ void main() {
       channel.setMockMethodCallHandler(null);
     });
   });
+
+  group('retrieveEntitlements', () {
+    final Map<String, String> getEntitlementsParams = {
+      "subscriptionId": "2000000226631982"
+    };
+    final entitlementsListString = """
+        [
+          {
+            "subscription_entitlement": {
+              "feature_description": "Test feature for SDK testing",
+              "feature_id": "test-feature",
+              "feature_name": "Test Feature",
+              "feature_type": "SWITCH",
+              "is_enabled": true,
+              "is_overridden": true,
+              "name": "Available",
+              "subscription_id": "2000000226631982",
+              "value": "true"
+            }
+          }
+        ]
+    """;
+    test('retrieves entitlements successfully on iOS', () async {
+      channelResponse = entitlementsListString;
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      final result =
+          await Chargebee.retrieveEntitlements(getEntitlementsParams);
+      expect(callStack, <Matcher>[
+        isMethodCall(Constants.mGetEntitlements,
+            arguments: getEntitlementsParams)
+      ]);
+      // we have 1 item in entitlementsListString above
+      expect(result.length, 1);
+    });
+
+    test('handles exception on iOS', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw CBException(code: "PlatformError", message: "An error occured");
+      });
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      await expectLater(
+          () => Chargebee.retrieveEntitlements(getEntitlementsParams),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
+    });
+
+    test('retrieves entitlements successfully on Android', () async {
+      channelResponse = entitlementsListString;
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      final result =
+          await Chargebee.retrieveEntitlements(getEntitlementsParams);
+      expect(callStack, <Matcher>[
+        isMethodCall(Constants.mGetEntitlements,
+            arguments: getEntitlementsParams)
+      ]);
+      // we have 1 item in entitlementsListString above
+      expect(result.length, 1);
+    });
+
+    test('handles exception on Android', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw CBException(code: "PlatformError", message: "An error occured");
+      });
+      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      await expectLater(
+          () => Chargebee.retrieveEntitlements(getEntitlementsParams),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
+    });
+  });
 }
