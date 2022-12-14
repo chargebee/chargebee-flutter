@@ -94,7 +94,8 @@ You can present any of the above products to your users for them to purchase.
 
 Pass the product and customer identifier to the following function when your customer chooses the product to purchase.
 
-`customerId`: This is an optional parameter. Chargebee requires the unique ID of your customer as customerId. If a unique list of customers is present in your database or a third-party system, send the unique customer ID to Chargebee from that source.
+`customerId` -  **Optional parameter**. Although this is an optional parameter, we recommend passing customerId if it is available before user subscribes on your App. Passing this parameter ensures that customerId in your database matches with the customerId in Chargebee.
+In case this parameter is not passed, then the **customerId** will be the same as the **SubscriptionId** created in Chargebee.
 
 ```dart
 try {
