@@ -15,11 +15,12 @@ class Product {
 
 class PurchaseResult {
   String subscriptionId;
+  String planId;
   String status;
-  PurchaseResult(this.subscriptionId, this.status);
+  PurchaseResult(this.subscriptionId, this.planId, this.status);
 
   factory PurchaseResult.fromJson(dynamic json) {
-    return PurchaseResult(json['id'] as String, json['status'] as String);
+    return PurchaseResult(json['subscriptionId'] as String, json['planId'] as String, json['status'] as String);
   }
 }
 
@@ -61,6 +62,7 @@ class Subscripton {
     customerId = json['customer_id'] as String;
     planAmount = json['plan_amount'].toString();
     status = json['status'] as String;
+    subscriptionId = json['subscription_id'] as String;
   }
 }
 

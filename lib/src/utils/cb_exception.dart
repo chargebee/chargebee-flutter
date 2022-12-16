@@ -1,17 +1,14 @@
 
-class CBException implements Exception {
+import 'package:flutter/services.dart';
 
-  /// An error code.
-  final String code;
-
-  /// A human-readable error message, possibly null.
-  final String message;
-
-  CBException({
-    required this.code,
-    required this.message
-  });
-
+class CBException {
+   String errorCode;
+   String? message;
+   String details;
+  CBException(
+     this.errorCode,
+     this.message, this.details
+  );
   @override
-  String toString() => 'CBException($code, $message)';
+  String toString() => 'CBException($errorCode, $message, $details)';
 }

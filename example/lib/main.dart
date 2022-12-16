@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'package:chargebee_flutter/chargebee_flutter.dart';
 import 'package:chargebee_flutter_sdk_example/product_ids_listview.dart';
@@ -32,11 +31,10 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   final List<String> cbMenu;
+  final String title;
 
   const MyHomePage(this.cbMenu, {Key? key, required this.title})
       : super(key: key);
-
-  final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState(cbMenu);
@@ -45,26 +43,23 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   _MyHomePageState(this.cbMenu);
 
-  late List<String> cbMenu;
-
-  List<Product> cbProductList = [];
-  List<Product> products = [];
-
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController apiKeyController = TextEditingController();
   final TextEditingController sdkKeyController = TextEditingController();
   final TextEditingController iosDdkKeyController = TextEditingController();
-  late String siteName="", apiKey="", androidSdkKey="", iosSdkKey = "";
+  final TextEditingController productIdTextFieldController = TextEditingController();
 
-  final TextEditingController productIdTextFieldController =
-      TextEditingController();
+  List<Product> products = [];
+  late List<String> cbMenu;
+  late String siteName="", apiKey="", androidSdkKey="", iosSdkKey = "";
   late String productIDs;
-  late Map<String, String> queryParams = {"channel": "app_store", "customer_id":"imay-flutter"};
-  Map<String, String> params = {"subscriptionId":"AzZlGJTC9U3tw4nF"};
-  late Map<String, String> itemsQueryParams = {"limit": "10","sort_by[desc]": "Standard","channel[is]": "play_store"};
-  late Map<String, String> plansQueryParams = {"sort_by[desc]": "Standard","channel[is]": "app_store"};
   late String userInput;
   late ProgressBarUtil mProgressBarUtil;
+
+  final Map<String, String> queryParams = {"channel": "app_store", "customer_id":"abc"}; // sample query params for retrieveSubscriptions
+  final Map<String, String> params = {"subscriptionId":"AzZlGJTC9U3tw4nF"}; // eg. query params for entitlements
+  final Map<String, String> itemsQueryParams = {"limit": "10","channel[is]": "play_store"}; // eg. query params for getAllItems, limit- default=100, min=1, max=100
+  final Map<String, String> plansQueryParams = {"limit": "5","channel[is]": "play_store"}; // eg. query params for getAllPlans
 
   @override
   void initState() {
@@ -136,34 +131,182 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       await Chargebee.configure(siteName, apiKey, iosSdkKey, androidSdkKey);
     } on PlatformException catch (e) {
-      log('PlatformException : ${e.message}');
+      print('${e.message}, ${e.details}');
     }
   }
 
-  Future<void> getProductIdList(List<String> productIDsList) async {
+  Future<void> getProducts(List<String> productIDsList) async {
     try {
-      cbProductList = await Chargebee.retrieveProducts(productIDsList);
-      log('result : $cbProductList');
+      products = await Chargebee.retrieveProducts(productIDsList);
+      log('result : $products');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
-      if (cbProductList.isNotEmpty) {
+      if (products.isNotEmpty) {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => ProductListView(cbProductList,
+              builder: (BuildContext context) => ProductListView(products,
                   title: 'Google Play-Product List'),
             ));
       } else {
         log('Items not avilable to buy');
         _showDialog(context, "Items not avilable to buy");
       }
-    } catch (e) {
-      log('Exception : ${e.toString()}');
+    } on PlatformException catch (e) {
+      print('${e.message}, ${e.details}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
+    }
+  }
+
+  Future<void> retrieveProductIdentifers() async {
+    try {
+      Map<String, String> queryparam = {"limit":"10"};
+      final result = await Chargebee.retrieveProductIdentifers(queryparam);
+      log('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+
+      if (result.isNotEmpty) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ProductIdentifiersView(result,
+                  title: 'Product Identifiers List'),
+            ));
+      } else {
+        log('Product Ids not avilable in chargebee');
+        _showDialog(context, "Product Ids not avilable in chargebee");
+      }
+
+    } on PlatformException catch (e) {
+      print('${e.message}, ${e.details}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
+  }
+
+  Future<void> retrieveSubscriptions(Map<String, String> queryparam) async {
+    try {
+      final result = await Chargebee.retrieveSubscriptions(queryparam);
+      print('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      if (result.length > 0) {
+        print('status : ${result.first?.status}');
+        print('subscriptionId : ${result.first?.subscriptionId}');
+        _showDialog(context, "Subscriptions retrieved successfully!");
+      } else {
+        print('Subscription not found in Chargebee System');
+        _showDialog(context, "Subscription not found in Chargebee System");
+      }
+    } on PlatformException catch (e) {
+      print('${e.message}, ${e.details}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      _showDialog(context, '${e.message}');
+    }
+  }
+
+  Future<void> retrieveEntitlements(Map<String, String> queryparam) async {
+    try {
+      final result = await Chargebee.retrieveEntitlements(queryparam);
+      print('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+
+      if (result.isNotEmpty) {
+        _showDialog(context, "entitlements retrieved successfully!");
+      } else {
+        log('Entitlements not found in chargebee system');
+        _showDialog(context, "Entitlements not found in system");
+      }
+
+    } on PlatformException catch (e) {
+      print('${e.message}, ${e.details}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      _showDialog(context, '${e.message}');
+    }
+  }
+
+  Future<void> retrieveAllPlans(Map<String, String> queryparam) async {
+    try {
+      final result = await Chargebee.retrieveAllPlans(queryparam);
+      log('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      List<String> name = [];
+      if (result.isNotEmpty) {
+        for (var cbPlan in result) {
+          name.add(cbPlan != null? cbPlan.name!: "null");
+        }
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ItemsView(name,
+                  title: 'List Plans'),
+            ));
+      } else {
+        log('Plans not found in chargebee');
+        _showDialog(context, "Plans not avilable in chargebee");
+      }
+
+    } on PlatformException catch (e) {
+      print('${e.message}, ${e.details}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      _showDialog(context, '${e.message}');
+    }
+  }
+
+  Future<void> retrieveAllItems(Map<String, String> queryparam) async {
+    try {
+      final result = await Chargebee.retrieveAllItems(queryparam);
+      print('result : $result');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+
+      List<String> name = [];
+      if (result.isNotEmpty) {
+        for (var cbItem in result) {
+          name.add(cbItem != null? cbItem.name!: "null");
+        }
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => ItemsView(name,
+                  title: 'List Items'),
+            ));
+      } else {
+        log('Items not found in chargebee');
+        _showDialog(context, "Items not avilable in chargebee");
+      }
+
+    } on PlatformException catch (e) {
+      print('${e.message}, ${e.details}');
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      _showDialog(context, '${e.message}');
     }
   }
 
@@ -222,7 +365,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       mProgressBarUtil.showProgressDialog();
 
                       List<String> listItems = productIDs.split(',');
-                      getProductIdList(listItems);
+                      getProducts(listItems);
                       productIdTextFieldController.clear();
                     } catch (e) {
                       log('error : ${e.toString()}');
@@ -233,29 +376,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           );
         });
-  }
-
-
-  Future<void> retrieveSubscriptions(Map<String, dynamic> queryparam) async {
-    try {
-      final result = await Chargebee.retrieveSubscriptions(queryparam);
-      log('result : $result');
-
-      if (mProgressBarUtil.isProgressBarShowing()) {
-        mProgressBarUtil.hideProgressDialog();
-      }
-      if (result.length > 0) {
-        _showDialog(context, "Subscriptions retrieved successfully!");
-      } else {
-        log('Subscription not found in Chargebee System');
-        _showDialog(context, "Subscription not found in Chargebee System");
-      }
-    } catch (e) {
-      log('Exception : ${e.toString()}');
-      if (mProgressBarUtil.isProgressBarShowing()) {
-        mProgressBarUtil.hideProgressDialog();
-      }
-    }
   }
 
   Future<void> showAuthenticationDialog(BuildContext context) async {
@@ -336,128 +456,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ]
           );
         });
-  }
-
-  Future<void> retrieveProductIdentifers() async {
-    try {
-      Map<String, String> queryparam = {"limit":"100"};
-      final result = await Chargebee.retrieveProductIdentifers(queryparam);
-      log('result : $result');
-
-      if (mProgressBarUtil.isProgressBarShowing()) {
-        mProgressBarUtil.hideProgressDialog();
-      }
-
-      if (result.isNotEmpty) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => ProductIdentifiersView(result,
-                  title: 'Product Identifiers List'),
-            ));
-      } else {
-        log('Product Ids not avilable in chargebee');
-        _showDialog(context, "Product Ids not avilable in chargebee");
-      }
-
-    } catch (e) {
-      log('Exception : ${e.toString()}');
-      if (mProgressBarUtil.isProgressBarShowing()) {
-        mProgressBarUtil.hideProgressDialog();
-      }
-    }
-  }
-
-  Future<void> retrieveEntitlements(Map<String, String> queryparam) async {
-    try {
-      final result = await Chargebee.retrieveEntitlements(queryparam);
-      log('result : $result');
-
-      if (mProgressBarUtil.isProgressBarShowing()) {
-        mProgressBarUtil.hideProgressDialog();
-      }
-
-      if (result.isNotEmpty) {
-        _showDialog(context, "entitlements retrieved successfully!");
-      } else {
-        log('Entitlements not found in system');
-        _showDialog(context, "Entitlements not found in system");
-      }
-
-    } catch (e) {
-      log('Exception : ${e.toString()}');
-      if (mProgressBarUtil.isProgressBarShowing()) {
-        mProgressBarUtil.hideProgressDialog();
-      }
-    }
-  }
-
-  Future<void> retrieveAllPlans(Map<String, dynamic> queryparam) async {
-    try {
-      final result = await Chargebee.retrieveAllPlans(queryparam);
-      log('result : $result');
-
-      if (mProgressBarUtil.isProgressBarShowing()) {
-        mProgressBarUtil.hideProgressDialog();
-      }
-      List<String> name = [];
-      if (result.isNotEmpty) {
-        for (var cbPlan in result) {
-          name.add(cbPlan != null? cbPlan.name!: "null");
-        }
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => ItemsView(name,
-                  title: 'List Plans'),
-            ));
-      } else {
-        log('Plans not avilable in chargebee');
-        _showDialog(context, "Plans not avilable in chargebee");
-      }
-
-    } catch (e) {
-      log('Exception : ${e.toString()}');
-      if (mProgressBarUtil.isProgressBarShowing()) {
-        mProgressBarUtil.hideProgressDialog();
-      }
-      _showDialog(context, e.toString());
-    }
-  }
-
-  Future<void> retrieveAllItems(Map<String, dynamic> queryparam) async {
-    try {
-      final result = await Chargebee.retrieveAllItems(queryparam);
-      print('result : $result');
-
-      if (mProgressBarUtil.isProgressBarShowing()) {
-        mProgressBarUtil.hideProgressDialog();
-      }
-
-      List<String> name = [];
-      if (result.isNotEmpty) {
-        for (var cbItem in result) {
-          name.add(cbItem != null? cbItem.name!: "null");
-        }
-
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => ItemsView(name,
-                  title: 'List Items'),
-            ));
-      } else {
-        log('Items not found in chargebee');
-        _showDialog(context, "Items not avilable in chargebee");
-      }
-
-    } catch (e) {
-      log('Exception : ${e.toString()}');
-      if (mProgressBarUtil.isProgressBarShowing()) {
-        mProgressBarUtil.hideProgressDialog();
-      }
-      _showDialog(context, e.toString());
-    }
   }
 
 }

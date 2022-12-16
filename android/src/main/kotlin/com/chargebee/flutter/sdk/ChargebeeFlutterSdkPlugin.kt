@@ -8,6 +8,8 @@ import com.chargebee.android.Chargebee
 import com.chargebee.android.ErrorDetail
 import com.chargebee.android.billingservice.CBCallback
 import com.chargebee.android.billingservice.CBPurchase
+import com.chargebee.android.billingservice.GPErrorCode
+import com.chargebee.android.network.CBAuthResponse
 import com.chargebee.android.exceptions.CBException
 import com.chargebee.android.exceptions.CBProductIDResult
 import com.chargebee.android.exceptions.ChargebeeResult
@@ -22,7 +24,6 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware{
     private lateinit var channel: MethodChannel
@@ -35,6 +36,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     var subscriptionsList = ArrayList<String>()
     private lateinit var context: Context
     private lateinit var activity: Activity
+    var queryParam = arrayOf<String>()
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "chargebee_flutter")
@@ -46,7 +48,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         when (call.method) {
             "authentication" -> {
                 if (args != null) {
-                    authentication(args)
+                    authentication(args, result)
                 }
             }
             "getProducts" -> {
@@ -95,16 +97,24 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             }
         }
     }
-    private fun authentication(args: Map<String, Any>) {
+    private fun authentication(args: Map<String, Any>, result: Result) {
         val siteName = args["site_name"] as String
         val apiKey = args["api_key"] as String
         val sdkKey = args["sdk_key"] as String
-
-        Log.i(javaClass.simpleName, " $siteName, $apiKey, $sdkKey, package Name: ${activity.packageName}")
         // Added chargebee logger support for flutter android sdk
         Chargebee.environment = "cb_flutter_android_sdk"
         // Configure with Chargebee SDK
-        Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = "${activity.packageName}")
+        Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = "${activity.packageName}"){
+            when(it){
+                is ChargebeeResult.Success -> {
+                    val response = (it.data) as CBAuthResponse
+                    result.success(response.in_app_detail.status)
+                }
+                is ChargebeeResult.Error ->{
+                    onError(it.exp, result)
+                }
+            }
+        }
     }
 
     private fun retrieveProducts(args: Map<String, Any>, result: Result) {
@@ -123,8 +133,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     }
 
                     override fun onError(error: CBException) {
-                        Log.e(javaClass.simpleName, "Error:  ${error.message}")
-                        result.success(error.message)
+                        onError(error, result)
                     }
                 })
     }
@@ -140,55 +149,58 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 arrayList,
                 object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
                     override fun onSuccess(productIDs: ArrayList<CBProduct>) {
-                        CBPurchase.purchaseProduct(
-                            productIDs.first(),
-                            customerID,
-                            object : CBCallback.PurchaseCallback<String> {
-                                override fun onSuccess(
-                                    receiptDetail: ReceiptDetail,
-                                    status: Boolean
-                                ) {
-                                    Log.i(
-                                        javaClass.simpleName,
-                                        "Subscription ID:  ${receiptDetail.subscription_id}"
-                                    )
-                                    Log.i(javaClass.simpleName, "Status:  $status")
-                                    Log.i(
-                                        javaClass.simpleName,
-                                        "Plan ID:  ${receiptDetail.plan_id}"
-                                    )
-                                    result.success(
-                                        onResultMap(
-                                            receiptDetail.subscription_id,
-                                            "$status"
+                        if (productIDs.size>0) {
+                            CBPurchase.purchaseProduct(
+                                productIDs.first(),
+                                customerID,
+                                object : CBCallback.PurchaseCallback<String> {
+                                    override fun onSuccess(
+                                        receiptDetail: ReceiptDetail,
+                                        status: Boolean
+                                    ) {
+                                        Log.i(
+                                            javaClass.simpleName,
+                                            "Subscription ID:  ${receiptDetail.subscription_id}"
                                         )
-                                    )
-                                }
+                                        Log.i(javaClass.simpleName, "Status:  $status")
+                                        Log.i(
+                                            javaClass.simpleName,
+                                            "Plan ID:  ${receiptDetail.plan_id}"
+                                        )
+                                        result.success(
+                                            onResultMap(
+                                                receiptDetail.subscription_id,
+                                                receiptDetail.plan_id,
+                                                "$status"
+                                            )
+                                        )
+                                    }
 
-                                override fun onError(error: CBException) {
-                                    Log.i(javaClass.simpleName, "Exception :${error.message}")
-                                    result.success(onResultMap("${error.message}", "false"))
-                                }
-                            })
+                                    override fun onError(error: CBException) {
+                                        onError(error, result)
+                                    }
+                                })
+                        }else {
+                            onError(CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)), result)
+                        }
                     }
 
                     override fun onError(error: CBException) {
-                        Log.e(javaClass.simpleName, "Error:  ${error.message}")
-                        result.success(onResultMap("${error.message}", "${error.message}"))
+                        onError(error, result)
                     }
                 })
         }catch (exp: Exception){
-            Log.e(javaClass.simpleName, "Exception:  ${exp.message}")
-            result.success(onResultMap("${exp.message}", "${exp.message}"))
+            result.error(exp.message,exp.message, exp)
         }
     }
 
-    fun onResultMap(id: String, status: String): String{
-        subscriptionStatus.put("id", id)
+    fun onResultMap(id: String, planId: String, status: String): String{
+        subscriptionStatus.put("subscriptionId", id)
+        subscriptionStatus.put("planId", planId)
         subscriptionStatus.put("status", status)
         return Gson().toJson(subscriptionStatus)
     }
-    private fun retrieveSubscriptions(queryParams: Map<String, String>, result: Result) {
+    private fun retrieveSubscriptions(queryParams: Map<String, String> = mapOf(), result: Result) {
         Chargebee.retrieveSubscriptions(queryParams) {
             when(it){
                 is ChargebeeResult.Success -> {
@@ -198,16 +210,17 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     result.success(jsonString)
                 }
                 is ChargebeeResult.Error ->{
-                    Log.e(javaClass.simpleName, "Exception from server- retrieveSubscription() :  ${it.exp.message}")
-                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+                    onError(it.exp, result)
                 }
             }
         }
 
     }
 
-    private fun retrieveAllItems(queryParams: Map<String, String>, result: Result) {
-        val queryParam = arrayOf(queryParams["limit"] as String, queryParams["sort_by[desc]"] as String, Chargebee.channel)
+    private fun retrieveAllItems(queryParams: Map<String, String>? = mapOf(), result: Result) {
+        if (queryParams != null)
+        queryParam = arrayOf(queryParams["limit"] ?:"", queryParams["sort_by[desc]"] ?:"Standard", Chargebee.channel)
+
         Chargebee.retrieveAllItems(queryParam) {
             when (it) {
                 is ChargebeeResult.Success -> {
@@ -215,43 +228,41 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     result.success(jsonString)
                 }
                 is ChargebeeResult.Error -> {
-                    Log.d(javaClass.simpleName, "exception :  ${it.exp.message}")
-                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+                    onError(it.exp, result)
                 }
             }
         }
     }
-    private fun retrieveAllPlans(queryParams: Map<String, String>, result: Result) {
-        val queryParam = arrayOf(queryParams["sort_by[desc]"] as String, "app_store")
+    private fun retrieveAllPlans(queryParams: Map<String, String>? = mapOf(), result: Result) {
+        if (queryParams != null)
+        queryParam = arrayOf(queryParams["limit"] ?:"", queryParams["sort_by[desc]"] ?:"Standard", Chargebee.channel)
+
         Chargebee.retrieveAllPlans(queryParam) {
             when (it) {
                 is ChargebeeResult.Success -> {
-                    Log.i(javaClass.simpleName, "list plans :  ${(it.data as PlansWrapper).list}")
                     val jsonString = Gson().toJson((it.data as PlansWrapper).list)
                     result.success(jsonString)
                 }
                 is ChargebeeResult.Error -> {
-                    Log.d(javaClass.simpleName, "exception :  ${it.exp.message}")
-                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+                    onError(it.exp, result)
                 }
             }
         }
     }
 
-    private fun retrieveProductIdentifers(queryParams: Map<String, String>, result: Result) {
-        val queryParam = arrayOf(queryParams["limit"] as String)
+    private fun retrieveProductIdentifers(queryParams: Map<String, String>? = mapOf(), result: Result) {
+        if (queryParams != null)
+            queryParam = arrayOf(queryParams["limit"] ?: "")
         CBPurchase.retrieveProductIdentifers(queryParam) {
             when (it) {
                 is CBProductIDResult.ProductIds -> {
-                    Log.i(javaClass.simpleName, "List of Product Identifiers:  $it")
                     if (it.IDs.isNotEmpty()) {
                         val jsonString = Gson().toJson(it.IDs)
                         result.success(jsonString)
                     }
                 }
                 is CBProductIDResult.Error -> {
-                    Log.e(javaClass.simpleName, " ${it.exp.message}")
-                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
+                    onError(it.exp, result)
                 }
             }
         }
@@ -261,19 +272,13 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         Chargebee.retrieveEntitlements(subscriptionId) {
             when(it){
                 is ChargebeeResult.Success -> {
-                    Log.i(
-                        javaClass.simpleName,
-                        "entitlements response:  ${(it.data)}"
-                    )
                     if ((it.data as CBEntitlements).list.isNotEmpty()) {
                         val jsonString = Gson().toJson((it.data as CBEntitlements).list)
                         result.success(jsonString)
                     }
                 }
                 is ChargebeeResult.Error ->{
-                    Log.e(javaClass.simpleName, "Exception from server- retrieveEntitlements() :  ${it.exp.message}")
-                    result.error("${it.exp.apiErrorCode}", "${it.exp.message}","")
-
+                    onError(it.exp, result)
                 }
             }
         }
@@ -294,6 +299,9 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
     override fun onDetachedFromActivityForConfigChanges() {
         onDetachedFromActivity();
+    }
+    private fun onError(error: CBException, result: Result) {
+        result.error("${error.apiErrorCode}", "${error.message}", error)
     }
 }
 

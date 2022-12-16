@@ -1,6 +1,4 @@
-import 'dart:developer';
 import 'package:chargebee_flutter/src/constants.dart';
-import 'package:chargebee_flutter/src/utils/cb_exception.dart';
 import 'package:chargebee_flutter/src/utils/item.dart';
 import 'package:chargebee_flutter/src/utils/plan.dart';
 import 'package:chargebee_flutter/src/utils/product.dart';
@@ -17,45 +15,35 @@ class Chargebee {
   /* Configure the app details with chargebee system */
   static Future<void> configure(String site, String publishableApiKey,
       [String? iosSdkKey = "", androidSdkKey = ""]) async {
-    try {
-      if (_isIOS) {
-        final args = {
-          Constants.siteName: site,
-          Constants.apiKey: publishableApiKey,
-          Constants.sdkKey: iosSdkKey
-        };
+    if (_isIOS) {
+      final args = {
+        Constants.siteName: site,
+        Constants.apiKey: publishableApiKey,
+        Constants.sdkKey: iosSdkKey
+      };
 
-        await platform.invokeMethod(Constants.mAuthentication, args);
-      } else {
-        final args = {
-          Constants.siteName: site,
-          Constants.apiKey: publishableApiKey,
-          Constants.sdkKey: androidSdkKey,
-        };
-        await platform.invokeMethod(Constants.mAuthentication, args);
-      }
-    } on CBException catch (e) {
-      log('CBException : ${e.message}');
+      await platform.invokeMethod(Constants.mAuthentication, args);
+    } else {
+      final args = {
+        Constants.siteName: site,
+        Constants.apiKey: publishableApiKey,
+        Constants.sdkKey: androidSdkKey,
+      };
+      await platform.invokeMethod(Constants.mAuthentication, args);
     }
   }
 
   /* Get the product/sku details from Play console/ App Store */
-  static Future<List<Product>> retrieveProducts(
-      List<String> listOfGPlayProductIDs) async {
-    List<Object?> result = [];
+  static Future<List<Product>> retrieveProducts(List<String> productIDs) async {
     List<Product> products = [];
-    try {
-      result = await platform.invokeMethod(Constants.mGetProducts,
-          {Constants.productIDs: listOfGPlayProductIDs});
-      if (result.isNotEmpty) {
-        for (var i = 0; i < result.length; i++) {
-          var obj = result[i].toString();
-          Product product = Product.fromJson(jsonDecode(obj));
-          products.add(product);
-        }
+    final result = await platform.invokeMethod(
+        Constants.mGetProducts, {Constants.productIDs: productIDs});
+    if (result.isNotEmpty) {
+      for (var i = 0; i < result.length; i++) {
+        var obj = result[i].toString();
+        Product product = Product.fromJson(jsonDecode(obj));
+        products.add(product);
       }
-    } on CBException catch (e) {
-      log('CBException : ${e.message}');
     }
     return products;
   }
@@ -63,157 +51,81 @@ class Chargebee {
   /* Buy the product with/without customer Id */
   static Future<PurchaseResult> purchaseProduct(Product product,
       [String? customerId = ""]) async {
-    if (customerId == null)
-      customerId = "";
-    else
-      customerId = customerId;
+    if (customerId == null) customerId = "";
     String purchaseResult = await platform.invokeMethod(
         Constants.mPurchaseProduct,
         {Constants.product: product.id, Constants.customerId: customerId});
     if (purchaseResult.isNotEmpty) {
       return PurchaseResult.fromJson(jsonDecode(purchaseResult.toString()));
     } else {
-      return PurchaseResult("", purchaseResult);
+      return PurchaseResult(purchaseResult, purchaseResult, purchaseResult);
     }
   }
 
   /* Get the subscription details from chargebee system */
   static Future<List<Subscripton?>> retrieveSubscriptions(
-      Map<String, dynamic> queryParams) async {
+      Map<String, String> queryParams) async {
     List<Subscripton> subscriptions = [];
-
     if (_isIOS) {
-      try {
-        String result = await platform.invokeMethod(
-            Constants.mSubscriptionMethod, queryParams);
-        print('result : $result');
-        List<dynamic> jsonData = jsonDecode(result.toString());
+      String result = await platform.invokeMethod(
+          Constants.mSubscriptionMethod, queryParams);
+      List jsonData = jsonDecode(result.toString());
+      if (jsonData.isNotEmpty) {
         for (var value in jsonData) {
           var wrapper = SubscriptonList.fromJson(value);
           subscriptions.add(wrapper.subscripton!);
         }
-        print(subscriptions.first.subscriptionId);
-        print(subscriptions.first.status);
-        return subscriptions;
-      } on CBException catch (e) {
-        log('CBException : ${e.message}');
       }
     } else {
-      try {
-        String result = await platform.invokeMethod(
-            Constants.mSubscriptionMethod, queryParams);
-        log('result : $result');
-
-        List<dynamic> jsonData = jsonDecode(result);
+      String result = await platform.invokeMethod(
+          Constants.mSubscriptionMethod, queryParams);
+      List jsonData = jsonDecode(result);
+      if (jsonData.isNotEmpty) {
         for (var value in jsonData) {
           var wrapper = SubscriptonList.fromJsonAndroid(value);
           subscriptions.add(wrapper.subscripton!);
         }
-        print(subscriptions.first.subscriptionId);
-        print(subscriptions.first.status);
-        return subscriptions;
-      } on CBException catch (e) {
-        log('CBException : ${e.message}');
       }
     }
     return subscriptions;
   }
 
   /* Get Apple/Google Product ID's from chargebee system */
-  static Future<List<dynamic>> retrieveProductIdentifers(
-      Map<String, String> queryParams) async {
-    List<dynamic> productIdList = [];
-
-    if (_isIOS) {
-      try {
-        String result = await platform.invokeMethod(
-            Constants.mProductIdentifiers, queryParams);
-        productIdList = jsonDecode(result);
-
-        return productIdList;
-      } on CBException catch (e) {
-        log('CBException : ${e.message}');
-      }
-    } else {
-      try {
-        String result = await platform.invokeMethod(
-            Constants.mProductIdentifiers, queryParams);
-        print("result : $result");
-        productIdList = jsonDecode(result);
-
-        return productIdList;
-      } on CBException catch (e) {
-        log('CBException : ${e.message}');
-      }
-    }
-    return productIdList;
+  static Future<List> retrieveProductIdentifers(
+      [Map<String, String>? queryParams]) async {
+    String result =
+        await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
+    return jsonDecode(result);
   }
 
   /* Get entitlement details from chargebee system */
-  static Future<List<dynamic>> retrieveEntitlements(
+  static Future<List> retrieveEntitlements(
       Map<String, String> queryParams) async {
-    List<dynamic> entitlementsList = [];
-
-    if (_isIOS) {
-      try {
-        String result = await platform.invokeMethod(
-            Constants.mGetEntitlements, queryParams);
-        print("result : $result");
-        entitlementsList = jsonDecode(result);
-
-        return entitlementsList;
-      } on CBException catch (e) {
-        log('CBException : ${e.message}');
-        print("result : ${e.message}");
-      }
-    } else {
-      try {
-        String result = await platform.invokeMethod(
-            Constants.mGetEntitlements, queryParams);
-        print("result : $result");
-        entitlementsList = jsonDecode(result);
-
-        return entitlementsList;
-      } on CBException catch (e) {
-        log('CBException : ${e.message}');
-        print("result : ${e.message}");
-      }
-    }
-    return entitlementsList;
+    String result =
+        await platform.invokeMethod(Constants.mGetEntitlements, queryParams);
+    return jsonDecode(result);
   }
 
   /* Get the list of items from chargebee system */
   static Future<List<CBItem?>> retrieveAllItems(
-      Map<String, dynamic> queryParams) async {
-    List<dynamic> itemsFromServer = [];
+      [Map<String, String>? queryParams]) async {
+    List itemsFromServer = [];
     List<CBItem> listItems = [];
     if (_isIOS) {
-      try {
-        String result = await platform.invokeMethod(
-            Constants.mRetrieveAllItems, queryParams);
-        itemsFromServer = jsonDecode(result);
-        for (var value in itemsFromServer) {
-          var wrapper = CBItemsList.fromJson(value);
-          listItems.add(wrapper.cbItem!);
-        }
-
-        return listItems;
-      } on CBException catch (e) {
-        print('CBException : ${e.message}');
+      String result =
+          await platform.invokeMethod(Constants.mRetrieveAllItems, queryParams);
+      itemsFromServer = jsonDecode(result);
+      for (var value in itemsFromServer) {
+        var wrapper = CBItemsList.fromJson(value);
+        listItems.add(wrapper.cbItem!);
       }
     } else {
-      try {
-        String result = await platform.invokeMethod(
-            Constants.mRetrieveAllItems, queryParams);
-        itemsFromServer = jsonDecode(result);
-        for (var value in itemsFromServer) {
-          var wrapper = CBItemsList.fromJsonAndroid(value);
-          listItems.add(wrapper.cbItem!);
-        }
-
-        return listItems;
-      } on CBException catch (e) {
-        log('CBException : ${e.message}');
+      String result =
+          await platform.invokeMethod(Constants.mRetrieveAllItems, queryParams);
+      itemsFromServer = jsonDecode(result);
+      for (var value in itemsFromServer) {
+        var wrapper = CBItemsList.fromJsonAndroid(value);
+        listItems.add(wrapper.cbItem!);
       }
     }
     return listItems;
@@ -221,40 +133,24 @@ class Chargebee {
 
   /* Get the list of plans from chargebee system */
   static Future<List<CBPlan?>> retrieveAllPlans(
-      Map<String, dynamic> queryParams) async {
-    List<dynamic> plansFromServer = [];
+      [Map<String, String>? queryParams]) async {
+    List plansFromServer = [];
     List<CBPlan> listPlans = [];
-
     if (_isIOS) {
-      try {
-        String result = await platform.invokeMethod(
-            Constants.mRetrieveAllPlans, queryParams);
-        print('result : $result');
-        plansFromServer = jsonDecode(result);
-        for (var value in plansFromServer) {
-          var wrapper = CBPlansList.fromJson(value);
-          listPlans.add(wrapper.cbPlan!);
-        }
-        return listPlans;
-      } on CBException catch (e) {
-        log('CBException : ${e.message}');
+      String result =
+          await platform.invokeMethod(Constants.mRetrieveAllPlans, queryParams);
+      plansFromServer = jsonDecode(result);
+      for (var value in plansFromServer) {
+        var wrapper = CBPlansList.fromJson(value);
+        listPlans.add(wrapper.cbPlan!);
       }
     } else {
-      try {
-        String result = await platform.invokeMethod(
-            Constants.mRetrieveAllPlans, queryParams);
-        print("result : $result");
-        plansFromServer = jsonDecode(result);
-        for (var value in plansFromServer) {
-          var wrapper = CBPlansList.fromJsonAndroid(value);
-          listPlans.add(wrapper.cbPlan!);
-        }
-        print(listPlans.first.name);
-        print(listPlans.first.status);
-
-        return listPlans;
-      } on CBException catch (e) {
-        log('CBException : ${e.message}');
+      String result =
+          await platform.invokeMethod(Constants.mRetrieveAllPlans, queryParams);
+      plansFromServer = jsonDecode(result);
+      for (var value in plansFromServer) {
+        var wrapper = CBPlansList.fromJsonAndroid(value);
+        listPlans.add(wrapper.cbPlan!);
       }
     }
     return listPlans;
