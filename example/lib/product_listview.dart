@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'package:chargebee_flutter/src/utils/product.dart';
+import 'package:flutter/services.dart';
 
 class ProductListView extends StatefulWidget {
   final List<Product> listProducts;
@@ -71,9 +72,8 @@ class ProductListViewState extends State<ProductListView> {
     try {
       Product map = listProducts[position];
       _showCustomerIdDialog(context, map);
-    } catch (e) {
-      log('PlatformException : ${e.toString()}');
-      print('exception  :${e.toString()}');
+    } on PlatformException catch (e) {
+      print('${e.message}, ${e.details}');
     }
   }
 
@@ -83,6 +83,7 @@ class ProductListViewState extends State<ProductListView> {
       if (kDebugMode) {
         print("subscription result : $result");
         print("subscription id : ${result.subscriptionId}");
+        print("plan id : ${result.planId}");
         print("subscription status : ${result.status}");
       }
       mProgressBarUtil.hideProgressDialog();
@@ -92,8 +93,8 @@ class ProductListViewState extends State<ProductListView> {
       }else{
         _showSuccessDialog(context, result.subscriptionId);
       }
-    }  catch (e) {
-      log('PlatformException : ${e.toString()}');
+    } on PlatformException catch (e) {
+      print('${e.message}, ${e.details}');
       mProgressBarUtil.hideProgressDialog();
     }
   }

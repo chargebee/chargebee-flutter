@@ -27,7 +27,7 @@ To use Chargebee SDK in your Flutter app, follow these steps:
 
     ```dart
     dependencies: 
-     chargebee_flutter: ^0.0.5
+     chargebee_flutter: ^0.0.6
     ```
     
 2.  Install dependency.
@@ -55,8 +55,8 @@ Initialize the Chargebee Flutter SDK with your Chargebee site, Publishable API K
 import 'package:chargebee_flutter/chargebee_flutter.dart';
 try {
   await Chargebee.configure("SITE_NAME", "API-KEY", "iOS SDK Key", "Android SDK Key");
-} on PlatformException catch (error) {
-  log('PlatformException : ${error.message}');
+} on PlatformException catch (e) {
+  print('${e.message}, ${e.details}');
 }
 ```
 
@@ -70,9 +70,9 @@ Every In-App Purchase subscription product that you configure in your account, c
 
 ```dart
 try {
-final result = await Chargebee.retrieveProductIdentifers(queryparam);
-} catch (error) {
-print('Exception : $error');
+  final result = await Chargebee.retrieveProductIdentifers(queryparam);
+} on PlatformException catch (e) {
+  print('${e.message}, ${e.details}');
 }
 ```
 For example, query parameters can be passed as **"limit": "100"**.
@@ -84,8 +84,8 @@ Retrieve the IAP Product objects with Product IDs using the following function.
 ```dart
 try {
   List<Product> products = await Chargebee.retrieveProducts({productList: "[Product ID's from Google or Apple]"});
-} catch (error) {
-  print(error);
+} on PlatformException catch (e) {
+  print('${e.message}, ${e.details}');
 }
 ```
 You can present any of the above products to your users for them to purchase.
@@ -94,15 +94,16 @@ You can present any of the above products to your users for them to purchase.
 
 Pass the product and customer identifier to the following function when your customer chooses the product to purchase.
 
-`customerId`: This is an optional parameter. Chargebee requires the unique ID of your customer as customerId. If a unique list of customers is present in your database or a third-party system, send the unique customer ID to Chargebee from that source.
+`customerId` -  **Optional parameter**. Although this is an optional parameter, we recommend passing customerId if it is available before user subscribes on your App. Passing this parameter ensures that customerId in your database matches with the customerId in Chargebee.
+In case this parameter is not passed, then the **customerId** will be the same as the **SubscriptionId** created in Chargebee.
 
 ```dart
 try {
   final result = await Chargebee.purchaseProduct(product, customerId);
-    print("subscription id : ${result.subscriptionId}");
-    print("subscription status : ${result.status}");
-}  catch (error) {
-  print('Exception : $error');
+  print("subscription id : ${result.subscriptionId}");
+  print("subscription status : ${result.status}");
+}  on PlatformException catch (e) {
+  print('${e.message}, ${e.details}');
 }
 ```
 
@@ -117,8 +118,8 @@ Use query parameters - Subscription ID, Customer ID, or Status for checking the 
 ```dart
 try {
   final result = await Chargebee.retrieveSubscriptions(queryparam);
-} catch (error) {
-  print('Exception : $error');
+} on PlatformException catch (e) {
+  print('${e.message}, ${e.details}');
 }
 ```
 
@@ -130,9 +131,9 @@ Use the query parameter - Subscription ID for retrieving the list of [entitlemen
 
 ```dart
 try {
-final result = await Chargebee.retrieveEntitlements(queryparam);
-} catch (error) {
-print('Exception : $error');
+  final result = await Chargebee.retrieveEntitlements(queryparam);
+} on PlatformException catch (e) {
+  print('${e.message}, ${e.details}');
 }
 ```
 For example, query parameters can be passed as **"subscriptionId": "id"**.
@@ -145,9 +146,9 @@ If your Chargebee site is configured to Product Catalog 2.0, use the following f
 
 ```dart
 try {
-final result = await Chargebee.retrieveAllItems(queryparam);
-} catch (error) {
-print('Exception : $error');
+  final result = await Chargebee.retrieveAllItems(queryparam);
+} on PlatformException catch (e) {
+  print('${e.message}, ${e.details}');
 }
 ```
 For example, query parameters can be passed as **"sort_by[desc]" : "name"** or **"limit": "100"**.
@@ -158,9 +159,9 @@ If your Chargebee site is configured to Product Catalog 1.0, use the relevant fu
 
 ```dart
 try {
-final result = await Chargebee.retrieveAllPlans(queryparam);
-} catch (error) {
-print('Exception : $error');
+  final result = await Chargebee.retrieveAllPlans(queryparam);
+} on PlatformException catch (e) {
+  print('${e.message}, ${e.details}');
 }
 ```
 For example, query parameters can be passed as **"sort_by[desc]" : "name"** or **"limit": "100"**.
