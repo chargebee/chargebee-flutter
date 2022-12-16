@@ -10,9 +10,8 @@ class Chargebee {
   static const platform = MethodChannel(Constants.methodChannelName);
 
 /* Configure the app details with chargebee system */
-  static Future<String> configure(String site, String publishableApiKey,
+  static Future<void> configure(String site, String publishableApiKey,
       [String? iosSdkKey = "", androidSdkKey = ""]) async {
-      String status = "";
       if (Platform.isIOS) {
         final args = {
           Constants.siteName: site,
@@ -27,9 +26,8 @@ class Chargebee {
           Constants.apiKey: publishableApiKey,
           Constants.sdkKey: androidSdkKey,
         };
-        status = await platform.invokeMethod(Constants.mAuthentication, args);
+        await platform.invokeMethod(Constants.mAuthentication, args);
       }
-      return status;
   }
 
   /* Get the product/sku details from Play console/ App Store */
@@ -52,7 +50,6 @@ class Chargebee {
   static Future<PurchaseResult> purchaseProduct(Product product,
       [String? customerId=""]) async {
       if (customerId == null) customerId = "";
-      else customerId = customerId;
       String purchaseResult = await platform.invokeMethod(
           Constants.mPurchaseProduct,
           {Constants.product: product.id, Constants.customerId: customerId});

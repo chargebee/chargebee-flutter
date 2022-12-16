@@ -129,8 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> authentication(String siteName, String apiKey, [String? iosSdkKey="",
       String? androidSdkKey = ""]) async {
     try {
-      String result = await Chargebee.configure(siteName, apiKey, iosSdkKey, androidSdkKey);
-      print('result - $result');
+      await Chargebee.configure(siteName, apiKey, iosSdkKey, androidSdkKey);
     } on PlatformException catch (e) {
       print('${e.message}, ${e.details}');
     }
