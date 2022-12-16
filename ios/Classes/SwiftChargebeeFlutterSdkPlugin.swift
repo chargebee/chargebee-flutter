@@ -18,6 +18,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             guard let args = call.arguments as? [String: Any] else {
                 return _result(FlutterError.noArgsError)
             }
+            // Added chargebee logger support for flutter ios sdk
             Chargebee.environment = "cb_flutter_ios_sdk"
             Chargebee.configure(site: args["site_name"] as! String,
                                 apiKey: args["api_key"] as! String,
@@ -38,7 +39,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                             _result(jsonString)
                         }
                     }else {
-                       
+
                         _result(FlutterError.subscriptionError("Serialization Issue"))
                     }
                 case let .error(error):

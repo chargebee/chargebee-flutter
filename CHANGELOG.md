@@ -1,4 +1,4 @@
-## 0.0.5
+## 0.0.6
 Bug fixes
   * subscriptionId is not set on android #28
   * App Crash After Purchase Subscriptions #11
@@ -7,6 +7,11 @@ Bug fixes
   * nullpointer exception #24
   * Chargebee.configure never finishes on error #23
   * Don't just swallow exceptions #26
+  * Updated Readme.md file
+## 0.0.5
+Bug fixes
+  * Swift Compiler Error (Xcode): Cannot find 'Environment' in scope
+  * Error while integrating iOS Flutter SDK
   * Updated Readme.md file
 ## 0.0.4
 * Bug fixes
