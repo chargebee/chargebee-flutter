@@ -8,15 +8,11 @@ import 'dart:convert';
 
 class Chargebee {
   static const platform = MethodChannel(Constants.methodChannelName);
-  static String status="";
-  static List<CBItem> listItems = [];
-  static List<Product> products = [];
-  static List<Subscripton> subscriptions = [];
-  static List<CBPlan> listPlans = [];
 
 /* Configure the app details with chargebee system */
   static Future<String> configure(String site, String publishableApiKey,
       [String? iosSdkKey = "", androidSdkKey = ""]) async {
+      String status = "";
       if (Platform.isIOS) {
         final args = {
           Constants.siteName: site,
@@ -39,6 +35,7 @@ class Chargebee {
   /* Get the product/sku details from Play console/ App Store */
   static Future<List<Product>> retrieveProducts(
       List<String> productIDs) async {
+     List<Product> products = [];
      final result = await platform.invokeMethod(Constants.mGetProducts,
           {Constants.productIDs: productIDs});
       if (result.isNotEmpty) {
@@ -68,7 +65,8 @@ class Chargebee {
 
   /* Get the subscription details from chargebee system */
   static Future<List<Subscripton?>> retrieveSubscriptions(
-      Map<String, dynamic> queryParams) async {
+      Map<String, String> queryParams) async {
+    List<Subscripton> subscriptions = [];
     if (Platform.isIOS) {
         String result = await platform.invokeMethod(
             Constants.mSubscriptionMethod, queryParams);
@@ -111,8 +109,9 @@ class Chargebee {
 
   /* Get the list of items from chargebee system */
   static Future<List<CBItem?>> retrieveAllItems(
-      [Map<String, dynamic>? queryParams]) async {
+      [Map<String, String>? queryParams]) async {
     List itemsFromServer = [];
+    List<CBItem> listItems = [];
     if (Platform.isIOS) {
         String result = await platform.invokeMethod(
             Constants.mRetrieveAllItems, queryParams);
@@ -134,8 +133,9 @@ class Chargebee {
   }
   /* Get the list of plans from chargebee system */
   static Future<List<CBPlan?>> retrieveAllPlans(
-      [Map<String, dynamic>? queryParams]) async {
+      [Map<String, String>? queryParams]) async {
     List plansFromServer = [];
+    List<CBPlan> listPlans = [];
     if (Platform.isIOS) {
         String result = await platform.invokeMethod(
             Constants.mRetrieveAllPlans, queryParams);

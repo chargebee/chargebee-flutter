@@ -193,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> retrieveSubscriptions(Map<String, dynamic> queryparam) async {
+  Future<void> retrieveSubscriptions(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveSubscriptions(queryparam);
       print('result : $result');
@@ -243,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> retrieveAllPlans(Map<String, dynamic> queryparam) async {
+  Future<void> retrieveAllPlans(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveAllPlans(queryparam);
       log('result : $result');
@@ -276,7 +276,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> retrieveAllItems(Map<String, dynamic> queryparam) async {
+  Future<void> retrieveAllItems(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveAllItems(queryparam);
       print('result : $result');
