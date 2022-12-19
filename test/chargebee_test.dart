@@ -75,11 +75,11 @@ void main() {
   });
 
   group('retrieveProductIdentifers', () {
-    test('returns the list of Product Identifiers on iOS', () async {
+    test('returns the list of Product Identifiers', () async {
       final productIdentifiersString =
           """["chargebee.price.change","chargebee.premium.android","merchant.start.android"]""";
       channelResponse = productIdentifiersString;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      // Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
       Map<String, String> queryparam = {"limit": "100"};
       final productIdentifiers =
           await Chargebee.retrieveProductIdentifers(queryparam);
@@ -92,39 +92,12 @@ void main() {
       expect(productIdentifiers, jsonDecode(productIdentifiersString));
     });
 
-    test('handles exception on iOS', () async {
+    test('handles exception', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw CBException(code: "PlatformError", message: "An error occured");
+        throw PlatformException(
+            code: "PlatformError", message: "An error occured");
       });
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
-      Map<String, String> queryparam = {"limit": "100"};
-      await expectLater(() => Chargebee.retrieveProductIdentifers(queryparam),
-          throwsA(isA<PlatformException>()));
-      channel.setMockMethodCallHandler(null);
-    });
-
-    test('returns the list of Product Identifiers on Android', () async {
-      final productIdentifiersString =
-          """["chargebee.price.change","chargebee.premium.android","merchant.start.android"]""";
-      channelResponse = productIdentifiersString;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
-      Map<String, String> queryparam = {"limit": "100"};
-      final productIdentifiers =
-          await Chargebee.retrieveProductIdentifers(queryparam);
-      expect(callStack, <Matcher>[
-        isMethodCall(
-          Constants.mProductIdentifiers,
-          arguments: queryparam,
-        )
-      ]);
-      expect(productIdentifiers, jsonDecode(productIdentifiersString));
-    });
-
-    test('handles exception on Android', () async {
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw CBException(code: "PlatformError", message: "An error occured");
-      });
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
       Map<String, String> queryparam = {"limit": "100"};
       await expectLater(() => Chargebee.retrieveProductIdentifers(queryparam),
           throwsA(isA<PlatformException>()));
@@ -159,7 +132,7 @@ void main() {
     test('returns the list of items on iOS', () async {
       channelResponse = itemsString;
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
-      final Map<String, dynamic> itemsQueryParams = {
+      final Map<String, String> itemsQueryParams = {
         "limit": "10",
         "sort_by[desc]": "Standard",
         "channel[is]": "app_store"
@@ -174,10 +147,11 @@ void main() {
 
     test('handles exception on iOS', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw CBException(code: "PlatformError", message: "An error occured");
+        throw PlatformException(
+            code: "PlatformError", message: "An error occured");
       });
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
-      final Map<String, dynamic> itemsQueryParams = {
+      final Map<String, String> itemsQueryParams = {
         "limit": "10",
         "sort_by[desc]": "Standard",
         "channel[is]": "app_store"
@@ -190,7 +164,7 @@ void main() {
     test('returns the list of items on Android', () async {
       channelResponse = itemsString;
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
-      final Map<String, dynamic> itemsQueryParams = {
+      final Map<String, String> itemsQueryParams = {
         "limit": "10",
         "sort_by[desc]": "Standard",
         "channel[is]": "play_store"
@@ -205,10 +179,11 @@ void main() {
 
     test('handles exception on Android', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw CBException(code: "PlatformError", message: "An error occured");
+        throw PlatformException(
+            code: "PlatformError", message: "An error occured");
       });
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
-      final Map<String, dynamic> itemsQueryParams = {
+      final Map<String, String> itemsQueryParams = {
         "limit": "10",
         "sort_by[desc]": "Standard",
         "channel[is]": "app_store"
@@ -220,7 +195,7 @@ void main() {
   });
 
   group('retrieveSubscriptions', () {
-    final Map<String, dynamic> getSubsQueryParams = {
+    final Map<String, String> getSubsQueryParams = {
       "channel": "app_store",
       "customer_id": "imay-flutter"
     };
@@ -233,7 +208,8 @@ void main() {
               "current_term_start": "1670860199",
               "customer_id": "imay-flutter",
               "plan_amount": "399.0",
-              "status": "ACTIVE"
+              "status": "ACTIVE",
+              "subscription_id": "2000000102582433"
             }
           }
         ]
@@ -267,7 +243,8 @@ void main() {
 
     test('handles exception on iOS', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw CBException(code: "PlatformError", message: "An error occured");
+        throw PlatformException(
+            code: "PlatformError", message: "An error occured");
       });
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
       await expectLater(
@@ -290,7 +267,8 @@ void main() {
 
     test('handles exception on Android', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw CBException(code: "PlatformError", message: "An error occured");
+        throw PlatformException(
+            code: "PlatformError", message: "An error occured");
       });
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
       await expectLater(
@@ -321,9 +299,8 @@ void main() {
           }
         ]
     """;
-    test('retrieves entitlements successfully on iOS', () async {
+    test('retrieves entitlements successfully', () async {
       channelResponse = entitlementsListString;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
       final result =
           await Chargebee.retrieveEntitlements(getEntitlementsParams);
       expect(callStack, <Matcher>[
@@ -334,35 +311,11 @@ void main() {
       expect(result.length, 1);
     });
 
-    test('handles exception on iOS', () async {
+    test('handles exception', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw CBException(code: "PlatformError", message: "An error occured");
+        throw PlatformException(
+            code: "PlatformError", message: "An error occured");
       });
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
-      await expectLater(
-          () => Chargebee.retrieveEntitlements(getEntitlementsParams),
-          throwsA(isA<PlatformException>()));
-      channel.setMockMethodCallHandler(null);
-    });
-
-    test('retrieves entitlements successfully on Android', () async {
-      channelResponse = entitlementsListString;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
-      final result =
-          await Chargebee.retrieveEntitlements(getEntitlementsParams);
-      expect(callStack, <Matcher>[
-        isMethodCall(Constants.mGetEntitlements,
-            arguments: getEntitlementsParams)
-      ]);
-      // we have 1 item in entitlementsListString above
-      expect(result.length, 1);
-    });
-
-    test('handles exception on Android', () async {
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw CBException(code: "PlatformError", message: "An error occured");
-      });
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
       await expectLater(
           () => Chargebee.retrieveEntitlements(getEntitlementsParams),
           throwsA(isA<PlatformException>()));
@@ -403,7 +356,7 @@ void main() {
       ]""";
       channelResponse = plansStringiOS;
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
-      final Map<String, dynamic> plansQueryParams = {
+      final Map<String, String> plansQueryParams = {
         "sort_by[desc]": "Standard",
         "channel[is]": "app_store"
       };
@@ -417,10 +370,11 @@ void main() {
 
     test('handles exception on iOS', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw CBException(code: "PlatformError", message: "An error occured");
+        throw PlatformException(
+            code: "PlatformError", message: "An error occured");
       });
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
-      final Map<String, dynamic> plansQueryParams = {
+      final Map<String, String> plansQueryParams = {
         "sort_by[desc]": "Standard",
         "channel[is]": "app_store"
       };
@@ -462,7 +416,7 @@ void main() {
       ]""";
       channelResponse = plansStringAndroid;
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
-      final Map<String, dynamic> plansQueryParams = {
+      final Map<String, String> plansQueryParams = {
         "sort_by[desc]": "Standard",
         "channel[is]": "play_store"
       };
@@ -476,10 +430,11 @@ void main() {
 
     test('handles exception on Android', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw CBException(code: "PlatformError", message: "An error occured");
+        throw PlatformException(
+            code: "PlatformError", message: "An error occured");
       });
       Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
-      final Map<String, dynamic> plansQueryParams = {
+      final Map<String, String> plansQueryParams = {
         "sort_by[desc]": "Standard",
         "channel[is]": "play_store"
       };
