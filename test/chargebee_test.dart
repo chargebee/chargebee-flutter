@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:chargebee_flutter/src/chargebee.dart';
 import 'package:chargebee_flutter/src/constants.dart';
-import 'package:platform/platform.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('chargebee_flutter');
