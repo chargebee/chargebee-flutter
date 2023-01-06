@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:chargebee_flutter/src/utils/cb_exception.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:chargebee_flutter/src/chargebee.dart';
@@ -33,7 +34,7 @@ void main() {
   group('configure', () {
     test('works for iOS', () async {
       channelResponse = true;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await Chargebee.configure(siteName, apiKey, iosSDKKey);
       expect(callStack, <Matcher>[
         isMethodCall(
@@ -49,7 +50,7 @@ void main() {
 
     test('works for android', () async {
       channelResponse = true;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
       await Chargebee.configure(siteName, apiKey, "", androidSDKKey);
       expect(callStack, <Matcher>[
         isMethodCall(
@@ -67,7 +68,7 @@ void main() {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(code: "Dummy");
       });
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await expectLater(() => Chargebee.configure(siteName, apiKey, iosSDKKey),
           throwsA(isA<PlatformException>()));
       channel.setMockMethodCallHandler(null);
@@ -79,7 +80,7 @@ void main() {
       final productIdentifiersString =
           """["chargebee.price.change","chargebee.premium.android","merchant.start.android"]""";
       channelResponse = productIdentifiersString;
-      // Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      // debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       Map<String, String> queryparam = {"limit": "100"};
       final productIdentifiers =
           await Chargebee.retrieveProductIdentifers(queryparam);
@@ -97,7 +98,7 @@ void main() {
         throw PlatformException(
             code: "PlatformError", message: "An error occured");
       });
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       Map<String, String> queryparam = {"limit": "100"};
       await expectLater(() => Chargebee.retrieveProductIdentifers(queryparam),
           throwsA(isA<PlatformException>()));
@@ -131,7 +132,7 @@ void main() {
     ]""";
     test('returns the list of items on iOS', () async {
       channelResponse = itemsString;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final Map<String, String> itemsQueryParams = {
         "limit": "10",
         "sort_by[desc]": "Standard",
@@ -150,7 +151,7 @@ void main() {
         throw PlatformException(
             code: "PlatformError", message: "An error occured");
       });
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final Map<String, String> itemsQueryParams = {
         "limit": "10",
         "sort_by[desc]": "Standard",
@@ -163,7 +164,7 @@ void main() {
 
     test('returns the list of items on Android', () async {
       channelResponse = itemsString;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final Map<String, String> itemsQueryParams = {
         "limit": "10",
         "sort_by[desc]": "Standard",
@@ -182,7 +183,7 @@ void main() {
         throw PlatformException(
             code: "PlatformError", message: "An error occured");
       });
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final Map<String, String> itemsQueryParams = {
         "limit": "10",
         "sort_by[desc]": "Standard",
@@ -231,7 +232,7 @@ void main() {
     """;
     test('retrieves subscriptions successfully on iOS', () async {
       channelResponse = subscriptionsListiOSString;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final result = await Chargebee.retrieveSubscriptions(getSubsQueryParams);
       expect(callStack, <Matcher>[
         isMethodCall(Constants.mSubscriptionMethod,
@@ -246,7 +247,7 @@ void main() {
         throw PlatformException(
             code: "PlatformError", message: "An error occured");
       });
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await expectLater(
           () => Chargebee.retrieveSubscriptions(getSubsQueryParams),
           throwsA(isA<PlatformException>()));
@@ -255,7 +256,7 @@ void main() {
 
     test('retrieves subscriptions successfully on Android', () async {
       channelResponse = subscriptionsListAndroidString;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final result = await Chargebee.retrieveSubscriptions(getSubsQueryParams);
       expect(callStack, <Matcher>[
         isMethodCall(Constants.mSubscriptionMethod,
@@ -270,7 +271,7 @@ void main() {
         throw PlatformException(
             code: "PlatformError", message: "An error occured");
       });
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
       await expectLater(
           () => Chargebee.retrieveSubscriptions(getSubsQueryParams),
           throwsA(isA<PlatformException>()));
@@ -355,7 +356,7 @@ void main() {
         }
       ]""";
       channelResponse = plansStringiOS;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final Map<String, String> plansQueryParams = {
         "sort_by[desc]": "Standard",
         "channel[is]": "app_store"
@@ -373,7 +374,7 @@ void main() {
         throw PlatformException(
             code: "PlatformError", message: "An error occured");
       });
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.iOS);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final Map<String, String> plansQueryParams = {
         "sort_by[desc]": "Standard",
         "channel[is]": "app_store"
@@ -415,7 +416,7 @@ void main() {
         }
       ]""";
       channelResponse = plansStringAndroid;
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final Map<String, String> plansQueryParams = {
         "sort_by[desc]": "Standard",
         "channel[is]": "play_store"
@@ -433,7 +434,7 @@ void main() {
         throw PlatformException(
             code: "PlatformError", message: "An error occured");
       });
-      Chargebee.localPlatform = FakePlatform(operatingSystem: Platform.android);
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final Map<String, String> plansQueryParams = {
         "sort_by[desc]": "Standard",
         "channel[is]": "play_store"

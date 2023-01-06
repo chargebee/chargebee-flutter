@@ -2,15 +2,13 @@ import 'package:chargebee_flutter/src/constants.dart';
 import 'package:chargebee_flutter/src/utils/item.dart';
 import 'package:chargebee_flutter/src/utils/plan.dart';
 import 'package:chargebee_flutter/src/utils/product.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:platform/platform.dart';
 import 'dart:convert';
 
 class Chargebee {
   static const platform = MethodChannel(Constants.methodChannelName);
-
-  static Platform localPlatform = LocalPlatform();
-  static bool get _isIOS => localPlatform.isIOS;
+  static bool get _isIOS => defaultTargetPlatform == TargetPlatform.iOS;
 
   /* Configure the app details with chargebee system */
   static Future<void> configure(String site, String publishableApiKey,
