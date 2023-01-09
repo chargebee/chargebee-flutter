@@ -3,16 +3,14 @@ import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
-import 'package:chargebee_flutter/src/utils/product.dart';
 import 'package:flutter/services.dart';
 
 class ProductListView extends StatefulWidget {
   final List<Product> listProducts;
+  final String title;
 
   const ProductListView(this.listProducts, {Key? key, required this.title})
       : super(key: key);
-
-  final String title;
 
   @override
   ProductListViewState createState() => ProductListViewState(listProducts);
@@ -20,9 +18,12 @@ class ProductListView extends StatefulWidget {
 
 class ProductListViewState extends State<ProductListView> {
   late List<Product> listProducts;
-  ProductListViewState(this.listProducts);
-
   late ProgressBarUtil mProgressBarUtil;
+  final TextEditingController productIdTextFieldController =
+      TextEditingController();
+  String? customerId = "";
+
+  ProductListViewState(this.listProducts);
 
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -44,13 +45,12 @@ class ProductListViewState extends State<ProductListView> {
               child: ListTile(
                 title: Text(listProducts[pos].id,
                     style: const TextStyle(
-                      color: Colors.black54,
+                        color: Colors.black54,
                         fontWeight: FontWeight.bold,
                         fontSize: 18)),
                 subtitle: Text(listProducts[pos].price,
                     style: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15)),
+                        fontWeight: FontWeight.normal, fontSize: 15)),
                 trailing: const Text("Subscribe",
                     style: TextStyle(
                         color: Colors.cyan,
@@ -88,9 +88,9 @@ class ProductListViewState extends State<ProductListView> {
       }
       mProgressBarUtil.hideProgressDialog();
 
-      if(result.status == "true"){
+      if (result.status == "true") {
         _showSuccessDialog(context, "Success");
-      }else{
+      } else {
         _showSuccessDialog(context, result.subscriptionId);
       }
     } on PlatformException catch (e) {
@@ -99,9 +99,6 @@ class ProductListViewState extends State<ProductListView> {
     }
   }
 
-  final TextEditingController productIdTextFieldController =
-      TextEditingController();
-  String? customerId = "";
   Future<void> _showCustomerIdDialog(
       BuildContext context, Product product) async {
     return showDialog(
@@ -123,8 +120,7 @@ class ProductListViewState extends State<ProductListView> {
                 style: TextButton.styleFrom(
                     primary: Colors.white,
                     backgroundColor: Colors.red,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -136,15 +132,14 @@ class ProductListViewState extends State<ProductListView> {
                 style: TextButton.styleFrom(
                     primary: Colors.white,
                     backgroundColor: Colors.green,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
                     Navigator.pop(context);
                     mProgressBarUtil.showProgressDialog();
                     try {
-                       purchaseProduct(product);
+                      purchaseProduct(product);
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -168,8 +163,7 @@ class ProductListViewState extends State<ProductListView> {
                 style: TextButton.styleFrom(
                     primary: Colors.white,
                     backgroundColor: Colors.green,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: const Text('OK'),
                 onPressed: () {
                   mProgressBarUtil.hideProgressDialog();

@@ -1,8 +1,8 @@
-
 class Product {
   String id;
   String price;
   String title;
+
   Product(this.id, this.price, this.title);
 
   factory Product.fromJson(dynamic json) {
@@ -17,10 +17,12 @@ class PurchaseResult {
   String subscriptionId;
   String planId;
   String status;
+
   PurchaseResult(this.subscriptionId, this.planId, this.status);
 
   factory PurchaseResult.fromJson(dynamic json) {
-    return PurchaseResult(json['subscriptionId'] as String, json['planId'] as String, json['status'] as String);
+    return PurchaseResult(json['subscriptionId'] as String,
+        json['planId'] as String, json['status'] as String);
   }
 }
 
@@ -55,6 +57,7 @@ class Subscripton {
     planAmount = json['plan_amount']
         .toString(); /*Plan amount sometime we are getting double value sometime Int*/
   }
+
   Subscripton.fromJsonAndroid(Map<String, dynamic> json) {
     activatedAtString = json['activated_at'].toString();
     currentTermEndString = json['current_term_end'].toString();
@@ -76,6 +79,7 @@ class SubscriptonList {
         ? new Subscripton.fromJson(json['cb_subscription'])
         : null;
   }
+
   SubscriptonList.fromJsonAndroid(dynamic json) {
     subscripton = json['cb_subscription'] != null
         ? new Subscripton.fromJsonAndroid(json['cb_subscription'])
@@ -95,6 +99,5 @@ class CBSubscriptionWrapper {
       print(value);
       subsArray.add(Subscripton.fromJson(value));
     }
-
   }
 }
