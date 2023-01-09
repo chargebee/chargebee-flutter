@@ -6,11 +6,12 @@ on:
       - main
 jobs:
   build:
-    # This job will run on ubuntu virtual machine
+    name: Checks
     runs-on: ubuntu-latest
     steps:
       # Setup Java environment in order to build the Android app.
       - uses: actions/checkout@v1
+      - name: Set up JDK
       - uses: actions/setup-java@v1
         with:
           java-version: '12.x'
@@ -21,13 +22,13 @@ jobs:
           # flutter-version: '1.12.x' # you can also specify exact version of flutter
       # Get flutter dependencies.
       - run: flutter pub get
-      # Check for any formatting issues in the code.
+      - name: Check formatting issues
       - run: flutter format --set-exit-if-changed .
       # Statically analyze the Dart code for any errors.
       - run: flutter analyze .
       # Run widget tests for our flutter project.
       #- run: flutter test
-      # Build apk.
+      - name: Build APK
       - run: flutter build apk
           # Upload generated apk to the artifacts.
           #- uses: actions/upload-artifact@v1
