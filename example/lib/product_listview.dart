@@ -3,7 +3,6 @@ import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
-import 'package:chargebee_flutter/src/utils/product.dart';
 import 'package:flutter/services.dart';
 
 class ProductListView extends StatefulWidget {

@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Constants.dart';
 import 'alertDialog.dart';
-import 'package:chargebee_flutter/src/utils/product.dart';
-
 import 'items_listview.dart';
 import 'product_listview.dart';
 
@@ -64,7 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     // For both iOS and Android
-    authentication("your-site", "publishable_api_key", "iOS ResourceID/SDK Key", "Android ResourceID/SDK Key");
+   // authentication("your-site", "publishable_api_key", "iOS ResourceID/SDK Key", "Android ResourceID/SDK Key");
+    authentication("cb-imay-test", "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3", "cb-njjoibyzbrhyjg7yz4hkwg2ywq", "cb-wpkheixkuzgxbnt23rzslg724y");
     super.initState();
   }
 
