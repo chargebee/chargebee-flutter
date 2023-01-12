@@ -199,8 +199,9 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                         onError(error, result)
                     }
                 })
-        } catch (exp: Exception) {
-            result.error(exp.message, exp.message, exp)
+        }catch (exp: Exception){
+            val errorMsg = exp.message ?: "${exp.message}"
+            result.error(errorMsg,errorMsg, exp)
         }
     }
 
