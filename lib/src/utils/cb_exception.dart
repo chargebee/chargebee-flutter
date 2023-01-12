@@ -1,5 +1,3 @@
-import 'package:flutter/services.dart';
-
 class CBException {
   String errorCode;
   String? message;

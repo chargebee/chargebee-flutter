@@ -118,7 +118,7 @@ class ProductListViewState extends State<ProductListView> {
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.red,
                     textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('CANCEL'),
@@ -130,7 +130,7 @@ class ProductListViewState extends State<ProductListView> {
               ),
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.green,
                     textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('OK'),
@@ -161,7 +161,7 @@ class ProductListViewState extends State<ProductListView> {
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.green,
                     textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: const Text('OK'),

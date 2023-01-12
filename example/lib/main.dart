@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'Constants.dart';
 import 'alertDialog.dart';
 import 'items_listview.dart';
-import 'product_listview.dart';
 
 void main() => runApp(MyApp());
 
@@ -345,7 +344,7 @@ class _MyHomePageState extends State<MyHomePage> {
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.red,
                     textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('CANCEL'),
@@ -357,7 +356,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.green,
                     textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('OK'),
@@ -434,7 +433,7 @@ class _MyHomePageState extends State<MyHomePage> {
               actions: <Widget>[
                 TextButton(
                   style: TextButton.styleFrom(
-                      primary: Colors.white,
+                      foregroundColor: Colors.white,
                       backgroundColor: Colors.red,
                       textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                   child: Text('CANCEL'),
@@ -446,7 +445,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 TextButton(
                     style: TextButton.styleFrom(
-                        primary: Colors.white,
+                        foregroundColor: Colors.white,
                         backgroundColor: Colors.green,
                         textStyle:
                             const TextStyle(fontStyle: FontStyle.normal)),
