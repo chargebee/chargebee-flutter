@@ -17,3 +17,7 @@ lib/*.jar
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties
+
+
+# test coverage files
+/coverage

@@ -1,18 +1,19 @@
-import 'dart:io';
 import 'package:chargebee_flutter/src/constants.dart';
 import 'package:chargebee_flutter/src/utils/item.dart';
 import 'package:chargebee_flutter/src/utils/plan.dart';
 import 'package:chargebee_flutter/src/utils/product.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 
 class Chargebee {
   static const platform = MethodChannel(Constants.methodChannelName);
+  static bool get _isIOS => defaultTargetPlatform == TargetPlatform.iOS;
 
   /* Configure the app details with chargebee system */
   static Future<void> configure(String site, String publishableApiKey,
       [String? iosSdkKey = "", androidSdkKey = ""]) async {
-    if (Platform.isIOS) {
+    if (_isIOS) {
       final args = {
         Constants.siteName: site,
         Constants.apiKey: publishableApiKey,
@@ -63,7 +64,7 @@ class Chargebee {
   static Future<List<Subscripton?>> retrieveSubscriptions(
       Map<String, String> queryParams) async {
     List<Subscripton> subscriptions = [];
-    if (Platform.isIOS) {
+    if (_isIOS) {
       String result = await platform.invokeMethod(
           Constants.mSubscriptionMethod, queryParams);
       List jsonData = jsonDecode(result.toString());
@@ -108,7 +109,7 @@ class Chargebee {
       [Map<String, String>? queryParams]) async {
     List itemsFromServer = [];
     List<CBItem> listItems = [];
-    if (Platform.isIOS) {
+    if (_isIOS) {
       String result =
           await platform.invokeMethod(Constants.mRetrieveAllItems, queryParams);
       itemsFromServer = jsonDecode(result);
@@ -133,7 +134,7 @@ class Chargebee {
       [Map<String, String>? queryParams]) async {
     List plansFromServer = [];
     List<CBPlan> listPlans = [];
-    if (Platform.isIOS) {
+    if (_isIOS) {
       String result =
           await platform.invokeMethod(Constants.mRetrieveAllPlans, queryParams);
       plansFromServer = jsonDecode(result);

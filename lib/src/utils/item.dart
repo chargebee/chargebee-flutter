@@ -34,7 +34,7 @@ class CBItem {
     id = json['id'] as String;
     resourceVersion = json['resource_version'];
     enabledInPortal = json['enabled_in_portal'] as bool;
-    status = json['item_family_id'] as String;
+    itemFamilyId = json['item_family_id'] as String;
     isShippable = json['is_shippable'] as bool;
     type = json['type'];
     object = json['object'] as String;
