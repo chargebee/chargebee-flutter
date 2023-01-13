@@ -1,5 +1,4 @@
-
-class CBItem{
+class CBItem {
   String? id;
   String? name;
   String? description;
@@ -16,25 +15,26 @@ class CBItem{
   String? object;
 
   CBItem(
-  {this.id,
-  this.name,
-  this.description,
-  this.status,
-  this.resourceVersion,
-  this.updatedAt,
-  this.itemFamilyId,this.type,
-    this.isShippable,
-    this.isGiftable,
-    this.enabledForCheckout,
-    this.enabledInPortal,
-    this.metered,
-    this.object});
+      {this.id,
+      this.name,
+      this.description,
+      this.status,
+      this.resourceVersion,
+      this.updatedAt,
+      this.itemFamilyId,
+      this.type,
+      this.isShippable,
+      this.isGiftable,
+      this.enabledForCheckout,
+      this.enabledInPortal,
+      this.metered,
+      this.object});
 
   CBItem.fromJson(Map<String, dynamic> json) {
     id = json['id'] as String;
     resourceVersion = json['resource_version'];
     enabledInPortal = json['enabled_in_portal'] as bool;
-    status = json['item_family_id'] as String;
+    itemFamilyId = json['item_family_id'] as String;
     isShippable = json['is_shippable'] as bool;
     type = json['type'];
     object = json['object'] as String;
@@ -52,8 +52,7 @@ class CBItem{
     description = json['name'] as String;
     status = json['status'] as String;
   }
-
-  }
+}
 
 class CBItemsList {
   CBItem? cbItem;
@@ -61,17 +60,13 @@ class CBItemsList {
   CBItemsList({this.cbItem});
 
   CBItemsList.fromJson(dynamic json) {
-    cbItem = json['item'] != null
-        ? new CBItem.fromJson(json['item'])
-        : null;
+    cbItem = json['item'] != null ? new CBItem.fromJson(json['item']) : null;
   }
 
   CBItemsList.fromJsonAndroid(dynamic json) {
-    cbItem = json['item'] != null
-        ? new CBItem.fromJsonAndroid(json['item'])
-        : null;
+    cbItem =
+        json['item'] != null ? new CBItem.fromJsonAndroid(json['item']) : null;
   }
-
 }
 
 class CBItemWrapper {
@@ -86,8 +81,5 @@ class CBItemWrapper {
       print(value);
       subsArray.add(CBItem.fromJson(value));
     }
-
   }
 }
-
-
