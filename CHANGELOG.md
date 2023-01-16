@@ -1,3 +1,6 @@
+## 0.0.8
+Bug fixes
+* Android app crashed on signed apk and the issue fixed in Native Android SDK v1.0.15
 ## 0.0.7
 Bug fixes
   * Android flutter sdk error type mismatch: inferred type is String? but String was expected. 
