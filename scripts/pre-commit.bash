@@ -1,8 +1,8 @@
 # Flutter formatter
 printf "\e[33;1m%s\e[0m\n" '=== Running Flutter Formatter ==='
-flutter format .
 
-hasNewFilesFormatted=$(git diff)
+hasNewFilesFormatted=$(git diff --name-only)
+flutter format $hasNewFilesFormatted
 if [ -n "$hasNewFilesFormatted" ]; then
     git add .
     printf "\e[33;1m%s\e[0m\n" 'Formmated files added to git stage'
