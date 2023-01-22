@@ -13,6 +13,11 @@ class Product {
     return Product(json['productId'] as String, json['productPrice'] as String,
         json['productTitle'] as String, json['currencyCode'] as String);
   }
+
+  @override
+  String toString() {
+    return 'Product(id: $id, price: $price, title: $title, currencyCode: $currencyCode)';
+  }
 }
 
 class PurchaseResult {
@@ -23,6 +28,11 @@ class PurchaseResult {
 
   factory PurchaseResult.fromJson(dynamic json) {
     return PurchaseResult(json['subscriptionId'] as String, json['planId'] as String, json['status'] as String);
+  }
+
+  @override
+  String toString() {
+    return 'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, $status)';
   }
 }
 
