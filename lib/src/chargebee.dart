@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'dart:convert';
 
 class Chargebee {
+  Chargebee._();
+
   static const platform = MethodChannel(Constants.methodChannelName);
   static bool get _isIOS => defaultTargetPlatform == TargetPlatform.iOS;
 
