@@ -47,7 +47,7 @@ class ProductListViewState extends State<ProductListView> {
                       color: Colors.black54,
                         fontWeight: FontWeight.bold,
                         fontSize: 18)),
-                subtitle: Text(listProducts[pos].price,
+                subtitle: Text(listProducts[pos].price + " (currencyCode: "+ listProducts[pos].currencyCode + ")",
                     style: const TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 15)),

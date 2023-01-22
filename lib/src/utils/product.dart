@@ -3,13 +3,15 @@ class Product {
   String id;
   String price;
   String title;
-  Product(this.id, this.price, this.title);
+  String currencyCode;
+
+  Product(this.id, this.price, this.title, this.currencyCode);
 
   factory Product.fromJson(dynamic json) {
     print(json);
 
     return Product(json['productId'] as String, json['productPrice'] as String,
-        json['productTitle'] as String);
+        json['productTitle'] as String, json['currencyCode'] as String);
   }
 }
 
