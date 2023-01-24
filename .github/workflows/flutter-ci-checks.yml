@@ -24,7 +24,8 @@ jobs:
           channel: 'stable'
       - name: Get Flutter Dependencies
         run: flutter pub get
-      - name: Check Formatting
-        run: flutter format .
       - name: Statically analyze the code
-        run: flutter analyze
+        run: flutter analyze .
+      - name: Formatting Check
+        run: bash ${GITHUB_WORKSPACE}/scripts/github-actions.bash
+
