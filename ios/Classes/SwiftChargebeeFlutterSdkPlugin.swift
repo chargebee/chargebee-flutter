@@ -27,7 +27,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             guard let args = call.arguments as? [String: String] else {
                 return _result(FlutterError.noArgsError)
             }
-
+            
             Chargebee.shared.retrieveSubscriptions(queryParams: args) { result in
                 switch result {
                 case let .success(list):
@@ -39,7 +39,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                             _result(jsonString)
                         }
                     }else {
-
+                        
                         _result(FlutterError.subscriptionError("Serialization Issue"))
                     }
                 case let .error(error):
@@ -117,7 +117,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                 DispatchQueue.main.async {
                     switch result {
                     case let .success(dataWrapper):
-                       if let data = try? JSONSerialization.data(
+                        if let data = try? JSONSerialization.data(
                             withJSONObject:dataWrapper.ids,
                             options: []) {
                             if let jsonString = String(data: data,
@@ -216,9 +216,25 @@ extension SKProduct {
             "productId": productIdentifier,
             "productPrice": price.description,
             "productTitle": localizedTitle,
-            "currencyCode": priceLocale.currencyCode
+            "currencyCode": priceLocale.currencyCode,
+            "subscriptionPeriod": subscriptionDuration()
         ]
         return map
+    }
+    func subscriptionDuration() -> String {
+        let period:String = {
+            switch self.subscriptionPeriod?.unit {
+            case .day: return "day"
+            case .week: return "week"
+            case .month: return "month"
+            case .year: return "year"
+            case .none: return ""
+            case .some(_): return ""
+            }
+        }()
+        let numOfUnits = self.subscriptionPeriod?.numberOfUnits ?? 0
+        let pluralInPeriod = numOfUnits > 1 ? "s" : ""
+        return String(format: "%d %@%@", arguments: [numOfUnits, period, pluralInPeriod])
     }
 }
 

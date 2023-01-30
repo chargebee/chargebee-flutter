@@ -311,7 +311,8 @@ fun CBProduct.toMap(): Map<String, Any> {
         "productId" to productId,
         "productPrice" to productPrice,
         "productTitle" to productTitle,
-        "currencyCode" to skuDetails.priceCurrencyCode
+        "currencyCode" to skuDetails.priceCurrencyCode,
+        "subscriptionPeriod" to skuDetails.subscriptionPeriod
     )
 }
 

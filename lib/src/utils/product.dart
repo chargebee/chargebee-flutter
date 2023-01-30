@@ -4,14 +4,19 @@ class Product {
   String price;
   String title;
   String currencyCode;
+  String subscriptionPeriod;
 
-  Product(this.id, this.price, this.title, this.currencyCode);
+  Product(this.id, this.price, this.title, this.currencyCode, this.subscriptionPeriod);
 
   factory Product.fromJson(dynamic json) {
     print(json);
 
     return Product(json['productId'] as String, json['productPrice'] as String,
-        json['productTitle'] as String, json['currencyCode'] as String);
+        json['productTitle'] as String, json['currencyCode'] as String, json['subscriptionPeriod'] as String);
+  }
+  @override
+  String toString() {
+    return 'Product(id: $id, price: $price, title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
   }
 }
 
@@ -23,6 +28,10 @@ class PurchaseResult {
 
   factory PurchaseResult.fromJson(dynamic json) {
     return PurchaseResult(json['subscriptionId'] as String, json['planId'] as String, json['status'] as String);
+  }
+  @override
+  String toString() {
+    return 'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, status: $status)';
   }
 }
 
