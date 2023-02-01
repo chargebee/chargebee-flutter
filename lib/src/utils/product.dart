@@ -1,22 +1,55 @@
 
 class Product {
-  String id;
-  String price;
-  String title;
-  String currencyCode;
-  String subscriptionPeriod;
+  String id = "";
+  String priceForAndroid ="";
+  String title ="";
+  String currencyCode = "";
+  String subscriptionPeriod = "";
+  double priceForIos =0;
 
-  Product(this.id, this.price, this.title, this.currencyCode, this.subscriptionPeriod);
+  Product.jsonForIOS(String id,
+      double priceForIos,
+      String title,
+      String currencyCode,
+      String subscriptionPeriod){
+    this.id = id;
+    this.priceForIos = priceForIos;
+    this.title = title;
+    this.currencyCode = currencyCode;
+    this.subscriptionPeriod = subscriptionPeriod;
+  }
 
-  factory Product.fromJson(dynamic json) {
+  Product.jsonForAndroid(String id,
+  String priceForAndroid,
+  String title,
+  String currencyCode,
+  String subscriptionPeriod){
+    this.id = id;
+    this.priceForAndroid = priceForAndroid;
+    this.title = title;
+    this.currencyCode = currencyCode;
+    this.subscriptionPeriod = subscriptionPeriod;
+  }
+
+  factory Product.fromJsonIOS(dynamic json) {
     print(json);
 
-    return Product(json['productId'] as String, json['productPrice'] as String,
+    return Product.jsonForIOS(json['productId'] as String, json['productPrice'] as double,
+        json['productTitle'] as String, json['currencyCode'] as String, json['subscriptionPeriod'] as String);
+  }
+
+  factory Product.fromJsonAndroid(dynamic json) {
+    print(json);
+
+    return Product.jsonForAndroid(json['productId'] as String, json['productPrice'] as String,
         json['productTitle'] as String, json['currencyCode'] as String, json['subscriptionPeriod'] as String);
   }
   @override
   String toString() {
-    return 'Product(id: $id, price: $price, title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
+    if(priceForAndroid.isEmpty)
+      return 'Product(id: $id, price: $priceForIos, title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
+    else
+      return 'Product(id: $id, price: $priceForAndroid, title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
   }
 }
 

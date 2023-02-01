@@ -214,7 +214,7 @@ extension SKProduct {
     func toMap() -> [String: Any?] {
         let map: [String: Any?] = [
             "productId": productIdentifier,
-            "productPrice": price.description,
+            "productPrice": price,
             "productTitle": localizedTitle,
             "currencyCode": priceLocale.currencyCode,
             "subscriptionPeriod": subscriptionDuration()

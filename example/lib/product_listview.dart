@@ -20,6 +20,7 @@ class ProductListView extends StatefulWidget {
 
 class ProductListViewState extends State<ProductListView> {
   late List<Product> listProducts;
+  late var productPrice;
   ProductListViewState(this.listProducts);
 
   late ProgressBarUtil mProgressBarUtil;
@@ -40,6 +41,10 @@ class ProductListViewState extends State<ProductListView> {
         body: ListView.builder(
           itemCount: listProducts.length,
           itemBuilder: (context, pos) {
+            if (listProducts[pos].priceForAndroid.isEmpty)
+              productPrice = listProducts[pos].priceForIos.toString();
+            else
+              productPrice = listProducts[pos].priceForAndroid;
             return Card(
               child: ListTile(
                 title: Text(listProducts[pos].id,
