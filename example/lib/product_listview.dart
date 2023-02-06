@@ -21,6 +21,9 @@ class ProductListView extends StatefulWidget {
 class ProductListViewState extends State<ProductListView> {
   late List<Product> listProducts;
   late var productPrice;
+  late var productId;
+  late var currencyCode;
+
   ProductListViewState(this.listProducts);
 
   late ProgressBarUtil mProgressBarUtil;
@@ -41,13 +44,18 @@ class ProductListViewState extends State<ProductListView> {
         body: ListView.builder(
           itemCount: listProducts.length,
           itemBuilder: (context, pos) {
-            if (listProducts[pos].priceForAndroid.isEmpty)
-              productPrice = listProducts[pos].priceForIos.toString();
-            else
-              productPrice = listProducts[pos].priceForAndroid;
+            if (listProducts[pos].skDetails == null) {
+              productPrice = listProducts[pos].price.toString();
+              productId = listProducts[pos].id;
+              currencyCode = listProducts[pos].currencyCode;
+            } else {
+              productPrice = listProducts[pos].skDetails?.price;
+              productId = listProducts[pos].skDetails?.productId;
+              currencyCode = listProducts[pos].skDetails?.priceCurrencyCode;
+            }
             return Card(
               child: ListTile(
-                title: Text(listProducts[pos].id,
+                title: Text("$productId",
                     style: const TextStyle(
                       color: Colors.black54,
                         fontWeight: FontWeight.bold,
@@ -55,7 +63,7 @@ class ProductListViewState extends State<ProductListView> {
                 subtitle: Text(
                     productPrice +
                         " (currencyCode: " +
-                        listProducts[pos].currencyCode +
+                         currencyCode+
                         ")",
                     style: const TextStyle(
                         fontWeight: FontWeight.normal,

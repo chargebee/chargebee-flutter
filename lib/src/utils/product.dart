@@ -1,55 +1,85 @@
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 class Product {
   String id = "";
-  String priceForAndroid ="";
-  String title ="";
+  String title = "";
   String currencyCode = "";
-  String subscriptionPeriod = "";
-  double priceForIos =0;
+  double price = 0;
+  SKDetails? skDetails;
+  SubscriptionPeriod? subscriptionPeriod;
 
   Product.jsonForIOS(String id,
-      double priceForIos,
+      double price,
       String title,
       String currencyCode,
-      String subscriptionPeriod){
+      SubscriptionPeriod subscriptionPeriod){
     this.id = id;
-    this.priceForIos = priceForIos;
+    this.price = price;
     this.title = title;
     this.currencyCode = currencyCode;
     this.subscriptionPeriod = subscriptionPeriod;
   }
 
-  Product.jsonForAndroid(String id,
-  String priceForAndroid,
-  String title,
-  String currencyCode,
-  String subscriptionPeriod){
-    this.id = id;
-    this.priceForAndroid = priceForAndroid;
-    this.title = title;
-    this.currencyCode = currencyCode;
-    this.subscriptionPeriod = subscriptionPeriod;
+  Product.jsonForAndroid(SKDetails skDetails){
+    this.skDetails = skDetails;
   }
 
   factory Product.fromJsonIOS(dynamic json) {
-    print(json);
-
+    if(kDebugMode) print(json);
+    var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
     return Product.jsonForIOS(json['productId'] as String, json['productPrice'] as double,
-        json['productTitle'] as String, json['currencyCode'] as String, json['subscriptionPeriod'] as String);
+        json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
   }
 
   factory Product.fromJsonAndroid(dynamic json) {
-    print(json);
-
-    return Product.jsonForAndroid(json['productId'] as String, json['productPrice'] as String,
-        json['productTitle'] as String, json['currencyCode'] as String, json['subscriptionPeriod'] as String);
+    if(kDebugMode) print(json);
+    return Product.jsonForAndroid(new SKDetails.from(jsonDecode(json['skuDetails'])));
   }
   @override
   String toString() {
-    if(priceForAndroid.isEmpty)
-      return 'Product(id: $id, price: $priceForIos, title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
+    if(skDetails == null)
+      return 'Product(id: $id, price: $price, title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
     else
-      return 'Product(id: $id, price: $priceForAndroid, title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
+      return 'Product(skDetails: $skDetails)';
+  }
+}
+
+class SubscriptionPeriod {
+  String? unit;
+  late int numberOfUnits;
+
+  SubscriptionPeriod.fromMap(Map<String, dynamic> map) {
+    unit = map['periodUnit'].toString();
+    numberOfUnits = map['numberOfUnits'] as int;
+  }
+}
+
+class SKDetails{
+  late String productId;
+  late String type;
+  late String title;
+  late String name;
+  late String iconUrl;
+  late String description;
+  late String price;
+  late int priceAmountMicros;
+  late String priceCurrencyCode;
+  late String skuDetailsToken;
+  late String subscriptionPeriod;
+
+  SKDetails.from(Map json) {
+    productId = json['productId'].toString();
+    type = json['type'].toString();
+    title = json['title'].toString();
+    name = json['name'] as String;
+    iconUrl = json['iconUrl'].toString();
+    description = json['description'] as String;
+    price = json['price'] as String;
+    priceAmountMicros = json['price_amount_micros'] as int;
+    priceCurrencyCode = json['price_currency_code'].toString();
+    skuDetailsToken = json['skuDetailsToken'] as String;
+    subscriptionPeriod = json['subscriptionPeriod'] as String;
   }
 }
 

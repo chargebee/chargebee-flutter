@@ -214,14 +214,15 @@ extension SKProduct {
     func toMap() -> [String: Any?] {
         let map: [String: Any?] = [
             "productId": productIdentifier,
-            "productPrice": price,
+            "productPrice": price.doubleValue,
             "productTitle": localizedTitle,
             "currencyCode": priceLocale.currencyCode,
-            "subscriptionPeriod": subscriptionDuration()
+            "subscriptionPeriod": subscriptionPeriod()
         ]
         return map
     }
-    func subscriptionDuration() -> String {
+    func subscriptionPeriod() -> [String:Any?]?  {
+        var subscriptionPeriod: [String: Any?]? = nil;
         let period:String = {
             switch self.subscriptionPeriod?.unit {
             case .day: return "day"
@@ -232,10 +233,12 @@ extension SKProduct {
             case .some(_): return ""
             }
         }()
-        let numOfUnits = self.subscriptionPeriod?.numberOfUnits ?? 0
-        let pluralInPeriod = numOfUnits > 1 ? "s" : ""
-        return String(format: "%d %@%@", arguments: [numOfUnits, period, pluralInPeriod])
-    }
+        subscriptionPeriod = [
+            "periodUnit": period,
+            "numberOfUnits": self.subscriptionPeriod!.numberOfUnits,
+        ];
+        return subscriptionPeriod
+    }    
 }
 
 
