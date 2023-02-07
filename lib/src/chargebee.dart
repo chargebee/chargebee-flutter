@@ -89,7 +89,7 @@ class Chargebee {
   }
 
   /* Get Apple/Google Product ID's from chargebee system */
-  static Future<List> retrieveProductIdentifers(
+  static Future<List> retrieveProductIdentifiers(
       [Map<String, String>? queryParams]) async {
     String result =
         await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
