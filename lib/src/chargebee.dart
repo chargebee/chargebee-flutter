@@ -1,7 +1,7 @@
 import 'package:chargebee_flutter/src/constants.dart';
-import 'package:chargebee_flutter/src/utils/item.dart';
-import 'package:chargebee_flutter/src/utils/plan.dart';
-import 'package:chargebee_flutter/src/utils/product.dart';
+import 'package:chargebee_flutter/src/models/item.dart';
+import 'package:chargebee_flutter/src/models/plan.dart';
+import 'package:chargebee_flutter/src/models/product.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
