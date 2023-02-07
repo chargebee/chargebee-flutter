@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 class Product {
-  String id = "";
-  String title = "";
-  String currencyCode = "";
-  double price = 0;
+  late String id;
+  late String title;
+  late String currencyCode;
+  late double price;
   SKDetails? skDetails;
   SubscriptionPeriod? subscriptionPeriod;
 
@@ -46,7 +46,7 @@ class Product {
 }
 
 class SubscriptionPeriod {
-  String? unit;
+  late String unit;
   late int numberOfUnits;
 
   SubscriptionPeriod.fromMap(Map<String, dynamic> map) {
