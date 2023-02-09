@@ -302,7 +302,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         onDetachedFromActivity();
     }
     private fun onError(error: CBException, result: Result) {
-        result.error("${error.apiErrorCode}", "${error.message}", error)
+        result.error("${error.httpStatusCode}", "${error.message}", error)
     }
 }
 

@@ -40,10 +40,10 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         }
                     }else {
 
-                        _result(FlutterError.subscriptionError("Serialization Issue"))
+                        _result(FlutterError.jsonSerializationError("Serialization Issue"))
                     }
                 case let .error(error):
-                    _result(FlutterError.chargebeeError(error as NSError))
+                    _result(FlutterError.chargebeeError(error))
                 }
             }
         case "purchaseProduct":
@@ -74,11 +74,11 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                                     _result(FlutterError.jsonSerializationError("Serialization Issue"))
                                 }
                             case .failure(let error):
-                                _result(FlutterError.purchaseError(error.localizedDescription))
+                                _result(FlutterError.purchaseError(error as! CBPurchaseError))
                             }
                         }
                     case let .failure(error):
-                        _result(FlutterError.productError(error.localizedDescription))
+                        _result(FlutterError.purchaseError(error ))
                     }
                 }
             })
@@ -107,7 +107,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         }
                         _result(array)
                     case let .failure(error):
-                        _result(FlutterError.productError(error.localizedDescription))
+                        _result(FlutterError.purchaseError(error))
                     }
                 }
             })
@@ -128,7 +128,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                             _result(FlutterError.jsonSerializationError("Serialization Issue"))
                         }
                     case let .failure(error):
-                        _result(FlutterError.chargebeeError(error as NSError))
+                        _result(FlutterError.productIdentifierError(error.localizedDescription))
                     }
                 }
             })
@@ -151,7 +151,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         _result(FlutterError.jsonSerializationError("Serialization Issue"))
                     }
                 case let .error(error):
-                    _result(FlutterError.chargebeeError(error as NSError))
+                    _result(FlutterError.chargebeeError(error))
                 }
             }
         case "retrieveAllItems":
@@ -172,7 +172,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                             _result(FlutterError.jsonSerializationError("Serialization Issue"))
                         }
                     case let .error(error):
-                        _result(FlutterError.chargebeeError( error as NSError))
+                        _result(FlutterError.chargebeeError(error))
                     }
                 }
             })
@@ -193,7 +193,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         _result(FlutterError.jsonSerializationError("Serialization Issue"))
                     }
                 case let .error(error):
-                    _result(FlutterError.chargebeeError( error as NSError))
+                    _result(FlutterError.chargebeeError(error))
                 }
             }
         default:
