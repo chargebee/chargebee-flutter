@@ -75,15 +75,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             }
             "retrieveAllPlans" ->{
                 val params = call.arguments() as? Map<String, String>?
-                if (params != null) {
-                    retrieveAllPlans(params, result)
-                }
+                retrieveAllPlans(params, result)
             }
             "retrieveProductIdentifers" ->{
                 val params = call.arguments() as? Map<String, String>?
-                if (params != null) {
-                    retrieveProductIdentifers(params, result)
-                }
+                retrieveProductIdentifers(params, result)
             }
             "retrieveEntitlements" ->{
                 val params = call.arguments() as? Map<String, String>?

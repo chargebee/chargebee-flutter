@@ -22,7 +22,17 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             Chargebee.environment = "cb_flutter_ios_sdk"
             Chargebee.configure(site: args["site_name"] as! String,
                                 apiKey: args["api_key"] as! String,
-                                sdkKey: (args["sdk_key"] as! String))
+                                sdkKey: (args["sdk_key"] as! String)) { result in
+                switch result {
+                case .success(let status):
+                    _result(status.details.status!)
+                case .error(let error):
+                    print("error : \(error)")
+                    _result(FlutterError.chargebeeError(error as NSError))
+                    
+                }
+            }
+            
         case "retrieveSubscriptions":
             guard let args = call.arguments as? [String: String] else {
                 return _result(FlutterError.noArgsError)
