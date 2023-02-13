@@ -75,15 +75,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             }
             "retrieveAllPlans" ->{
                 val params = call.arguments() as? Map<String, String>?
-                if (params != null) {
-                    retrieveAllPlans(params, result)
-                }
+                retrieveAllPlans(params, result)
             }
             "retrieveProductIdentifers" ->{
                 val params = call.arguments() as? Map<String, String>?
-                if (params != null) {
-                    retrieveProductIdentifers(params, result)
-                }
+                retrieveProductIdentifers(params, result)
             }
             "retrieveEntitlements" ->{
                 val params = call.arguments() as? Map<String, String>?
@@ -104,7 +100,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         // Added chargebee logger support for flutter android sdk
         Chargebee.environment = "cb_flutter_android_sdk"
         // Configure with Chargebee SDK
-        Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = "${activity.packageName}"){
+        Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = "org.biblingo.biblingo"){
             when(it){
                 is ChargebeeResult.Success -> {
                     val response = (it.data) as CBAuthResponse
