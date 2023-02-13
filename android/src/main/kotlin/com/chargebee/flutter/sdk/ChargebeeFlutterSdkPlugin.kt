@@ -100,7 +100,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         // Added chargebee logger support for flutter android sdk
         Chargebee.environment = "cb_flutter_android_sdk"
         // Configure with Chargebee SDK
-        Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = "org.biblingo.biblingo"){
+        Chargebee.configure(site = siteName, publishableApiKey = apiKey, sdkKey = sdkKey, packageName = "${activity.packageName}"){
             when(it){
                 is ChargebeeResult.Success -> {
                     val response = (it.data) as CBAuthResponse
