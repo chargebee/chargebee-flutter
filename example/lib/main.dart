@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       await Chargebee.configure(siteName, apiKey, iosSdkKey, androidSdkKey);
     } on PlatformException catch (e) {
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      print('Error Message: ${e.message}, Error Details: ${e.details}');
     }
   }
 
