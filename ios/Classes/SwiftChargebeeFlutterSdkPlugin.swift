@@ -52,7 +52,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             }
             let productId = params["product"]
             let customerId = params["customerId"]
-            
+            var dict = [String:String]()
             CBPurchase.shared.retrieveProducts(withProductID: [productId!], completion: { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -62,7 +62,9 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         CBPurchase.shared.purchaseProduct(product: product, customerId: customerId) { result in
                             switch result {
                             case .success(let result):
-                                let dict = ["status": "\(result.status)", "subscriptionId": "\(result.subscriptionId)", "planId": "\(result.planId)"]
+                                if let subscriptionId = result.subscriptionId, let planId = result.planId{
+                                    dict = ["status": "\(result.status)", "subscriptionId": "\(subscriptionId)", "planId": "\(planId)"]
+                                }
                                 if let data = try? JSONSerialization.data(
                                     withJSONObject:dict,
                                     options: []) {
