@@ -30,7 +30,7 @@ class CBItem {
       this.metered,
       this.object});
 
-  CBItem.fromJson(Map<String, dynamic> json) {
+  CBItem.fromJson(Map json) {
     id = json['id'] as String;
     resourceVersion = json['resource_version'];
     enabledInPortal = json['enabled_in_portal'] as bool;
@@ -46,7 +46,7 @@ class CBItem {
     name = json['name'] as String;
   }
 
-  CBItem.fromJsonAndroid(Map<String, dynamic> json) {
+  CBItem.fromJsonAndroid(Map json) {
     id = json['channel'] as String;
     name = json['id'] as String;
     description = json['name'] as String;
@@ -59,11 +59,11 @@ class CBItemsList {
 
   CBItemsList({this.cbItem});
 
-  CBItemsList.fromJson(dynamic json) {
+  CBItemsList.fromJson(Map json) {
     cbItem = json['item'] != null ? new CBItem.fromJson(json['item']) : null;
   }
 
-  CBItemsList.fromJsonAndroid(dynamic json) {
+  CBItemsList.fromJsonAndroid(Map json) {
     cbItem =
         json['item'] != null ? new CBItem.fromJsonAndroid(json['item']) : null;
   }
@@ -74,7 +74,7 @@ class CBItemWrapper {
 
   CBItemWrapper({this.list});
 
-  CBItemWrapper.fromJson(List<dynamic> json) {
+  CBItemWrapper.fromJson(List<Map> json) {
     print(json);
     List<CBItem> subsArray = [];
     for (var value in json) {

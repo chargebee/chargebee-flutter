@@ -7,7 +7,7 @@ class Product {
 
   Product(this.id, this.price, this.title, this.currencyCode);
 
-  factory Product.fromJson(dynamic json) {
+  factory Product.fromJson(Map json) {
     print(json);
 
     return Product(json['productId'] as String, json['productPrice'] as String,
@@ -21,7 +21,7 @@ class PurchaseResult {
   String status;
   PurchaseResult(this.subscriptionId, this.planId, this.status);
 
-  factory PurchaseResult.fromJson(dynamic json) {
+  factory PurchaseResult.fromJson(Map json) {
     return PurchaseResult(json['subscriptionId'] as String, json['planId'] as String, json['status'] as String);
   }
 }
@@ -47,7 +47,7 @@ class Subscripton {
       this.currentTermEnd,
       this.planAmount});
 
-  Subscripton.fromJson(Map<String, dynamic> json) {
+  Subscripton.fromJson(Map json) {
     subscriptionId = json['subscription_id'] as String;
     customerId = json['customer_id'] as String;
     status = json['status'] as String;
@@ -57,7 +57,7 @@ class Subscripton {
     planAmount = json['plan_amount']
         .toString(); /*Plan amount sometime we are getting double value sometime Int*/
   }
-  Subscripton.fromJsonAndroid(Map<String, dynamic> json) {
+  Subscripton.fromJsonAndroid(Map json) {
     activatedAtString = json['activated_at'].toString();
     currentTermEndString = json['current_term_end'].toString();
     currentTermStartString = json['current_term_start'].toString();
@@ -73,12 +73,12 @@ class SubscriptonList {
 
   SubscriptonList({this.subscripton});
 
-  SubscriptonList.fromJson(dynamic json) {
+  SubscriptonList.fromJson(Map json) {
     subscripton = json['cb_subscription'] != null
         ? new Subscripton.fromJson(json['cb_subscription'])
         : null;
   }
-  SubscriptonList.fromJsonAndroid(dynamic json) {
+  SubscriptonList.fromJsonAndroid(Map json) {
     subscripton = json['cb_subscription'] != null
         ? new Subscripton.fromJsonAndroid(json['cb_subscription'])
         : null;
@@ -90,7 +90,7 @@ class CBSubscriptionWrapper {
 
   CBSubscriptionWrapper({this.list});
 
-  CBSubscriptionWrapper.fromJson(List<dynamic> json) {
+  CBSubscriptionWrapper.fromJson(List<Map> json) {
     print(json);
     List<Subscripton> subsArray = [];
     for (var value in json) {

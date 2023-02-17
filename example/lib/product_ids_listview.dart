@@ -2,7 +2,7 @@ import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class ProductIdentifiersView extends StatefulWidget {
-  final List<dynamic> listProductIds;
+  final List listProductIds;
 
   const ProductIdentifiersView(this.listProductIds, {Key? key, required this.title})
       : super(key: key);
@@ -14,7 +14,7 @@ class ProductIdentifiersView extends StatefulWidget {
 }
 
 class ProductIdentifiersViewState extends State<ProductIdentifiersView> {
-  late List<dynamic> listProducts;
+  late List listProducts;
   ProductIdentifiersViewState(this.listProducts);
 
   late ProgressBarUtil mProgressBarUtil;

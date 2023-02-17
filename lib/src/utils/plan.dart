@@ -55,7 +55,7 @@ class CBPlan{
         });
 
 
-  CBPlan.fromJson(Map<String, dynamic> json) {
+  CBPlan.fromJson(Map json) {
     id = json['id'] as String;
     chargeModel = json['charge_model'] as String;
     resourceVersion = json['resource_version'] as int;
@@ -79,7 +79,7 @@ class CBPlan{
 
   }
 
-  CBPlan.fromJsonAndroid(Map<String, dynamic> json) {
+  CBPlan.fromJsonAndroid(Map json) {
     addonApplicability = json['addonApplicability'] as String;
     channel = json['channel'] as String;
     chargeModel = json['chargeModel'] as String;
@@ -115,13 +115,13 @@ class CBPlansList {
 
   CBPlansList({this.cbPlan});
 
-  CBPlansList.fromJson(dynamic json) {
+  CBPlansList.fromJson(Map json) {
     cbPlan = json['plan'] != null
         ? new CBPlan.fromJson(json['plan'])
         : null;
   }
 
-  CBPlansList.fromJsonAndroid(dynamic json) {
+  CBPlansList.fromJsonAndroid(Map json) {
     cbPlan = json['plan'] != null
         ? new CBPlan.fromJsonAndroid(json['plan'])
         : null;
@@ -134,7 +134,7 @@ class CBPlanWrapper {
 
   CBPlanWrapper({this.list});
 
-  CBPlanWrapper.fromJson(List<dynamic> json) {
+  CBPlanWrapper.fromJson(List<Map> json) {
     print(json);
     List<CBPlan> subsArray = [];
     for (var value in json) {
