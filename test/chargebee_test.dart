@@ -34,7 +34,11 @@ void main() {
     test('works for iOS', () async {
       channelResponse = true;
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      await Chargebee.configure(siteName, apiKey, iosSDKKey);
+      await Chargebee.configure(
+        site: siteName,
+        publishableApiKey: apiKey,
+        iosSdkKey: iosSDKKey,
+      );
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mAuthentication,
@@ -50,7 +54,11 @@ void main() {
     test('works for android', () async {
       channelResponse = true;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      await Chargebee.configure(siteName, apiKey, "", androidSDKKey);
+      await Chargebee.configure(
+        site: siteName,
+        publishableApiKey: apiKey,
+        androidSdkKey: androidSDKKey,
+      );
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mAuthentication,
@@ -68,7 +76,12 @@ void main() {
         throw PlatformException(code: "Dummy");
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      await expectLater(() => Chargebee.configure(siteName, apiKey, iosSDKKey),
+      await expectLater(
+          () => Chargebee.configure(
+                site: siteName,
+                publishableApiKey: apiKey,
+                iosSdkKey: iosSDKKey,
+              ),
           throwsA(isA<PlatformException>()));
       channel.setMockMethodCallHandler(null);
     });

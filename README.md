@@ -54,7 +54,12 @@ Initialize the Chargebee Flutter SDK with your Chargebee site, Publishable API K
 ```dart
 import 'package:chargebee_flutter/chargebee_flutter.dart';
 try {
-  await Chargebee.configure("SITE_NAME", "API-KEY", "iOS SDK Key", "Android SDK Key");
+  await Chargebee.configure(
+    site: "SITE_NAME",
+    publishableApiKey: "API_KEY",
+    iosSdkKey: "iOS_SDK_Key",
+    androidSdkKey: "Android_SDK_Key",
+  );
 } on PlatformException catch (e) {
   print('${e.message}, ${e.details}');
 }

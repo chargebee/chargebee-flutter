@@ -7,12 +7,18 @@ import 'package:flutter/services.dart';
 import 'dart:convert';
 
 class Chargebee {
+  Chargebee._();
+
   static const platform = MethodChannel(Constants.methodChannelName);
   static bool get _isIOS => defaultTargetPlatform == TargetPlatform.iOS;
 
   /* Configure the app details with chargebee system */
-  static Future<void> configure(String site, String publishableApiKey,
-      [String? iosSdkKey = "", androidSdkKey = ""]) async {
+  static Future<void> configure({
+    required String site,
+    required String publishableApiKey,
+    String? iosSdkKey = "",
+    String? androidSdkKey = "",
+  }) async {
     if (_isIOS) {
       final args = {
         Constants.siteName: site,
