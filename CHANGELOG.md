@@ -1,3 +1,10 @@
+## 0.0.8
+Bug fixes
+* Android app crashed on signed apk and the issue fixed in Native Android SDK v1.0.15
+## 0.0.7
+Bug fixes
+  * Android flutter sdk error type mismatch: inferred type is String? but String was expected. 
+    The issue has been fixed in this PR - https://github.com/chargebee/chargebee-flutter/pull/33
 ## 0.0.6
 Bug fixes
   * subscriptionId is not set on android #28

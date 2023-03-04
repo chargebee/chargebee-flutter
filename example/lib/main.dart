@@ -164,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveProductIdentifers() async {
     try {
       Map<String, String> queryparam = {"limit":"10"};
-      final result = await Chargebee.retrieveProductIdentifers(queryparam);
+      final result = await Chargebee.retrieveProductIdentifiers(queryparam);
       log('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {

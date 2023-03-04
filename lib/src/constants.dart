@@ -20,6 +20,6 @@ class Constants {
   static const mGetProducts = 'getProducts';
   static const mPurchaseProduct = 'purchaseProduct';
   static const mSubscriptionMethod = 'retrieveSubscriptions';
-  static const mProductIdentifiers = 'retrieveProductIdentifers';
+  static const mProductIdentifiers = 'retrieveProductIdentifiers';
   static const mGetEntitlements = 'retrieveEntitlements';
 }
