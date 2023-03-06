@@ -22,7 +22,17 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             Chargebee.environment = "cb_flutter_ios_sdk"
             Chargebee.configure(site: args["site_name"] as! String,
                                 apiKey: args["api_key"] as! String,
-                                sdkKey: (args["sdk_key"] as! String))
+                                sdkKey: (args["sdk_key"] as! String)) { result in
+                switch result {
+                case .success(let status):
+                    _result(status.details.status!)
+                case .error(let error):
+                    print("error : \(error)")
+                    _result(FlutterError.chargebeeError(error as NSError))
+                    
+                }
+            }
+            
         case "retrieveSubscriptions":
             guard let args = call.arguments as? [String: String] else {
                 return _result(FlutterError.noArgsError)
@@ -52,7 +62,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             }
             let productId = params["product"]
             let customerId = params["customerId"]
-            
+            var dict = [String:String]()
             CBPurchase.shared.retrieveProducts(withProductID: [productId!], completion: { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -62,7 +72,9 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         CBPurchase.shared.purchaseProduct(product: product, customerId: customerId) { result in
                             switch result {
                             case .success(let result):
-                                let dict = ["status": "\(result.status)", "subscriptionId": "\(result.subscriptionId)", "planId": "\(result.planId)"]
+                                if let subscriptionId = result.subscriptionId, let planId = result.planId{
+                                    dict = ["status": "\(result.status)", "subscriptionId": "\(subscriptionId)", "planId": "\(planId)"]
+                                }
                                 if let data = try? JSONSerialization.data(
                                     withJSONObject:dict,
                                     options: []) {
