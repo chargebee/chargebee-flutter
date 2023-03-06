@@ -6,42 +6,53 @@ class Product {
   late String title;
   late String currencyCode;
   late double price;
-  SKDetails? skDetails;
+  late String priceString;
+  String? subscriptionPeriodAndroid;
   SubscriptionPeriod? subscriptionPeriod;
 
   Product.jsonForIOS(String id,
       double price,
+      String priceString,
       String title,
       String currencyCode,
       SubscriptionPeriod subscriptionPeriod){
     this.id = id;
     this.price = price;
+    this.priceString = priceString;
     this.title = title;
     this.currencyCode = currencyCode;
     this.subscriptionPeriod = subscriptionPeriod;
   }
 
-  Product.jsonForAndroid(SKDetails skDetails){
-    this.skDetails = skDetails;
+  Product.jsonForAndroid(String id,
+      double price,
+      String priceString,
+      String title,
+      String currencyCode,
+      String subscriptionPeriodAndroid){
+    this.id = id;
+    this.price = price;
+    this.priceString = priceString;
+    this.title = title;
+    this.currencyCode = currencyCode;
+    this.subscriptionPeriodAndroid = subscriptionPeriodAndroid;
   }
 
   factory Product.fromJsonIOS(dynamic json) {
     if(kDebugMode) print(json);
     var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
-    return Product.jsonForIOS(json['productId'] as String, json['productPrice'] as double,
+    return Product.jsonForIOS(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
         json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
   }
 
   factory Product.fromJsonAndroid(dynamic json) {
     if(kDebugMode) print(json);
-    return Product.jsonForAndroid(new SKDetails.from(jsonDecode(json['skuDetails'])));
+    return Product.jsonForAndroid(json['productId'] as String, json['productPrice'] as double,json['productPriceString'] as String,
+        json['productTitle'] as String, json['currencyCode'] as String, json['subscriptionPeriod'] as String);
   }
   @override
   String toString() {
-    if(skDetails == null)
-      return 'Product(id: $id, price: $price, title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
-    else
-      return 'Product(skDetails: $skDetails)';
+      return 'Product(id: $id, price: $price, priceString: $priceString title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod,subscriptionPeriodAndroid: $subscriptionPeriodAndroid)';
   }
 }
 

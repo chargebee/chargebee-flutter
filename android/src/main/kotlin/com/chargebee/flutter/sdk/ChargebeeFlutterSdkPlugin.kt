@@ -308,7 +308,12 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
 fun CBProduct.toMap(): Map<String, Any> {
     return mapOf(
-        "skuDetails" to skuDetails.originalJson
+        "productId" to productId,
+        "productPrice" to skuDetails.priceAmountMicros.toDouble(),
+        "productPriceString" to productPrice,
+        "productTitle" to productTitle,
+        "currencyCode" to skuDetails.priceCurrencyCode,
+        "subscriptionPeriod" to skuDetails.subscriptionPeriod
     )
 }
 

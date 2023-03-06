@@ -44,15 +44,9 @@ class ProductListViewState extends State<ProductListView> {
         body: ListView.builder(
           itemCount: listProducts.length,
           itemBuilder: (context, pos) {
-            if (listProducts[pos].skDetails == null) {
-              productPrice = listProducts[pos].price.toString();
-              productId = listProducts[pos].id;
-              currencyCode = listProducts[pos].currencyCode;
-            } else {
-              productPrice = listProducts[pos].skDetails?.price;
-              productId = listProducts[pos].skDetails?.productId;
-              currencyCode = listProducts[pos].skDetails?.priceCurrencyCode;
-            }
+            productPrice = listProducts[pos].priceString;
+            productId = listProducts[pos].id;
+            currencyCode = listProducts[pos].currencyCode;
             return Card(
               child: ListTile(
                 title: Text("$productId",

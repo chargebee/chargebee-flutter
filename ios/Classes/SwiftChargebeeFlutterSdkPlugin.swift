@@ -215,6 +215,7 @@ extension SKProduct {
         let map: [String: Any?] = [
             "productId": productIdentifier,
             "productPrice": price.doubleValue,
+            "productPriceString": price.description,
             "productTitle": localizedTitle,
             "currencyCode": priceLocale.currencyCode,
             "subscriptionPeriod": subscriptionPeriod()
@@ -229,13 +230,13 @@ extension SKProduct {
             case .week: return "week"
             case .month: return "month"
             case .year: return "year"
-            case .none: return ""
-            case .some(_): return ""
+            case .none, .some(_): return ""
             }
         }()
         subscriptionPeriod = [
             "periodUnit": period,
-            "numberOfUnits": self.subscriptionPeriod!.numberOfUnits,
+            "numberOfUnits": self.subscriptionPeriod?.numberOfUnits ?? nil
+
         ];
         return subscriptionPeriod
     }    
