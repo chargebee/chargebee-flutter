@@ -27,7 +27,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                 case .success(let status):
                     _result(status.details.status!)
                 case .error(let error):
-                    print("error : \(error)")
+                    debugPrint("error : \(error)")
                     _result(FlutterError.chargebeeError(error as CBError))
                     
                 }
@@ -168,7 +168,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             }
         case "retrieveAllItems":
             let params = call.arguments as? [String: String]
-            print("All items:")
+            debugPrint("All items:")
             Chargebee.shared.retrieveAllItems(queryParams: params, completion: { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -190,7 +190,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             })
         case "retrieveAllPlans":
             let params = call.arguments as? [String: String]
-            print("List All Plans")
+            debugPrint("List All Plans")
             Chargebee.shared.retrieveAllPlans(queryParams: params) { result in
                 switch result {
                 case let .success(plansList):
