@@ -94,7 +94,7 @@ class ProductListViewState extends State<ProductListView> {
         _showSuccessDialog(context, result.subscriptionId);
       }
     } on PlatformException catch (e) {
-      print('${e.message}, ${e.details}');
+      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       mProgressBarUtil.hideProgressDialog();
     }
   }

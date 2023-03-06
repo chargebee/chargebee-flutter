@@ -28,7 +28,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     _result(status.details.status!)
                 case .error(let error):
                     print("error : \(error)")
-                    _result(FlutterError.chargebeeError(error as NSError))
+                    _result(FlutterError.chargebeeError(error as CBError))
                     
                 }
             }
