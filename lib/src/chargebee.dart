@@ -39,13 +39,8 @@ class Chargebee {
     if (result.isNotEmpty) {
       for (var i = 0; i < result.length; i++) {
         var obj = result[i].toString();
-        if(_isIOS) {
-          Product product = Product.fromJsonIOS(jsonDecode(obj));
-          products.add(product);
-        }else{
-          Product product = Product.fromJsonAndroid(jsonDecode(obj));
-          products.add(product);
-        }
+        Product product = Product.fromJson(jsonDecode(obj));
+        products.add(product);
       }
     }
     return products;

@@ -9,7 +9,7 @@ class Product {
   late String priceString;
   SubscriptionPeriod? subscriptionPeriod;
 
-  Product.jsonForIOS(String id,
+  Product.jsonMap(String id,
       double price,
       String priceString,
       String title,
@@ -23,33 +23,13 @@ class Product {
     this.subscriptionPeriod = subscriptionPeriod;
   }
 
-  Product.jsonForAndroid(String id,
-      double price,
-      String priceString,
-      String title,
-      String currencyCode,
-      SubscriptionPeriod subscriptionPeriod){
-    this.id = id;
-    this.price = price;
-    this.priceString = priceString;
-    this.title = title;
-    this.currencyCode = currencyCode;
-    this.subscriptionPeriod = subscriptionPeriod;
-  }
-
-  factory Product.fromJsonIOS(dynamic json) {
+  factory Product.fromJson(dynamic json) {
     if(kDebugMode) print(json);
     var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
-    return Product.jsonForIOS(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
+    return Product.jsonMap(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
         json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
   }
 
-  factory Product.fromJsonAndroid(dynamic json) {
-    if(kDebugMode) print(json);
-    var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
-    return Product.jsonForAndroid(json['productId'] as String, json['productPrice'] as double,json['productPriceString'] as String,
-        json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
-  }
   @override
   String toString() {
       return 'Product(id: $id, price: $price, priceString: $priceString title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
