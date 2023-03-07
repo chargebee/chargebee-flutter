@@ -309,12 +309,29 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 fun CBProduct.toMap(): Map<String, Any> {
     return mapOf(
         "productId" to productId,
-        "productPrice" to skuDetails.priceAmountMicros.toDouble(),
+        "productPrice" to skuDetails.priceAmountMicros / 1_000_000.0,
         "productPriceString" to productPrice,
         "productTitle" to productTitle,
         "currencyCode" to skuDetails.priceCurrencyCode,
-        "subscriptionPeriod" to skuDetails.subscriptionPeriod
+        "subscriptionPeriod" to subscriptionPeriod()
     )
 }
 
+ fun CBProduct.subscriptionPeriod(): Map<String, Any> {
+    val subscriptionPeriod = skuDetails.subscriptionPeriod
+    val numberOfUnits = subscriptionPeriod[subscriptionPeriod.length / 2].digitToInt()
+    return mapOf(
+        "periodUnit" to periodUnit(),
+        "numberOfUnits" to numberOfUnits
+    )
+}
+
+fun CBProduct.periodUnit(): String {
+    return when (skuDetails.subscriptionPeriod.last().toString()) {
+        "Y" -> "year"
+        "M" -> "month"
+        "D" -> "day"
+        else -> "unknown"
+    }
+}
 
