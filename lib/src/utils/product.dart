@@ -7,26 +7,14 @@ class Product {
   late String currencyCode;
   late double price;
   late String priceString;
-  SubscriptionPeriod? subscriptionPeriod;
+  late SubscriptionPeriod subscriptionPeriod;
 
-  Product.jsonMap(String id,
-      double price,
-      String priceString,
-      String title,
-      String currencyCode,
-      SubscriptionPeriod subscriptionPeriod){
-    this.id = id;
-    this.price = price;
-    this.priceString = priceString;
-    this.title = title;
-    this.currencyCode = currencyCode;
-    this.subscriptionPeriod = subscriptionPeriod;
-  }
+  Product(this.id, this.price, this.priceString, this.title, this.currencyCode, this.subscriptionPeriod);
 
   factory Product.fromJson(dynamic json) {
     if(kDebugMode) print(json);
     var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
-    return Product.jsonMap(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
+    return Product(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
         json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
   }
 
@@ -43,34 +31,6 @@ class SubscriptionPeriod {
   SubscriptionPeriod.fromMap(Map<String, dynamic> map) {
     unit = map['periodUnit'].toString();
     numberOfUnits = map['numberOfUnits'] as int;
-  }
-}
-
-class SKDetails{
-  late String productId;
-  late String type;
-  late String title;
-  late String name;
-  late String iconUrl;
-  late String description;
-  late String price;
-  late int priceAmountMicros;
-  late String priceCurrencyCode;
-  late String skuDetailsToken;
-  late String subscriptionPeriod;
-
-  SKDetails.from(Map json) {
-    productId = json['productId'].toString();
-    type = json['type'].toString();
-    title = json['title'].toString();
-    name = json['name'] as String;
-    iconUrl = json['iconUrl'].toString();
-    description = json['description'] as String;
-    price = json['price'] as String;
-    priceAmountMicros = json['price_amount_micros'] as int;
-    priceCurrencyCode = json['price_currency_code'].toString();
-    skuDetailsToken = json['skuDetailsToken'] as String;
-    subscriptionPeriod = json['subscriptionPeriod'] as String;
   }
 }
 

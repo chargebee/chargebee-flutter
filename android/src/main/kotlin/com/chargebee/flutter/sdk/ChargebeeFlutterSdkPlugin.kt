@@ -309,7 +309,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 fun CBProduct.toMap(): Map<String, Any> {
     return mapOf(
         "productId" to productId,
-        "productPrice" to skuDetails.priceAmountMicros / 1_000_000.0,
+        "productPrice" to convertPriceAmountInMicros(),
         "productPriceString" to productPrice,
         "productTitle" to productTitle,
         "currencyCode" to skuDetails.priceCurrencyCode,
@@ -317,7 +317,11 @@ fun CBProduct.toMap(): Map<String, Any> {
     )
 }
 
- fun CBProduct.subscriptionPeriod(): Map<String, Any> {
+fun CBProduct.convertPriceAmountInMicros(): Double {
+    return skuDetails.priceAmountMicros/1_000_000.0
+}
+
+fun CBProduct.subscriptionPeriod(): Map<String, Any> {
     val subscriptionPeriod = skuDetails.subscriptionPeriod
     val numberOfUnits = subscriptionPeriod[subscriptionPeriod.length / 2].digitToInt()
     return mapOf(
@@ -330,6 +334,7 @@ fun CBProduct.periodUnit(): String {
     return when (skuDetails.subscriptionPeriod.last().toString()) {
         "Y" -> "year"
         "M" -> "month"
+        "W" -> "week"
         "D" -> "day"
         else -> "unknown"
     }
