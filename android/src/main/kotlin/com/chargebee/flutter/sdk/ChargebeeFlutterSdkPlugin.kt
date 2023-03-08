@@ -323,7 +323,7 @@ fun CBProduct.convertPriceAmountInMicros(): Double {
 
 fun CBProduct.subscriptionPeriod(): Map<String, Any> {
     val subscriptionPeriod = skuDetails.subscriptionPeriod
-    val numberOfUnits = subscriptionPeriod[subscriptionPeriod.length / 2].digitToInt()
+    val numberOfUnits = subscriptionPeriod.substring(1, subscriptionPeriod.length-1).toInt()
     return mapOf(
         "periodUnit" to periodUnit(),
         "numberOfUnits" to numberOfUnits
@@ -336,7 +336,7 @@ fun CBProduct.periodUnit(): String {
         "M" -> "month"
         "W" -> "week"
         "D" -> "day"
-        else -> "unknown"
+        else -> ""
     }
 }
 

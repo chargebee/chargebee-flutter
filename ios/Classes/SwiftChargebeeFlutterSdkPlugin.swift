@@ -222,24 +222,24 @@ extension SKProduct {
         ]
         return map
     }
-    func subscriptionPeriod() -> [String:Any?]?  {
-        var subscriptionPeriod: [String: Any?]? = nil;
-        let period:String = {
-            switch self.subscriptionPeriod?.unit {
-            case .day: return "day"
-            case .week: return "week"
-            case .month: return "month"
-            case .year: return "year"
-            case .none, .some(_): return ""
-            }
-        }()
-        subscriptionPeriod = [
+    func subscriptionPeriod() -> [String:Any?]  {
+       let period:String = periodUnit()
+       let subscriptionPeriod: [String: Any?] = [
             "periodUnit": period,
             "numberOfUnits": self.subscriptionPeriod?.numberOfUnits ?? nil
-
         ];
         return subscriptionPeriod
-    }    
+    }
+    
+    func periodUnit() -> String {
+        switch self.subscriptionPeriod?.unit {
+        case .day: return "day"
+        case .week: return "week"
+        case .month: return "month"
+        case .year: return "year"
+        case .none, .some(_): return ""
+        }
+    }
 }
 
 

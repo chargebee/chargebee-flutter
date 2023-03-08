@@ -25,7 +25,11 @@ class Product {
 }
 
 class SubscriptionPeriod {
+  /// unit represent the duration of an interval, from a day up to a year.
+  /// For example, unit value would be a month, year, day and week.
   late String unit;
+  /// The number of units per subscription period.
+  /// For example, if the number of units is 6, then the subscription period would be 6 months.
   late int numberOfUnits;
 
   SubscriptionPeriod.fromMap(Map<String, dynamic> map) {
