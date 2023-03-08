@@ -226,7 +226,7 @@ extension SKProduct {
        let period:String = periodUnit()
        let subscriptionPeriod: [String: Any?] = [
             "periodUnit": period,
-            "numberOfUnits": self.subscriptionPeriod?.numberOfUnits ?? nil
+            "numberOfUnits": self.subscriptionPeriod?.numberOfUnits ?? 0
         ];
         return subscriptionPeriod
     }
