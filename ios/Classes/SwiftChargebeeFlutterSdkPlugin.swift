@@ -37,7 +37,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             guard let args = call.arguments as? [String: String] else {
                 return _result(FlutterError.noArgsError)
             }
-
+            
             Chargebee.shared.retrieveSubscriptions(queryParams: args) { result in
                 switch result {
                 case let .success(list):
@@ -49,7 +49,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                             _result(jsonString)
                         }
                     }else {
-
+                        
                         _result(FlutterError.subscriptionError("Serialization Issue"))
                     }
                 case let .error(error):
@@ -129,7 +129,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                 DispatchQueue.main.async {
                     switch result {
                     case let .success(dataWrapper):
-                       if let data = try? JSONSerialization.data(
+                        if let data = try? JSONSerialization.data(
                             withJSONObject:dataWrapper.ids,
                             options: []) {
                             if let jsonString = String(data: data,
@@ -226,11 +226,31 @@ extension SKProduct {
     func toMap() -> [String: Any?] {
         let map: [String: Any?] = [
             "productId": productIdentifier,
-            "productPrice": price.description,
+            "productPrice": price.doubleValue,
+            "productPriceString": price.description,
             "productTitle": localizedTitle,
-            "currencyCode": priceLocale.currencyCode
+            "currencyCode": priceLocale.currencyCode,
+            "subscriptionPeriod": subscriptionPeriod()
         ]
         return map
+    }
+    func subscriptionPeriod() -> [String:Any?]  {
+       let period:String = periodUnit()
+       let subscriptionPeriod: [String: Any?] = [
+            "periodUnit": period,
+            "numberOfUnits": self.subscriptionPeriod?.numberOfUnits ?? 0
+        ];
+        return subscriptionPeriod
+    }
+    
+    func periodUnit() -> String {
+        switch self.subscriptionPeriod?.unit {
+        case .day: return "day"
+        case .week: return "week"
+        case .month: return "month"
+        case .year: return "year"
+        case .none, .some(_): return ""
+        }
     }
 }
 
