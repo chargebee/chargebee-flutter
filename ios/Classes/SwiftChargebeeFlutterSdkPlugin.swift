@@ -86,7 +86,11 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                                     _result(FlutterError.jsonSerializationError("Serialization Issue"))
                                 }
                             case .failure(let error):
-                                _result(FlutterError.purchaseError(error as! CBPurchaseError))
+                                if let error = error as? CBPurchaseError {
+                                    _result(FlutterError.purchaseError(error))
+                                } else {
+                                    _result(FlutterError.purchaseError(CBPurchaseError.unknown))
+                                }
                             }
                         }
                     case let .failure(error):
