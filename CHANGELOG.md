@@ -1,3 +1,8 @@
+## 0.0.10
+Bug fixes
+* Fixes product lacking information (#45) 
+* Reply already submitted and subscriptionId and planId made as non-optional (#48)
+* Improvements on error handling, Added appropriate error codes to PlatformException. No impacts on existing error handling logic (#49) 
 ## 0.0.9
 Bug fixes
 * flutter retrieve all plans issue - Response has no/invalid body. And the issue fixed in Native iOS SDK v1.0.17
