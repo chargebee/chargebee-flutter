@@ -16,7 +16,7 @@ import Chargebee
 extension FlutterError {
     
     static func noArgsError() -> FlutterError{
-        return FlutterError(code: "0",
+        return FlutterError(code: "400",
                             message: "Could not find query params",
                             details: "Make sure you pass Map as query params")
     }
@@ -34,7 +34,7 @@ extension FlutterError {
     }
 
     static func productIdentifierError(_ description: String) -> FlutterError {
-        return FlutterError (code: "ProductIdentifier",
+        return FlutterError (code: "400",
                              message: description,
                              details: "Request Failed")
     }
