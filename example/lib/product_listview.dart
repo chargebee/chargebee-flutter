@@ -18,6 +18,12 @@ class ProductListView extends StatefulWidget {
 
 class ProductListViewState extends State<ProductListView> {
   late List<Product> listProducts;
+  late var productPrice;
+  late var productId;
+  late var currencyCode;
+
+  ProductListViewState(this.listProducts);
+
   late ProgressBarUtil mProgressBarUtil;
   final TextEditingController productIdTextFieldController =
       TextEditingController();
@@ -41,14 +47,21 @@ class ProductListViewState extends State<ProductListView> {
         body: ListView.builder(
           itemCount: listProducts.length,
           itemBuilder: (context, pos) {
+            productPrice = listProducts[pos].priceString;
+            productId = listProducts[pos].id;
+            currencyCode = listProducts[pos].currencyCode;
             return Card(
               child: ListTile(
-                title: Text(listProducts[pos].id,
+                title: Text("$productId",
                     style: const TextStyle(
                         color: Colors.black54,
                         fontWeight: FontWeight.bold,
                         fontSize: 18)),
-                subtitle: Text(listProducts[pos].price,
+                subtitle: Text(
+                    productPrice +
+                        " (currencyCode: " +
+                         currencyCode+
+                        ")",
                     style: const TextStyle(
                         fontWeight: FontWeight.normal, fontSize: 15)),
                 trailing: const Text("Subscribe",
@@ -94,7 +107,7 @@ class ProductListViewState extends State<ProductListView> {
         _showSuccessDialog(context, result.subscriptionId);
       }
     } on PlatformException catch (e) {
-      print('${e.message}, ${e.details}');
+      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       mProgressBarUtil.hideProgressDialog();
     }
   }
