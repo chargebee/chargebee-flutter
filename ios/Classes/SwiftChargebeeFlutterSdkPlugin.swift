@@ -22,7 +22,17 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             Chargebee.environment = "cb_flutter_ios_sdk"
             Chargebee.configure(site: args["site_name"] as! String,
                                 apiKey: args["api_key"] as! String,
-                                sdkKey: (args["sdk_key"] as! String))
+                                sdkKey: (args["sdk_key"] as! String)) { result in
+                switch result {
+                case .success(let status):
+                    _result(status.details.status!)
+                case .error(let error):
+                    debugPrint("error : \(error)")
+                    _result(FlutterError.chargebeeError(error as CBError))
+                    
+                }
+            }
+            
         case "retrieveSubscriptions":
             guard let args = call.arguments as? [String: String] else {
                 return _result(FlutterError.noArgsError)
@@ -40,10 +50,10 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         }
                     }else {
 
-                        _result(FlutterError.subscriptionError("Serialization Issue"))
+                        _result(FlutterError.jsonSerializationError("Serialization Issue"))
                     }
                 case let .error(error):
-                    _result(FlutterError.chargebeeError(error as NSError))
+                    _result(FlutterError.chargebeeError(error))
                 }
             }
         case "purchaseProduct":
@@ -52,7 +62,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             }
             let productId = params["product"]
             let customerId = params["customerId"]
-            
+            var dict = [String:String]()
             CBPurchase.shared.retrieveProducts(withProductID: [productId!], completion: { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -62,7 +72,9 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         CBPurchase.shared.purchaseProduct(product: product, customerId: customerId) { result in
                             switch result {
                             case .success(let result):
-                                let dict = ["status": "\(result.status)", "subscriptionId": "\(result.subscriptionId)", "planId": "\(result.planId)"]
+                                if let subscriptionId = result.subscriptionId, let planId = result.planId{
+                                    dict = ["status": "\(result.status)", "subscriptionId": "\(subscriptionId)", "planId": "\(planId)"]
+                                }
                                 if let data = try? JSONSerialization.data(
                                     withJSONObject:dict,
                                     options: []) {
@@ -74,11 +86,15 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                                     _result(FlutterError.jsonSerializationError("Serialization Issue"))
                                 }
                             case .failure(let error):
-                                _result(FlutterError.purchaseError(error.localizedDescription))
+                                if let error = error as? CBPurchaseError {
+                                    _result(FlutterError.purchaseError(error))
+                                } else {
+                                    _result(FlutterError.purchaseError(CBPurchaseError.unknown))
+                                }
                             }
                         }
                     case let .failure(error):
-                        _result(FlutterError.productError(error.localizedDescription))
+                        _result(FlutterError.purchaseError(error ))
                     }
                 }
             })
@@ -107,7 +123,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         }
                         _result(array)
                     case let .failure(error):
-                        _result(FlutterError.productError(error.localizedDescription))
+                        _result(FlutterError.purchaseError(error))
                     }
                 }
             })
@@ -117,7 +133,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                 DispatchQueue.main.async {
                     switch result {
                     case let .success(dataWrapper):
-                       if let data = try? JSONSerialization.data(
+                        if let data = try? JSONSerialization.data(
                             withJSONObject:dataWrapper.ids,
                             options: []) {
                             if let jsonString = String(data: data,
@@ -128,7 +144,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                             _result(FlutterError.jsonSerializationError("Serialization Issue"))
                         }
                     case let .failure(error):
-                        _result(FlutterError.chargebeeError(error as NSError))
+                        _result(FlutterError.productIdentifierError(error.localizedDescription))
                     }
                 }
             })
@@ -151,12 +167,12 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         _result(FlutterError.jsonSerializationError("Serialization Issue"))
                     }
                 case let .error(error):
-                    _result(FlutterError.chargebeeError(error as NSError))
+                    _result(FlutterError.chargebeeError(error))
                 }
             }
         case "retrieveAllItems":
             let params = call.arguments as? [String: String]
-            print("All items:")
+            debugPrint("All items:")
             Chargebee.shared.retrieveAllItems(queryParams: params, completion: { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -172,13 +188,13 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                             _result(FlutterError.jsonSerializationError("Serialization Issue"))
                         }
                     case let .error(error):
-                        _result(FlutterError.chargebeeError( error as NSError))
+                        _result(FlutterError.chargebeeError(error))
                     }
                 }
             })
         case "retrieveAllPlans":
             let params = call.arguments as? [String: String]
-            print("List All Plans")
+            debugPrint("List All Plans")
             Chargebee.shared.retrieveAllPlans(queryParams: params) { result in
                 switch result {
                 case let .success(plansList):
@@ -193,7 +209,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                         _result(FlutterError.jsonSerializationError("Serialization Issue"))
                     }
                 case let .error(error):
-                    _result(FlutterError.chargebeeError( error as NSError))
+                    _result(FlutterError.chargebeeError(error))
                 }
             }
         default:
@@ -214,11 +230,31 @@ extension SKProduct {
     func toMap() -> [String: Any?] {
         let map: [String: Any?] = [
             "productId": productIdentifier,
-            "productPrice": price.description,
+            "productPrice": price.doubleValue,
+            "productPriceString": price.description,
             "productTitle": localizedTitle,
-            "currencyCode": priceLocale.currencyCode
+            "currencyCode": priceLocale.currencyCode,
+            "subscriptionPeriod": subscriptionPeriod()
         ]
         return map
+    }
+    func subscriptionPeriod() -> [String:Any?]  {
+       let period:String = periodUnit()
+       let subscriptionPeriod: [String: Any?] = [
+            "periodUnit": period,
+            "numberOfUnits": self.subscriptionPeriod?.numberOfUnits ?? 0
+        ];
+        return subscriptionPeriod
+    }
+
+    func periodUnit() -> String {
+        switch self.subscriptionPeriod?.unit {
+        case .day: return "day"
+        case .week: return "week"
+        case .month: return "month"
+        case .year: return "year"
+        case .none, .some(_): return ""
+        }
     }
 }
 

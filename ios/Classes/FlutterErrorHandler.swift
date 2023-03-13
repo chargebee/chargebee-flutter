@@ -10,57 +10,68 @@ import Foundation
 import FlutterMacOS
 #else
 import Flutter
+import Chargebee
 #endif
 
 extension FlutterError {
     
-    static func subscriptionError(_ description: String)-> FlutterError{
-        return FlutterError(code: "404",
-                            message: "Failed",
-                            details: description)
-    }
     static func noArgsError() -> FlutterError{
-        return FlutterError(code: "0",
+        return FlutterError(code: "400",
                             message: "Could not find query params",
                             details: "Make sure you pass Map as query params")
     }
-    static func chargebeeError(_ error: NSError) -> FlutterError {
-        return mapChargebeeError(error)
+
+    static func chargebeeError(_ error: CBError) -> FlutterError {
+        return FlutterError(code: error.httpStatusCode.description,
+                            message: error.localizedDescription,
+                            details: "Chargebee error")
     }
     
-    static func purchaseError(_ description: String) -> FlutterError {
-        return FlutterError (code: "Purchase",
-                             message: "Failed",
-                             details: description)
+    static func purchaseError(_ error: CBPurchaseError) -> FlutterError {
+        return FlutterError (code: error.skErrorCode.description,
+                             message: error.localizedDescription,
+                             details: "Request failed")
     }
+
+    static func productIdentifierError(_ description: String) -> FlutterError {
+        return FlutterError (code: "400",
+                             message: description,
+                             details: "Request Failed")
+    }
+
     static func jsonSerializationError(_ description: String) -> FlutterError {
         return FlutterError(code: "JSONSerialization",
-                            message: "JSON Serialization Error",
-                            details: description)
+                            message: description,
+                            details: "JSON Serialization Error")
         
-    }
-    static func productError(_ description: String) -> FlutterError {
-        return FlutterError(code: "ProductNotFound",
-                            message: "Could not find product",
-                            details: description)
-    }
-    private static func mapChargebeeError(_ error: NSError, errorCode: String?=nil, errorMessage: String? = nil) -> FlutterError {
-        var message = ""
-        
-        if let errorMessage = errorMessage {
-            message = errorMessage + ". "
-        }
-        message += error.localizedDescription
-        
-        var details = "Chargebee Error Code: \(error.code)"
-        
-        if let additionalMessage = error.userInfo[NSDebugDescriptionErrorKey] {
-            details = "\(details). Additional Message: \(additionalMessage)"
-        }
-        
-        return FlutterError(code: errorCode ?? "",
-                            message: message,
-                            details: details)
     }
 }
 
+extension CBPurchaseError {
+    public var skErrorCode: Int {
+        switch self {
+        case .unknown: return 0
+        case .invalidClient: return 1
+        case .userCancelled: return 2
+        case .paymentFailed: return 3
+        case .paymentNotAllowed: return 4
+        case .productNotAvailable: return 5
+        case .cannotMakePayments: return 6
+        case .networkConnectionFailed: return 7            
+        case .productsNotFound: return 8
+        case .privacyAcknowledgementRequired: return 9
+        case .invalidOffer: return 11
+        case .invalidPromoCode: return 12
+        case .invalidPrice: return 14
+        case .invalidPromoOffer: return 13
+        case .invalidSandbox: return 8
+        case .productIDNotFound: return 10
+        case .skRequestFailed:return 15
+        case .noProductToRestore:return 16
+        case .invalidSDKKey:return 17
+        case .invalidCustomerId:return 18
+        case .invalidCatalogVersion:return 19
+        case .invalidPurchase:return 20
+        }
+    }
+}

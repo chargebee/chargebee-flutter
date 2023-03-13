@@ -75,15 +75,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             }
             "retrieveAllPlans" ->{
                 val params = call.arguments() as? Map<String, String>?
-                if (params != null) {
-                    retrieveAllPlans(params, result)
-                }
+                retrieveAllPlans(params, result)
             }
             "retrieveProductIdentifers" ->{
                 val params = call.arguments() as? Map<String, String>?
-                if (params != null) {
-                    retrieveProductIdentifers(params, result)
-                }
+                retrieveProductIdentifers(params, result)
             }
             "retrieveEntitlements" ->{
                 val params = call.arguments() as? Map<String, String>?
@@ -139,60 +135,52 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
 
     private fun purchaseProduct(args: Map<String, Any>, result: Result) {
-        try {
-            val customerID = args["customerId"] as String
-            val arrayList: ArrayList<String> = ArrayList<String>()
-            arrayList.add(args["product"] as String)
-
-            CBPurchase.retrieveProducts(
-                activity,
-                arrayList,
-                object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
-                    override fun onSuccess(productIDs: ArrayList<CBProduct>) {
-                        if (productIDs.size>0) {
-                            CBPurchase.purchaseProduct(
-                                productIDs.first(),
-                                customerID,
-                                object : CBCallback.PurchaseCallback<String> {
-                                    override fun onSuccess(
-                                        receiptDetail: ReceiptDetail,
-                                        status: Boolean
-                                    ) {
-                                        Log.i(
-                                            javaClass.simpleName,
-                                            "Subscription ID:  ${receiptDetail.subscription_id}"
-                                        )
-                                        Log.i(javaClass.simpleName, "Status:  $status")
-                                        Log.i(
-                                            javaClass.simpleName,
-                                            "Plan ID:  ${receiptDetail.plan_id}"
-                                        )
-                                        result.success(
-                                            onResultMap(
-                                                receiptDetail.subscription_id,
-                                                receiptDetail.plan_id,
-                                                "$status"
-                                            )
-                                        )
-                                    }
-
-                                    override fun onError(error: CBException) {
-                                        onError(error, result)
-                                    }
-                                })
-                        }else {
-                            onError(CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)), result)
-                        }
+        val customerID = args["customerId"] as String
+        val arrayList: ArrayList<String> = ArrayList<String>()
+        arrayList.add(args["product"] as String)
+        CBPurchase.retrieveProducts(
+            activity,
+            arrayList,
+            object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
+                override fun onSuccess(productIDs: ArrayList<CBProduct>) {
+                    if (productIDs.size == 0){
+                        onError(CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)), result)
+                        return
                     }
-
-                    override fun onError(error: CBException) {
-                        onError(error, result)
-                    }
-                })
-        }catch (exp: Exception){
-            val errorMsg = exp.message ?: "${exp.message}"
-            result.error(errorMsg,errorMsg, exp)
-        }
+                    CBPurchase.purchaseProduct(
+                        productIDs.first(),
+                        customerID,
+                        object : CBCallback.PurchaseCallback<String> {
+                            override fun onSuccess(
+                                receiptDetail: ReceiptDetail,
+                                status: Boolean
+                            ) {
+                                Log.i(
+                                    javaClass.simpleName,
+                                    "Subscription ID:  ${receiptDetail.subscription_id}"
+                                )
+                                Log.i(javaClass.simpleName, "Status:  $status")
+                                Log.i(
+                                    javaClass.simpleName,
+                                    "Plan ID:  ${receiptDetail.plan_id}"
+                                )
+                                result.success(
+                                    onResultMap(
+                                        receiptDetail.subscription_id,
+                                        receiptDetail.plan_id,
+                                        "$status"
+                                    )
+                                )
+                            }
+                            override fun onError(error: CBException) {
+                                onError(error, result)
+                            }
+                        })
+                }
+                override fun onError(error: CBException) {
+                    onError(error, result)
+                }
+            })
     }
 
     fun onResultMap(id: String, planId: String, status: String): String{
@@ -302,17 +290,49 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         onDetachedFromActivity();
     }
     private fun onError(error: CBException, result: Result) {
-        result.error("${error.apiErrorCode}", "${error.message}", error)
+        try {
+            result.error("${error.httpStatusCode}", "${Gson().fromJson(
+                error.message,
+                ErrorDetail::class.java
+            ).message}", error.localizedMessage)
+        }catch (exp: Exception){
+            result.error("${error.httpStatusCode}", "${error.message}", error.localizedMessage)
+        }
+
     }
 }
 
 fun CBProduct.toMap(): Map<String, Any> {
     return mapOf(
         "productId" to productId,
-        "productPrice" to productPrice,
+        "productPrice" to convertPriceAmountInMicros(),
+        "productPriceString" to productPrice,
         "productTitle" to productTitle,
-        "currencyCode" to skuDetails.priceCurrencyCode
+        "currencyCode" to skuDetails.priceCurrencyCode,
+        "subscriptionPeriod" to subscriptionPeriod()
     )
 }
 
+fun CBProduct.convertPriceAmountInMicros(): Double {
+    return skuDetails.priceAmountMicros/1_000_000.0
+}
+
+fun CBProduct.subscriptionPeriod(): Map<String, Any> {
+    val subscriptionPeriod = skuDetails.subscriptionPeriod
+    val numberOfUnits = subscriptionPeriod.substring(1, subscriptionPeriod.length-1).toInt()
+    return mapOf(
+        "periodUnit" to periodUnit(),
+        "numberOfUnits" to numberOfUnits
+    )
+}
+
+fun CBProduct.periodUnit(): String {
+    return when (skuDetails.subscriptionPeriod.last().toString()) {
+        "Y" -> "year"
+        "M" -> "month"
+        "W" -> "week"
+        "D" -> "day"
+        else -> ""
+    }
+}
 

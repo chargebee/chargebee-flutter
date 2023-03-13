@@ -1,3 +1,13 @@
+## 0.0.10
+Bug fixes
+* Additional information added to Product model (#45) 
+* Android plugIn improved by removing un-wanted try-catch blocks around the purchaseProduct and empty checks on the product. SubscriptionId and planId made as non-optional to avoid Optional type (#48)
+* Improvements on error handling, Added appropriate error codes to PlatformException. No impacts on existing error handling logic (#49) 
+## 0.0.9
+Bug fixes
+* flutter retrieve all plans issue - Response has no/invalid body. And the issue fixed in Native iOS SDK v1.0.17
+* Added configure() method callbacks to handle error case if any errors thrown from Chargebee during configuration
+  Fixed in this PR - https://github.com/chargebee/chargebee-ios/pull/56 and https://github.com/chargebee/chargebee-ios/pull/55
 ## 0.0.8
 Bug fixes
 * Android app crashed on signed apk and the issue fixed in Native Android SDK v1.0.15
