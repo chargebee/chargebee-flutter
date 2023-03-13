@@ -13,7 +13,7 @@ class Product {
 
   factory Product.fromJson(Map json) {
     if(kDebugMode) print(json);
-    var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
+    var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map);
     return Product(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
         json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
   }
@@ -32,7 +32,7 @@ class SubscriptionPeriod {
   /// For example, if the number of units is 6, then the subscription period would be 6 months.
   late int numberOfUnits;
 
-  SubscriptionPeriod.fromMap(Map<String, dynamic> map) {
+  SubscriptionPeriod.fromMap(Map map) {
     unit = map['periodUnit'].toString();
     numberOfUnits = map['numberOfUnits'] as int;
   }
