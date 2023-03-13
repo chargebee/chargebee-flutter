@@ -83,7 +83,7 @@ class ProductListViewState extends State<ProductListView> {
       Product map = listProducts[position];
       _showCustomerIdDialog(context, map);
     } on PlatformException catch (e) {
-      print('${e.message}, ${e.details}');
+      if (kDebugMode) print('${e.message}, ${e.details}');
     }
   }
 
@@ -104,6 +104,7 @@ class ProductListViewState extends State<ProductListView> {
         _showSuccessDialog(context, result.subscriptionId);
       }
     } on PlatformException catch (e) {
+      if (kDebugMode)
       print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       mProgressBarUtil.hideProgressDialog();
     }
