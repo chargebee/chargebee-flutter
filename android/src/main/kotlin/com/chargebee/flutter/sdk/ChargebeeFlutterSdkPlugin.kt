@@ -150,8 +150,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             arrayList,
             object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
                 override fun onSuccess(productIDs: ArrayList<CBProduct>) {
-                    if (productIDs.size == 0){
-                        onError(CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)), result)
+                    if (productIDs.size == 0) {
+                        onError(
+                            CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)),
+                            result
+                        )
                         return
                     }
                     CBPurchase.purchaseProduct(
@@ -179,11 +182,13 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                                     )
                                 )
                             }
+
                             override fun onError(error: CBException) {
                                 onError(error, result)
                             }
                         })
                 }
+
                 override fun onError(error: CBException) {
                     onError(error, result)
                 }
@@ -317,11 +322,15 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
     private fun onError(error: CBException, result: Result) {
         try {
-            result.error("${error.httpStatusCode}", "${Gson().fromJson(
-                error.message,
-                ErrorDetail::class.java
-            ).message}", error.localizedMessage)
-        }catch (exp: Exception){
+            result.error(
+                "${error.httpStatusCode}", "${
+                    Gson().fromJson(
+                        error.message,
+                        ErrorDetail::class.java
+                    ).message
+                }", error.localizedMessage
+            )
+        } catch (exp: Exception) {
             result.error("${error.httpStatusCode}", "${error.message}", error.localizedMessage)
         }
 
@@ -340,12 +349,12 @@ fun CBProduct.toMap(): Map<String, Any> {
 }
 
 fun CBProduct.convertPriceAmountInMicros(): Double {
-    return skuDetails.priceAmountMicros/1_000_000.0
+    return skuDetails.priceAmountMicros / 1_000_000.0
 }
 
 fun CBProduct.subscriptionPeriod(): Map<String, Any> {
     val subscriptionPeriod = skuDetails.subscriptionPeriod
-    val numberOfUnits = subscriptionPeriod.substring(1, subscriptionPeriod.length-1).toInt()
+    val numberOfUnits = subscriptionPeriod.substring(1, subscriptionPeriod.length - 1).toInt()
     return mapOf(
         "periodUnit" to periodUnit(),
         "numberOfUnits" to numberOfUnits
