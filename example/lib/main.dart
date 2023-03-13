@@ -129,15 +129,14 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       await Chargebee.configure(siteName, apiKey, iosSdkKey, androidSdkKey);
     } on PlatformException catch (e) {
-      if (kDebugMode)
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
     }
   }
 
   Future<void> getProducts(List<String> productIDsList) async {
     try {
       products = await Chargebee.retrieveProducts(productIDsList);
-      if (kDebugMode) print('result : $products');
+      debugPrint('result : $products');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -153,8 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _showDialog(context, "Items not available to buy");
       }
     } on PlatformException catch (e) {
-      if (kDebugMode)
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -166,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       Map<String, String> queryparam = {"limit":"10"};
       final result = await Chargebee.retrieveProductIdentifiers(queryparam);
-      if (kDebugMode) print('result : $result');
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -184,8 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
     } on PlatformException catch (e) {
-      if (kDebugMode)
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -196,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveSubscriptions(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveSubscriptions(queryparam);
-      if (kDebugMode) print('result : $result');
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -207,9 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _showDialog(context, "Subscription not found in Chargebee System");
       }
     } on PlatformException catch (e) {
-      if (kDebugMode)
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
-
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -220,7 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveEntitlements(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveEntitlements(queryparam);
-      if (kDebugMode) print('result : $result');
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -233,9 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
     } on PlatformException catch (e) {
-      if (kDebugMode)
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
-
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -246,7 +239,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveAllPlans(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveAllPlans(queryparam);
-      if (kDebugMode) print('result : $result');
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -267,8 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
     } on PlatformException catch (e) {
-      if (kDebugMode)
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -279,7 +271,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveAllItems(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveAllItems(queryparam);
-      if (kDebugMode) print('result : $result');
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -302,8 +294,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
     } on PlatformException catch (e) {
-      if (kDebugMode)
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -363,7 +354,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     try {
                       Navigator.pop(context);
-                      if (kDebugMode) print('productIds from user : $productIDs');
+                      debugPrint('productIds from user : $productIDs');
                       mProgressBarUtil.showProgressDialog();
 
                       List<String> listItems = productIDs.split(',');
@@ -451,7 +442,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Text('Initialize'),
                 onPressed: () {
                   Navigator.pop(context);
-                  if (kDebugMode) print('app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey');
+                  debugPrint('app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey');
                   authentication(siteName, apiKey, iosSdkKey, androidSdkKey);
                 }
               )

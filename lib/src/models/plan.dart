@@ -135,10 +135,8 @@ class CBPlanWrapper {
   CBPlanWrapper({this.list});
 
   CBPlanWrapper.fromJson(List<dynamic> json) {
-    print(json);
     List<CBPlan> subsArray = [];
     for (var value in json) {
-      print(value);
       subsArray.add(CBPlan.fromJson(value));
     }
 
