@@ -130,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       await Chargebee.configure(siteName, apiKey, iosSdkKey, androidSdkKey);
     } on PlatformException catch (e) {
-      print('${e.message}, ${e.details}');
+      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
     }
   }
 
@@ -154,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _showDialog(context, "Items not avilable to buy");
       }
     } on PlatformException catch (e) {
-      print('${e.message}, ${e.details}');
+      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -184,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
     } on PlatformException catch (e) {
-      print('${e.message}, ${e.details}');
+      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -208,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _showDialog(context, "Subscription not found in Chargebee System");
       }
     } on PlatformException catch (e) {
-      print('${e.message}, ${e.details}');
+      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -233,7 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
     } on PlatformException catch (e) {
-      print('${e.message}, ${e.details}');
+      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -266,7 +266,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
     } on PlatformException catch (e) {
-      print('${e.message}, ${e.details}');
+      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -301,7 +301,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
     } on PlatformException catch (e) {
-      print('${e.message}, ${e.details}');
+      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }

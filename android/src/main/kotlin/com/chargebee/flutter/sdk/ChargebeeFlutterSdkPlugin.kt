@@ -290,17 +290,49 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         onDetachedFromActivity();
     }
     private fun onError(error: CBException, result: Result) {
-        result.error("${error.apiErrorCode}", "${error.message}", error)
+        try {
+            result.error("${error.httpStatusCode}", "${Gson().fromJson(
+                error.message,
+                ErrorDetail::class.java
+            ).message}", error.localizedMessage)
+        }catch (exp: Exception){
+            result.error("${error.httpStatusCode}", "${error.message}", error.localizedMessage)
+        }
+
     }
 }
 
 fun CBProduct.toMap(): Map<String, Any> {
     return mapOf(
         "productId" to productId,
-        "productPrice" to productPrice,
+        "productPrice" to convertPriceAmountInMicros(),
+        "productPriceString" to productPrice,
         "productTitle" to productTitle,
-        "currencyCode" to skuDetails.priceCurrencyCode
+        "currencyCode" to skuDetails.priceCurrencyCode,
+        "subscriptionPeriod" to subscriptionPeriod()
     )
 }
 
+fun CBProduct.convertPriceAmountInMicros(): Double {
+    return skuDetails.priceAmountMicros/1_000_000.0
+}
+
+fun CBProduct.subscriptionPeriod(): Map<String, Any> {
+    val subscriptionPeriod = skuDetails.subscriptionPeriod
+    val numberOfUnits = subscriptionPeriod.substring(1, subscriptionPeriod.length-1).toInt()
+    return mapOf(
+        "periodUnit" to periodUnit(),
+        "numberOfUnits" to numberOfUnits
+    )
+}
+
+fun CBProduct.periodUnit(): String {
+    return when (skuDetails.subscriptionPeriod.last().toString()) {
+        "Y" -> "year"
+        "M" -> "month"
+        "W" -> "week"
+        "D" -> "day"
+        else -> ""
+    }
+}
 
