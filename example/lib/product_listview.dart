@@ -21,20 +21,12 @@ class ProductListViewState extends State<ProductListView> {
   late var productPrice;
   late var productId;
   late var currencyCode;
-
-  ProductListViewState(this.listProducts);
-
   late ProgressBarUtil mProgressBarUtil;
   final TextEditingController productIdTextFieldController =
       TextEditingController();
   String? customerId = "";
 
   ProductListViewState(this.listProducts);
-
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
 
   @override
   Widget build(BuildContext context) {
