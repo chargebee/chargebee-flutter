@@ -35,27 +35,25 @@ class ItemnsViewState extends State<ItemsView> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
           ),
           title: Text(title),
         ),
         body: ListView.builder(
           itemCount: itemsList.length,
-          itemBuilder: (context, pos) {
-            return Card(
+          itemBuilder: (context, pos) => Card(
               child: ListTile(
                 title: Text(itemsList[pos],
                     style: const TextStyle(
                       color: Colors.black54,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18)),
+                        fontSize: 18,),),
 
                 // onTap: () {
                 //   onItemClick(pos);
                 // },
               ),
-            );
-          },
+            ),
         ),
       ),
       debugShowCheckedModeBanner: false,

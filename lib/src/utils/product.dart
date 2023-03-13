@@ -1,4 +1,6 @@
 
+import 'package:flutter/foundation.dart';
+
 class Product {
   String id;
   String price;
@@ -8,10 +10,12 @@ class Product {
   Product(this.id, this.price, this.title, this.currencyCode);
 
   factory Product.fromJson(dynamic json) {
-    print(json);
+    if (kDebugMode) {
+      print(json);
+    }
 
     return Product(json['productId'] as String, json['productPrice'] as String,
-        json['productTitle'] as String, json['currencyCode'] as String);
+        json['productTitle'] as String, json['currencyCode'] as String,);
   }
 }
 
@@ -21,9 +25,7 @@ class PurchaseResult {
   String status;
   PurchaseResult(this.subscriptionId, this.planId, this.status);
 
-  factory PurchaseResult.fromJson(dynamic json) {
-    return PurchaseResult(json['subscriptionId'] as String, json['planId'] as String, json['status'] as String);
-  }
+  factory PurchaseResult.fromJson(dynamic json) => PurchaseResult(json['subscriptionId'] as String, json['planId'] as String, json['status'] as String);
 }
 
 class Subscripton {
@@ -45,7 +47,7 @@ class Subscripton {
       this.activatedAt,
       this.currentTermStart,
       this.currentTermEnd,
-      this.planAmount});
+      this.planAmount,});
 
   Subscripton.fromJson(Map<String, dynamic> json) {
     subscriptionId = json['subscription_id'] as String;
@@ -75,12 +77,12 @@ class SubscriptonList {
 
   SubscriptonList.fromJson(dynamic json) {
     subscripton = json['cb_subscription'] != null
-        ? new Subscripton.fromJson(json['cb_subscription'])
+        ? Subscripton.fromJson(json['cb_subscription'])
         : null;
   }
   SubscriptonList.fromJsonAndroid(dynamic json) {
     subscripton = json['cb_subscription'] != null
-        ? new Subscripton.fromJsonAndroid(json['cb_subscription'])
+        ? Subscripton.fromJsonAndroid(json['cb_subscription'])
         : null;
   }
 }
@@ -91,10 +93,11 @@ class CBSubscriptionWrapper {
   CBSubscriptionWrapper({this.list});
 
   CBSubscriptionWrapper.fromJson(List<dynamic> json) {
-    print(json);
-    List<Subscripton> subsArray = [];
-    for (var value in json) {
-      print(value);
+    if (kDebugMode) {
+      print(json);
+    }
+    final subsArray = <Subscripton>[];
+    for (final value in json) {
       subsArray.add(Subscripton.fromJson(value));
     }
 

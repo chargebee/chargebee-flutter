@@ -4,23 +4,21 @@ class BaseAlertDialog extends StatelessWidget {
    final String title;
    final String content;
 
-  BaseAlertDialog(this.title, this.content);
-  final TextStyle textStyle = TextStyle (color: Colors.black);
+  const BaseAlertDialog(this.title, this.content, {Key? key}) : super(key: key);
+  final TextStyle textStyle = const TextStyle (color: Colors.black);
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-          title: new Text(title,style: textStyle,),
-          content: new Text(content, style: textStyle,),
+  Widget build(BuildContext context) => AlertDialog(
+          title: Text(title,style: textStyle,),
+          content: Text(content, style: textStyle,),
           actions: <Widget>[
-            new TextButton(
-              child: new Text("Ok"),
+            TextButton(
+              child: const Text('Ok'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             )
           ],
         );
-  }
 }
 

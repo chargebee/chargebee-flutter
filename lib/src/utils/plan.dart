@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'package:flutter/foundation.dart';
+
 class CBPlan{
   String? id;
   String? name;
@@ -9,7 +11,7 @@ class CBPlan{
   String? periodUnit;
   String? pricingModel;
   int? freeQuantity;
-  int? setup_cost;
+  int? setupCost;
   String? status;
   bool? enabledInHostedPages;
   bool? enabledInPortal;
@@ -35,7 +37,7 @@ class CBPlan{
         this.period,
         this.periodUnit,
         this.pricingModel,this.freeQuantity,
-        this.setup_cost,
+        this.setupCost,
         this.status,
         this.enabledInHostedPages,
         this.enabledInPortal,
@@ -98,13 +100,13 @@ class CBPlan{
     price = json['price'] as int;
     pricingModel = json['pricingModel'] as String;
     resourceVersion = json['resourceVersion'] as int;
-    setup_cost = json['setup_cost'] as int;
+    setupCost = json['setup_cost'] as int;
     showDescriptionInInvoices = json['showDescriptionInInvoices'] as bool;
     showDescriptionInQuotes = json['showDescriptionInQuotes'] as bool;
     status = json['status'] as String;
     taxable = json['taxable'] as bool;
     updatedAt = json['updatedAt'] as int;
-    metaData = json['metaData'] !=null ? json['metaData'].toString() : null ;
+    metaData = json['metaData'] ? null : json['metaData'].toString();
   }
 
 
@@ -117,13 +119,13 @@ class CBPlansList {
 
   CBPlansList.fromJson(dynamic json) {
     cbPlan = json['plan'] != null
-        ? new CBPlan.fromJson(json['plan'])
+        ? CBPlan.fromJson(json['plan'])
         : null;
   }
 
   CBPlansList.fromJsonAndroid(dynamic json) {
     cbPlan = json['plan'] != null
-        ? new CBPlan.fromJsonAndroid(json['plan'])
+        ? CBPlan.fromJsonAndroid(json['plan'])
         : null;
   }
 
@@ -135,10 +137,11 @@ class CBPlanWrapper {
   CBPlanWrapper({this.list});
 
   CBPlanWrapper.fromJson(List<dynamic> json) {
-    print(json);
-    List<CBPlan> subsArray = [];
-    for (var value in json) {
-      print(value);
+    if (kDebugMode) {
+      print(json);
+    }
+    final subsArray = <CBPlan>[];
+    for (final value in json) {
       subsArray.add(CBPlan.fromJson(value));
     }
 
