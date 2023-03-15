@@ -93,9 +93,7 @@ class Chargebee {
   @Deprecated('This method will be removed in upcoming release, Use retrieveProductIdentifiers instead')
   static Future<List> retrieveProductIdentifers(
       [Map<String, String>? queryParams]) async {
-    String result =
-    await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
-    return jsonDecode(result);
+    return retrieveProductIdentifiers(queryParams);
   }
 
 /* Get Apple/Google Product ID's from chargebee system */
