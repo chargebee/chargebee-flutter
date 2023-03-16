@@ -9,7 +9,7 @@ class CBPlan {
   String? periodUnit;
   String? pricingModel;
   int? freeQuantity;
-  int? setupCost;
+  int? setup_cost;
   String? status;
   bool? enabledInHostedPages;
   bool? enabledInPortal;
@@ -36,7 +36,7 @@ class CBPlan {
     this.periodUnit,
     this.pricingModel,
     this.freeQuantity,
-    this.setupCost,
+    this.setup_cost,
     this.status,
     this.enabledInHostedPages,
     this.enabledInPortal,
@@ -96,7 +96,7 @@ class CBPlan {
     price = json['price'] as int;
     pricingModel = json['pricingModel'] as String;
     resourceVersion = json['resourceVersion'] as int;
-    setupCost = json['setup_cost'] as int;
+    setup_cost = json['setup_cost'] as int;
     showDescriptionInInvoices = json['showDescriptionInInvoices'] as bool;
     showDescriptionInQuotes = json['showDescriptionInQuotes'] as bool;
     status = json['status'] as String;
