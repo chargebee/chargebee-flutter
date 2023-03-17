@@ -8,10 +8,10 @@ import 'package:chargebee_flutter_sdk_example/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  final String siteName = "cb-imay-test";
-  final String apiKey = "test_EojsGoGFeHoc3VpGPQDOZGAxYy3d0FF3";
-  final String iosSDKKey = "cb-njjoibyzbrhyjg7yz4hkwg2ywq";
-  final String androidSDKKey = "cb-wpkheixkuzgxbnt23rzslg724y";
+  final String siteName = "cb-test";
+  final String apiKey = "test_****";
+  final String iosSDKKey = "cb-*****";
+  final String androidSDKKey = "cb-*****";
 
   ChargebeeTest chargebeeTest;
   group('end-to-end-test', () {
