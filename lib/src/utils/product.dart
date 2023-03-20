@@ -11,9 +11,9 @@ class Product {
 
   Product(this.id, this.price, this.priceString, this.title, this.currencyCode, this.subscriptionPeriod);
 
-  factory Product.fromJson(Map json) {
+  factory Product.fromJson(Map<String, dynamic> json) {
     if(kDebugMode) print(json);
-    var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map);
+    var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
     return Product(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
         json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
   }
@@ -32,7 +32,7 @@ class SubscriptionPeriod {
   /// For example, if the number of units is 6, then the subscription period would be 6 months.
   late int numberOfUnits;
 
-  SubscriptionPeriod.fromMap(Map map) {
+  SubscriptionPeriod.fromMap(Map<String, dynamic> map) {
     unit = map['periodUnit'].toString();
     numberOfUnits = map['numberOfUnits'] as int;
   }
@@ -44,7 +44,7 @@ class PurchaseResult {
   String status;
   PurchaseResult(this.subscriptionId, this.planId, this.status);
 
-  factory PurchaseResult.fromJson(Map json) {
+  factory PurchaseResult.fromJson(Map<String, dynamic> json) {
     return PurchaseResult(json['subscriptionId'] as String, json['planId'] as String, json['status'] as String);
   }
   @override
@@ -74,7 +74,7 @@ class Subscripton {
       this.currentTermEnd,
       this.planAmount});
 
-  Subscripton.fromJson(Map json) {
+  Subscripton.fromJson(Map<String, dynamic> json) {
     subscriptionId = json['subscription_id'] as String;
     customerId = json['customer_id'] as String;
     status = json['status'] as String;
@@ -84,7 +84,7 @@ class Subscripton {
     planAmount = json['plan_amount']
         .toString(); /*Plan amount sometime we are getting double value sometime Int*/
   }
-  Subscripton.fromJsonAndroid(Map json) {
+  Subscripton.fromJsonAndroid(Map<String, dynamic> json) {
     activatedAtString = json['activated_at'].toString();
     currentTermEndString = json['current_term_end'].toString();
     currentTermStartString = json['current_term_start'].toString();
@@ -100,12 +100,12 @@ class SubscriptonList {
 
   SubscriptonList({this.subscripton});
 
-  SubscriptonList.fromJson(Map json) {
+  SubscriptonList.fromJson(Map<String, dynamic> json) {
     subscripton = json['cb_subscription'] != null
         ? new Subscripton.fromJson(json['cb_subscription'])
         : null;
   }
-  SubscriptonList.fromJsonAndroid(Map json) {
+  SubscriptonList.fromJsonAndroid(Map<String, dynamic> json) {
     subscripton = json['cb_subscription'] != null
         ? new Subscripton.fromJsonAndroid(json['cb_subscription'])
         : null;
@@ -117,7 +117,7 @@ class CBSubscriptionWrapper {
 
   CBSubscriptionWrapper({this.list});
 
-  CBSubscriptionWrapper.fromJson(List<Map> json) {
+  CBSubscriptionWrapper.fromJson(List<Map<String, dynamic>> json) {
     print(json);
     List<Subscripton> subsArray = [];
     for (var value in json) {
@@ -125,5 +125,33 @@ class CBSubscriptionWrapper {
       subsArray.add(Subscripton.fromJson(value));
     }
 
+  }
+}
+
+class CBProductIdentifierWrapper {
+  late List<String> productIdentifiersList;
+
+  CBProductIdentifierWrapper(this.productIdentifiersList);
+
+  factory CBProductIdentifierWrapper.fromJson(List<dynamic> json) {
+    List<String> productsList = [];
+    for (var value in json) {
+      productsList.add(value);
+    }
+    return CBProductIdentifierWrapper(productsList);
+  }
+}
+
+class CBEntitlementWrapper {
+  late List<String> entitlementsList;
+
+  CBEntitlementWrapper(this.entitlementsList);
+
+  factory CBEntitlementWrapper.fromJson(List<dynamic> json) {
+    List<String> entitlementList = [];
+    for (var value in json) {
+      entitlementList.add(value);
+    }
+    return CBEntitlementWrapper(entitlementList);
   }
 }

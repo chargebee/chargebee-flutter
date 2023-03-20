@@ -89,19 +89,19 @@ class Chargebee {
   }
 
   /* Get Apple/Google Product ID's from chargebee system */
-  static Future<List> retrieveProductIdentifers(
+  static Future<List<String>> retrieveProductIdentifers(
       [Map<String, String>? queryParams]) async {
     String result =
         await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
-    return jsonDecode(result);
+    return CBProductIdentifierWrapper.fromJson(jsonDecode(result)).productIdentifiersList;
   }
 
   /* Get entitlement details from chargebee system */
-  static Future<List> retrieveEntitlements(
+  static Future<List<String>> retrieveEntitlements(
       Map<String, String> queryParams) async {
     String result =
         await platform.invokeMethod(Constants.mGetEntitlements, queryParams);
-    return jsonDecode(result);
+    return CBEntitlementWrapper.fromJson(jsonDecode(result)).entitlementsList;
   }
 
   /* Get the list of items from chargebee system */
