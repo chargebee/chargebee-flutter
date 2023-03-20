@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:chargebee_flutter/src/utils/cb_exception.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

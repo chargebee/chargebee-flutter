@@ -70,7 +70,7 @@ Every In-App Purchase subscription product that you configure in your account, c
 
 ```dart
 try {
-  final result = await Chargebee.retrieveProductIdentifers(queryparam);
+  final result = await Chargebee.retrieveProductIdentifiers(queryparam);
 } on PlatformException catch (e) {
   print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 }

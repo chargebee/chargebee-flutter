@@ -78,7 +78,6 @@ class CBItemWrapper {
     print(json);
     List<CBItem> subsArray = [];
     for (var value in json) {
-      print(value);
       subsArray.add(CBItem.fromJson(value));
     }
   }

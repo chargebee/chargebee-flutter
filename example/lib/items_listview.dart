@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class ItemsView extends StatefulWidget {
   final List itemsList;
+  final String title;
 
   const ItemsView(this.itemsList, {Key? key, required this.title})
       : super(key: key);
@@ -16,9 +17,9 @@ class ItemsView extends StatefulWidget {
 class ItemnsViewState extends State<ItemsView> {
   late List itemsList;
   late String title;
-  ItemnsViewState(this.itemsList, this.title);
-
   late ProgressBarUtil mProgressBarUtil;
+
+  ItemnsViewState(this.itemsList, this.title);
 
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -46,13 +47,9 @@ class ItemnsViewState extends State<ItemsView> {
               child: ListTile(
                 title: Text(itemsList[pos],
                     style: const TextStyle(
-                      color: Colors.black54,
+                        color: Colors.black54,
                         fontWeight: FontWeight.bold,
                         fontSize: 18)),
-
-                // onTap: () {
-                //   onItemClick(pos);
-                // },
               ),
             );
           },

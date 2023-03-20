@@ -12,7 +12,7 @@ class Product {
   Product(this.id, this.price, this.priceString, this.title, this.currencyCode, this.subscriptionPeriod);
 
   factory Product.fromJson(Map<String, dynamic> json) {
-    if(kDebugMode) print(json);
+    debugPrint('json: $json');
     var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
     return Product(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
         json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
@@ -42,10 +42,12 @@ class PurchaseResult {
   String subscriptionId;
   String planId;
   String status;
+
   PurchaseResult(this.subscriptionId, this.planId, this.status);
 
   factory PurchaseResult.fromJson(Map<String, dynamic> json) {
-    return PurchaseResult(json['subscriptionId'] as String, json['planId'] as String, json['status'] as String);
+    return PurchaseResult(json['subscriptionId'] as String,
+        json['planId'] as String, json['status'] as String);
   }
   @override
   String toString() {
@@ -84,6 +86,7 @@ class Subscripton {
     planAmount = json['plan_amount']
         .toString(); /*Plan amount sometime we are getting double value sometime Int*/
   }
+
   Subscripton.fromJsonAndroid(Map<String, dynamic> json) {
     activatedAtString = json['activated_at'].toString();
     currentTermEndString = json['current_term_end'].toString();
@@ -121,10 +124,8 @@ class CBSubscriptionWrapper {
     print(json);
     List<Subscripton> subsArray = [];
     for (var value in json) {
-      print(value);
       subsArray.add(Subscripton.fromJson(value));
     }
-
   }
 }
 
