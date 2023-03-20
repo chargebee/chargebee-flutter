@@ -75,10 +75,8 @@ class CBItemWrapper {
   CBItemWrapper({this.list});
 
   CBItemWrapper.fromJson(List<dynamic> json) {
-    print(json);
     List<CBItem> subsArray = [];
     for (var value in json) {
-      print(value);
       subsArray.add(CBItem.fromJson(value));
     }
   }

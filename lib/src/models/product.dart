@@ -12,7 +12,7 @@ class Product {
   Product(this.id, this.price, this.priceString, this.title, this.currencyCode, this.subscriptionPeriod);
 
   factory Product.fromJson(dynamic json) {
-    if(kDebugMode) print(json);
+    debugPrint('json: $json');
     var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
     return Product(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
         json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
@@ -122,10 +122,8 @@ class CBSubscriptionWrapper {
   CBSubscriptionWrapper({this.list});
 
   CBSubscriptionWrapper.fromJson(List<dynamic> json) {
-    print(json);
     List<Subscripton> subsArray = [];
     for (var value in json) {
-      print(value);
       subsArray.add(Subscripton.fromJson(value));
     }
   }

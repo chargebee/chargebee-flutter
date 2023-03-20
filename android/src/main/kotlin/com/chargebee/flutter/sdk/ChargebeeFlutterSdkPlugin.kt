@@ -78,9 +78,9 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 val params = call.arguments() as? Map<String, String>?
                 retrieveAllPlans(params, result)
             }
-            "retrieveProductIdentifers" -> {
+            "retrieveProductIdentifiers" -> {
                 val params = call.arguments() as? Map<String, String>?
-                retrieveProductIdentifers(params, result)
+                retrieveProductIdentifiers(params, result)
             }
             "retrieveEntitlements" -> {
                 val params = call.arguments() as? Map<String, String>?
@@ -261,7 +261,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         }
     }
 
-    private fun retrieveProductIdentifers(
+    private fun retrieveProductIdentifiers(
         queryParams: Map<String, String>? = mapOf(),
         result: Result
     ) {

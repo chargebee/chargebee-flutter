@@ -1,7 +1,8 @@
+import 'dart:io';
 import 'package:chargebee_flutter/src/constants.dart';
-import 'package:chargebee_flutter/src/utils/item.dart';
-import 'package:chargebee_flutter/src/utils/plan.dart';
-import 'package:chargebee_flutter/src/utils/product.dart';
+import 'package:chargebee_flutter/src/models/item.dart';
+import 'package:chargebee_flutter/src/models/plan.dart';
+import 'package:chargebee_flutter/src/models/product.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -89,10 +90,17 @@ class Chargebee {
   }
 
   /* Get Apple/Google Product ID's from chargebee system */
+  @Deprecated('This method will be removed in upcoming release, Use retrieveProductIdentifiers instead')
   static Future<List> retrieveProductIdentifers(
       [Map<String, String>? queryParams]) async {
+    return retrieveProductIdentifiers(queryParams);
+  }
+
+/* Get Apple/Google Product ID's from chargebee system */
+  static Future<List> retrieveProductIdentifiers(
+      [Map<String, String>? queryParams]) async {
     String result =
-        await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
+    await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
     return jsonDecode(result);
   }
 

@@ -78,19 +78,18 @@ class ProductListViewState extends State<ProductListView> {
       Product map = listProducts[position];
       _showCustomerIdDialog(context, map);
     } on PlatformException catch (e) {
-      print('${e.message}, ${e.details}');
+      debugPrint('${e.message}, ${e.details}');
     }
   }
 
   Future<void> purchaseProduct(Product product) async {
     try {
       final result = (await Chargebee.purchaseProduct(product, customerId));
-      if (kDebugMode) {
-        print("subscription result : $result");
-        print("subscription id : ${result.subscriptionId}");
-        print("plan id : ${result.planId}");
-        print("subscription status : ${result.status}");
-      }
+      debugPrint("subscription result : $result");
+      debugPrint("subscription id : ${result.subscriptionId}");
+      debugPrint("plan id : ${result.planId}");
+      debugPrint("subscription status : ${result.status}");
+
       mProgressBarUtil.hideProgressDialog();
 
       if (result.status == "true") {
@@ -99,7 +98,7 @@ class ProductListViewState extends State<ProductListView> {
         _showSuccessDialog(context, result.subscriptionId);
       }
     } on PlatformException catch (e) {
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       mProgressBarUtil.hideProgressDialog();
     }
   }
