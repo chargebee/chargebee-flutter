@@ -8,8 +8,6 @@ class ItemsView extends StatefulWidget {
   const ItemsView(this.itemsList, {Key? key, required this.title})
       : super(key: key);
 
-  final String title;
-
   @override
   ItemnsViewState createState() => ItemnsViewState(itemsList, title);
 }

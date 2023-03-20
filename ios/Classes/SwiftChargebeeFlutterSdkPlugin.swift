@@ -127,7 +127,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     }
                 }
             })
-        case "retrieveProductIdentifers":
+        case "retrieveProductIdentifiers":
             let params = call.arguments as? [String: String]
             CBPurchase.shared.retrieveProductIdentifers(queryParams: params, completion: { result in
                 DispatchQueue.main.async {
