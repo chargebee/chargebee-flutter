@@ -10,8 +10,11 @@ import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'Constants.dart';
+import 'alertDialog.dart';
+import 'items_listview.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -39,30 +42,43 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _MyHomePageState(this.cbMenu);
-
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController apiKeyController = TextEditingController();
   final TextEditingController sdkKeyController = TextEditingController();
   final TextEditingController iosDdkKeyController = TextEditingController();
-  final TextEditingController productIdTextFieldController = TextEditingController();
+  final TextEditingController productIdTextFieldController =
+      TextEditingController();
 
   List<Product> products = [];
   late List<String> cbMenu;
-  late String siteName='', apiKey='', androidSdkKey='', iosSdkKey = '';
+  late String siteName = "", apiKey = "", androidSdkKey = "", iosSdkKey = "";
   late String productIDs;
   late String userInput;
   late ProgressBarUtil mProgressBarUtil;
 
-  final Map<String, String> queryParams = {'channel': 'app_store', 'customer_id':'abc'}; // sample query params for retrieveSubscriptions
-  final Map<String, String> params = {'subscriptionId':'AzZlGJTC9U3tw4nF'}; // eg. query params for entitlements
-  final Map<String, String> itemsQueryParams = {'limit': '10','channel[is]': 'play_store'}; // eg. query params for getAllItems, limit- default=100, min=1, max=100
-  final Map<String, String> plansQueryParams = {'limit': '5','channel[is]': 'play_store'}; // eg. query params for getAllPlans
+  final Map<String, String> queryParams = {
+    "channel": "app_store",
+    "customer_id": "abc"
+  }; // sample query params for retrieveSubscriptions
+  final Map<String, String> params = {
+    "subscriptionId": "AzZlGJTC9U3tw4nF"
+  }; // eg. query params for entitlements
+  final Map<String, String> itemsQueryParams = {
+    "limit": "10",
+    "channel[is]": "play_store"
+  }; // eg. query params for getAllItems, limit- default=100, min=1, max=100
+  final Map<String, String> plansQueryParams = {
+    "limit": "5",
+    "channel[is]": "play_store"
+  }; // eg. query params for getAllPlans
+
+  _MyHomePageState(this.cbMenu);
 
   @override
   void initState() {
     // For both iOS and Android
-    authentication('your-site', 'publishable_api_key', 'iOS ResourceID/SDK Key', 'Android ResourceID/SDK Key');
+    authentication("your-site", "publishable_api_key", "iOS ResourceID/SDK Key",
+        "Android ResourceID/SDK Key");
     super.initState();
   }
 
@@ -122,40 +138,36 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> authentication(String siteName, String apiKey, [String? iosSdkKey='',
-    String? androidSdkKey = '',]) async {
+  Future<void> authentication(String siteName, String apiKey,
+      [String? iosSdkKey = "", String? androidSdkKey = ""]) async {
     try {
       await Chargebee.configure(siteName, apiKey, iosSdkKey, androidSdkKey);
     } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print('${e.message}, ${e.details}');
-      }
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
     }
   }
 
   Future<void> getProducts(List<String> productIDsList) async {
     try {
       products = await Chargebee.retrieveProducts(productIDsList);
-      log('result : $products');
+      debugPrint('result : $products');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
       if (products.isNotEmpty) {
         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => ProductListView(products,
-              title: 'Google Play-Product List',),
-          ),);
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  ProductListView(products, title: 'Google Play-Product List'),
+            ));
       } else {
-        log('Items not avilable to buy');
-        _showDialog(context, 'Items not avilable to buy');
+        _showDialog(context, "Items not available to buy");
       }
     } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print('${e.message}, ${e.details}');
-      }
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -164,8 +176,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> retrieveProductIdentifers() async {
     try {
-      final queryparam = <String, String>{'limit':'10'};
-      final result = await Chargebee.retrieveProductIdentifers(queryparam);
+      Map<String, String> queryparam = {"limit": "10"};
+      final result = await Chargebee.retrieveProductIdentifiers(queryparam);
       log('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
@@ -180,14 +192,11 @@ class _MyHomePageState extends State<MyHomePage> {
               title: 'Product Identifiers List',),
           ),);
       } else {
-        log('Product Ids not avilable in chargebee');
-        _showDialog(context, 'Product Ids not avilable in chargebee');
+        _showDialog(context, "Product Ids not avilable in chargebee");
       }
-
     } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print('${e.message}, ${e.details}');
-      }
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -197,23 +206,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveSubscriptions(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveSubscriptions(queryparam);
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
-      if (result.isNotEmpty) {
-        if (kDebugMode) {
-          print('status : ${result.first?.status}');
-          print('subscriptionId : ${result.first?.subscriptionId}');
-        }
-        _showDialog(context, 'Subscriptions retrieved successfully!');
+      if (result.length > 0) {
+        _showDialog(context, "Subscriptions retrieved successfully!");
       } else {
-        _showDialog(context, 'Subscription not found in Chargebee System');
+        _showDialog(context, "Subscription not found in Chargebee System");
       }
     } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print('${e.message}, ${e.details}');
-      }
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -224,9 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveEntitlements(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveEntitlements(queryparam);
-      if (kDebugMode) {
-        print('result : $result');
-      }
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -235,14 +237,10 @@ class _MyHomePageState extends State<MyHomePage> {
       if (result.isNotEmpty) {
         _showDialog(context, 'entitlements retrieved successfully!');
       } else {
-        log('Entitlements not found in chargebee system');
-        _showDialog(context, 'Entitlements not found in system');
+        _showDialog(context, "Entitlements not found in system");
       }
-
     } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print('${e.message}, ${e.details}');
-      }
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -253,31 +251,27 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveAllPlans(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveAllPlans(queryparam);
-      log('result : $result');
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
       final name = <String>[];
       if (result.isNotEmpty) {
-        for (final cbPlan in result) {
-          name.add(cbPlan != null? cbPlan.name!: 'null');
+        for (var cbPlan in result) {
+          name.add(cbPlan != null ? cbPlan.name! : "null");
         }
         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => ItemsView(name,
-              title: 'List Plans',),
-          ),);
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  ItemsView(name, title: 'List Plans'),
+            ));
       } else {
-        log('Plans not found in chargebee');
-        _showDialog(context, 'Plans not avilable in chargebee');
+        _showDialog(context, "Plans not available in chargebee");
       }
-
     } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print('${e.message}, ${e.details}');
-      }
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -288,9 +282,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveAllItems(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveAllItems(queryparam);
-      if (kDebugMode) {
-        print('result : $result');
-      }
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -298,25 +290,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
       final name = <String>[];
       if (result.isNotEmpty) {
-        for (final cbItem in result) {
-          name.add(cbItem != null? cbItem.name!: 'null');
+        for (var cbItem in result) {
+          name.add(cbItem != null ? cbItem.name! : "null");
         }
 
         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => ItemsView(name,
-              title: 'List Items',),
-          ),);
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  ItemsView(name, title: 'List Items'),
+            ));
       } else {
-        log('Items not found in chargebee');
-        _showDialog(context, 'Items not avilable in chargebee');
+        _showDialog(context, "Items not available in chargebee");
       }
-
     } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print('${e.message}, ${e.details}');
-      }
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -332,47 +321,46 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  showSkProductDialog(BuildContext context) => showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Please enter Product Ids(Comma separated)'),
-      content: TextField(
-        onChanged: (value) {
-          setState(() {
-            productIDs = value.trim();
-          });
-        },
-        controller: productIdTextFieldController,
-        decoration: const InputDecoration(hintText: "Product ID's"),
-      ),
-      actions: <Widget>[
-        TextButton(
-          style: TextButton.styleFrom(
-            primary: Colors.white,
-            backgroundColor: Colors.red,
-            textStyle:
-            const TextStyle(fontStyle: FontStyle.normal),),
-          child: const Text('CANCEL'),
-          onPressed: () {
-            setState(() {
-              Navigator.pop(context);
-            });
-          },
-        ),
-        TextButton(
-          style: TextButton.styleFrom(
-            primary: Colors.white,
-            backgroundColor: Colors.green,
-            textStyle:
-            const TextStyle(fontStyle: FontStyle.normal),),
-
-          child: const Text('OK'),
-          onPressed: () {
-            setState(() {
-              try {
-                Navigator.pop(context);
-                log('productIDs with comma from user : $productIDs');
-                mProgressBarUtil.showProgressDialog();
+  showSkProductDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Please enter Product Ids(Comma separated)'),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  productIDs = value.trim();
+                });
+              },
+              controller: productIdTextFieldController,
+              decoration: const InputDecoration(hintText: "Product ID's"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.red,
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
+                child: Text('CANCEL'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.green,
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
+                child: Text('OK'),
+                onPressed: () {
+                  setState(() {
+                    try {
+                      Navigator.pop(context);
+                      debugPrint('productIds from user : $productIDs');
+                      mProgressBarUtil.showProgressDialog();
 
                 final listItems = productIDs.split(',');
                 getProducts(listItems);
@@ -386,80 +374,83 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     ),);
 
-  Future<void> showAuthenticationDialog(BuildContext context) async => showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Chargebee'),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          TextField(
-            onChanged: (value) {
-              setState(() {
-                siteName = value;
-              });
-            },
-            controller: siteNameController,
-            decoration: const InputDecoration(hintText: 'Site Name'),
-          ),
-          TextField(
-            onChanged: (value) {
-              setState(() {
-                apiKey = value;
-              });
-            },
-            controller: apiKeyController,
-            decoration: const InputDecoration(hintText: 'API Key'),
-          ),
-          TextField(
-            onChanged: (value) {
-              setState(() {
-                iosSdkKey = value;
-              });
-            },
-            controller: iosDdkKeyController,
-            decoration: const InputDecoration(hintText: 'iOS SDK Key'),
-          ),
-          TextField(
-            onChanged: (value) {
-              setState(() {
-                androidSdkKey = value;
-              });
-            },
-            controller: sdkKeyController,
-            decoration: const InputDecoration(hintText: 'Android SDK Key'),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        TextButton(
-          style: TextButton.styleFrom(
-            primary: Colors.white,
-            backgroundColor: Colors.red,
-            textStyle:
-            const TextStyle(fontStyle: FontStyle.normal),),
-          child: const Text('CANCEL'),
-          onPressed: () {
-            setState(() {
-              Navigator.pop(context);
-            });
-          },
-        ),
-        TextButton(
-          style: TextButton.styleFrom(
-            primary: Colors.white,
-            backgroundColor: Colors.green,
-            textStyle:
-            const TextStyle(fontStyle: FontStyle.normal),),
-          child: const Text('Initialize'),
-          onPressed: () {
-            Navigator.pop(context);
-            log('app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey');
-            authentication(siteName, apiKey, iosSdkKey, androidSdkKey);
-          },
-        )
-      ],
-    ),);
-
+  Future<void> showAuthenticationDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Chargebee'),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      siteName = value;
+                    });
+                  },
+                  controller: siteNameController,
+                  decoration: const InputDecoration(hintText: "Site Name"),
+                ),
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      apiKey = value;
+                    });
+                  },
+                  controller: apiKeyController,
+                  decoration: const InputDecoration(hintText: "API Key"),
+                ),
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      iosSdkKey = value;
+                    });
+                  },
+                  controller: iosDdkKeyController,
+                  decoration: const InputDecoration(hintText: "iOS SDK Key"),
+                ),
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      androidSdkKey = value;
+                    });
+                  },
+                  controller: sdkKeyController,
+                  decoration: const InputDecoration(hintText: "Android SDK Key"),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.red,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
+                child: Text('CANCEL'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.green,
+                    textStyle:
+                    const TextStyle(fontStyle: FontStyle.normal)),
+                child: const Text('Initialize'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  debugPrint('app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey');
+                  authentication(siteName, apiKey, iosSdkKey, androidSdkKey);
+                }
+              )
+            ]
+          );
+        });
+  }
 }

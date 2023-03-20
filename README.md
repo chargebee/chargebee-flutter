@@ -27,7 +27,7 @@ To use Chargebee SDK in your Flutter app, follow these steps:
 
     ```dart
     dependencies: 
-     chargebee_flutter: ^0.0.9
+     chargebee_flutter: ^0.0.10
     ```
     
 2.  Install dependency.
@@ -56,7 +56,7 @@ import 'package:chargebee_flutter/chargebee_flutter.dart';
 try {
   await Chargebee.configure("SITE_NAME", "API-KEY", "iOS SDK Key", "Android SDK Key");
 } on PlatformException catch (e) {
-  print('${e.message}, ${e.details}');
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 }
 ```
 
@@ -70,9 +70,9 @@ Every In-App Purchase subscription product that you configure in your account, c
 
 ```dart
 try {
-  final result = await Chargebee.retrieveProductIdentifers(queryparam);
+  final result = await Chargebee.retrieveProductIdentifiers(queryparam);
 } on PlatformException catch (e) {
-  print('${e.message}, ${e.details}');
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 }
 ```
 For example, query parameters can be passed as **"limit": "100"**.
@@ -85,7 +85,7 @@ Retrieve the IAP Product objects with Product IDs using the following function.
 try {
   List<Product> products = await Chargebee.retrieveProducts({productList: "[Product ID's from Google or Apple]"});
 } on PlatformException catch (e) {
-  print('${e.message}, ${e.details}');
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 }
 ```
 You can present any of the above products to your users for them to purchase.
@@ -102,8 +102,8 @@ try {
   final result = await Chargebee.purchaseProduct(product, customerId);
   print("subscription id : ${result.subscriptionId}");
   print("subscription status : ${result.status}");
-}  on PlatformException catch (e) {
-  print('${e.message}, ${e.details}');
+} on PlatformException catch (e) {
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 }
 ```
 
@@ -119,7 +119,7 @@ Use query parameters - Subscription ID, Customer ID, or Status for checking the 
 try {
   final result = await Chargebee.retrieveSubscriptions(queryparam);
 } on PlatformException catch (e) {
-  print('${e.message}, ${e.details}');
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 }
 ```
 
@@ -133,7 +133,7 @@ Use the query parameter - Subscription ID for retrieving the list of [entitlemen
 try {
   final result = await Chargebee.retrieveEntitlements(queryparam);
 } on PlatformException catch (e) {
-  print('${e.message}, ${e.details}');
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 }
 ```
 For example, query parameters can be passed as **"subscriptionId": "id"**.
@@ -148,7 +148,7 @@ If your Chargebee site is configured to Product Catalog 2.0, use the following f
 try {
   final result = await Chargebee.retrieveAllItems(queryparam);
 } on PlatformException catch (e) {
-  print('${e.message}, ${e.details}');
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 }
 ```
 For example, query parameters can be passed as **"sort_by[desc]" : "name"** or **"limit": "100"**.
@@ -161,7 +161,7 @@ If your Chargebee site is configured to Product Catalog 1.0, use the relevant fu
 try {
   final result = await Chargebee.retrieveAllPlans(queryparam);
 } on PlatformException catch (e) {
-  print('${e.message}, ${e.details}');
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 }
 ```
 For example, query parameters can be passed as **"sort_by[desc]" : "name"** or **"limit": "100"**.

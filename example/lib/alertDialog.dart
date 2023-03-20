@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
 
 class BaseAlertDialog extends StatelessWidget {
-   final String title;
-   final String content;
+  final String title;
+  final String content;
 
-  const BaseAlertDialog(this.title, this.content, {Key? key}) : super(key: key);
-  final TextStyle textStyle = const TextStyle (color: Colors.black);
+  BaseAlertDialog(this.title, this.content);
+
+  final TextStyle textStyle = TextStyle(color: Colors.black);
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-          title: Text(title,style: textStyle,),
-          content: Text(content, style: textStyle,),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        );
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: new Text(
+        title,
+        style: textStyle,
+      ),
+      content: new Text(
+        content,
+        style: textStyle,
+      ),
+      actions: <Widget>[
+        new TextButton(
+          child: new Text("Ok"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        )
+      ],
+    );
+  }
 }
-

@@ -11,7 +11,7 @@ class CBPlan{
   String? periodUnit;
   String? pricingModel;
   int? freeQuantity;
-  int? setupCost;
+  int? setup_cost;
   String? status;
   bool? enabledInHostedPages;
   bool? enabledInPortal;
@@ -37,7 +37,7 @@ class CBPlan{
         this.period,
         this.periodUnit,
         this.pricingModel,this.freeQuantity,
-        this.setupCost,
+        this.setup_cost,
         this.status,
         this.enabledInHostedPages,
         this.enabledInPortal,
@@ -55,7 +55,6 @@ class CBPlan{
         this.showDescriptionInQuotes,
         this.metaData,
         });
-
 
   CBPlan.fromJson(Map<String, dynamic> json) {
     id = json['id'] as String;
@@ -77,8 +76,6 @@ class CBPlan{
     updatedAt = json['updated_at'] as int;
     status = json['status'] as String;
     name = json['name'] as String;
-
-
   }
 
   CBPlan.fromJsonAndroid(Map<String, dynamic> json) {
@@ -100,7 +97,7 @@ class CBPlan{
     price = json['price'] as int;
     pricingModel = json['pricingModel'] as String;
     resourceVersion = json['resourceVersion'] as int;
-    setupCost = json['setup_cost'] as int;
+    setup_cost = json['setup_cost'] as int;
     showDescriptionInInvoices = json['showDescriptionInInvoices'] as bool;
     showDescriptionInQuotes = json['showDescriptionInQuotes'] as bool;
     status = json['status'] as String;
@@ -108,8 +105,6 @@ class CBPlan{
     updatedAt = json['updatedAt'] as int;
     metaData = json['metaData'] ? null : json['metaData'].toString();
   }
-
-
 }
 
 class CBPlansList {
@@ -128,7 +123,6 @@ class CBPlansList {
         ? CBPlan.fromJsonAndroid(json['plan'])
         : null;
   }
-
 }
 
 class CBPlanWrapper {
@@ -137,16 +131,9 @@ class CBPlanWrapper {
   CBPlanWrapper({this.list});
 
   CBPlanWrapper.fromJson(List<dynamic> json) {
-    if (kDebugMode) {
-      print(json);
-    }
     final subsArray = <CBPlan>[];
     for (final value in json) {
       subsArray.add(CBPlan.fromJson(value));
     }
-
   }
 }
-
-
-

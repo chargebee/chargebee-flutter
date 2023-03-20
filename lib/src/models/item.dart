@@ -77,9 +77,6 @@ class CBItemWrapper {
   CBItemWrapper({this.list});
 
   CBItemWrapper.fromJson(List<dynamic> json) {
-    if (kDebugMode) {
-      print(json);
-    }
     final subsArray = <CBItem>[];
     for (final value in json) {
       subsArray.add(CBItem.fromJson(value));

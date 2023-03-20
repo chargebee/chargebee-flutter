@@ -1,15 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
-class ProgressBarUtil{
-
+class ProgressBarUtil {
   static late ProgressDialog pr;
 
-  ProgressBarUtil(BuildContext context){
-    pr  = ProgressDialog(context);
+  ProgressBarUtil(BuildContext context) {
+    pr = ProgressDialog(context);
   }
-  Future<void> showProgressDialog() async {
+
+  void showProgressDialog() async {
     pr.style(
         message: 'Loading...',
         borderRadius: 10.0,

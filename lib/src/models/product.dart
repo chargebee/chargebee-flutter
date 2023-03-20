@@ -1,21 +1,40 @@
-
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 class Product {
-  String id;
-  String price;
-  String title;
-  String currencyCode;
+  late String id;
+  late String title;
+  late String currencyCode;
+  late double price;
+  late String priceString;
+  late SubscriptionPeriod subscriptionPeriod;
 
-  Product(this.id, this.price, this.title, this.currencyCode);
+  Product(this.id, this.price, this.priceString, this.title, this.currencyCode, this.subscriptionPeriod);
 
   factory Product.fromJson(dynamic json) {
-    if (kDebugMode) {
-      print(json);
-    }
+    debugPrint('json: $json');
+    var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
+    return Product(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
+        json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
+  }
 
-    return Product(json['productId'] as String, json['productPrice'] as String,
-        json['productTitle'] as String, json['currencyCode'] as String,);
+  @override
+  String toString() {
+      return 'Product(id: $id, price: $price, priceString: $priceString title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
+  }
+}
+
+class SubscriptionPeriod {
+  /// unit represent the duration of an interval, from a day up to a year.
+  /// For example, unit value would be a month, year, day and week.
+  late String unit;
+  /// The number of units per subscription period.
+  /// For example, if the number of units is 6, then the subscription period would be 6 months.
+  late int numberOfUnits;
+
+  SubscriptionPeriod.fromMap(Map<String, dynamic> map) {
+    unit = map['periodUnit'].toString();
+    numberOfUnits = map['numberOfUnits'] as int;
   }
 }
 
@@ -23,9 +42,17 @@ class PurchaseResult {
   String subscriptionId;
   String planId;
   String status;
+
   PurchaseResult(this.subscriptionId, this.planId, this.status);
 
-  factory PurchaseResult.fromJson(dynamic json) => PurchaseResult(json['subscriptionId'] as String, json['planId'] as String, json['status'] as String);
+  factory PurchaseResult.fromJson(dynamic json) {
+    return PurchaseResult(json['subscriptionId'] as String,
+        json['planId'] as String, json['status'] as String);
+  }
+  @override
+  String toString() {
+    return 'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, status: $status)';
+  }
 }
 
 class Subscripton {
@@ -59,6 +86,7 @@ class Subscripton {
     planAmount = json['plan_amount']
         .toString(); /*Plan amount sometime we are getting double value sometime Int*/
   }
+
   Subscripton.fromJsonAndroid(Map<String, dynamic> json) {
     activatedAtString = json['activated_at'].toString();
     currentTermEndString = json['current_term_end'].toString();
@@ -80,6 +108,7 @@ class SubscriptonList {
         ? Subscripton.fromJson(json['cb_subscription'])
         : null;
   }
+
   SubscriptonList.fromJsonAndroid(dynamic json) {
     subscripton = json['cb_subscription'] != null
         ? Subscripton.fromJsonAndroid(json['cb_subscription'])
@@ -93,13 +122,9 @@ class CBSubscriptionWrapper {
   CBSubscriptionWrapper({this.list});
 
   CBSubscriptionWrapper.fromJson(List<dynamic> json) {
-    if (kDebugMode) {
-      print(json);
-    }
     final subsArray = <Subscripton>[];
     for (final value in json) {
       subsArray.add(Subscripton.fromJson(value));
     }
-
   }
 }

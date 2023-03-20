@@ -1,3 +1,8 @@
+## 0.0.10
+Bug fixes
+* Additional information added to Product model (#45) 
+* Android plugIn improved by removing un-wanted try-catch blocks around the purchaseProduct and empty checks on the product. SubscriptionId and planId made as non-optional to avoid Optional type (#48)
+* Improvements on error handling, Added appropriate error codes to PlatformException. No impacts on existing error handling logic (#49) 
 ## 0.0.9
 Bug fixes
 * flutter retrieve all plans issue - Response has no/invalid body. And the issue fixed in Native iOS SDK v1.0.17
