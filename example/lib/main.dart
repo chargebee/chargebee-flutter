@@ -8,10 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Constants.dart';
 import 'alertDialog.dart';
-import 'package:chargebee_flutter/src/utils/product.dart';
-
 import 'items_listview.dart';
-import 'product_listview.dart';
 
 void main() => runApp(MyApp());
 
@@ -41,30 +38,43 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _MyHomePageState(this.cbMenu);
-
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController apiKeyController = TextEditingController();
   final TextEditingController sdkKeyController = TextEditingController();
   final TextEditingController iosDdkKeyController = TextEditingController();
-  final TextEditingController productIdTextFieldController = TextEditingController();
+  final TextEditingController productIdTextFieldController =
+      TextEditingController();
 
   List<Product> products = [];
   late List<String> cbMenu;
-  late String siteName="", apiKey="", androidSdkKey="", iosSdkKey = "";
+  late String siteName = "", apiKey = "", androidSdkKey = "", iosSdkKey = "";
   late String productIDs;
   late String userInput;
   late ProgressBarUtil mProgressBarUtil;
 
-  final Map<String, String> queryParams = {"channel": "app_store", "customer_id":"abc"}; // sample query params for retrieveSubscriptions
-  final Map<String, String> params = {"subscriptionId":"AzZlGJTC9U3tw4nF"}; // eg. query params for entitlements
-  final Map<String, String> itemsQueryParams = {"limit": "10","channel[is]": "play_store"}; // eg. query params for getAllItems, limit- default=100, min=1, max=100
-  final Map<String, String> plansQueryParams = {"limit": "5","channel[is]": "play_store"}; // eg. query params for getAllPlans
+  final Map<String, String> queryParams = {
+    "channel": "app_store",
+    "customer_id": "abc"
+  }; // sample query params for retrieveSubscriptions
+  final Map<String, String> params = {
+    "subscriptionId": "AzZlGJTC9U3tw4nF"
+  }; // eg. query params for entitlements
+  final Map<String, String> itemsQueryParams = {
+    "limit": "10",
+    "channel[is]": "play_store"
+  }; // eg. query params for getAllItems, limit- default=100, min=1, max=100
+  final Map<String, String> plansQueryParams = {
+    "limit": "5",
+    "channel[is]": "play_store"
+  }; // eg. query params for getAllPlans
+
+  _MyHomePageState(this.cbMenu);
 
   @override
   void initState() {
     // For both iOS and Android
-    authentication("your-site", "publishable_api_key", "iOS ResourceID/SDK Key", "Android ResourceID/SDK Key");
+    authentication("your-site", "publishable_api_key", "iOS ResourceID/SDK Key",
+        "Android ResourceID/SDK Key");
     super.initState();
   }
 
@@ -126,8 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> authentication(String siteName, String apiKey, [String? iosSdkKey="",
-      String? androidSdkKey = ""]) async {
+  Future<void> authentication(String siteName, String apiKey,
+      [String? iosSdkKey = "", String? androidSdkKey = ""]) async {
     try {
       await Chargebee.configure(siteName, apiKey, iosSdkKey, androidSdkKey);
     } on PlatformException catch (e) {
@@ -147,8 +157,8 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => ProductListView(products,
-                  title: 'Google Play-Product List'),
+              builder: (BuildContext context) =>
+                  ProductListView(products, title: 'Google Play-Product List'),
             ));
       } else {
         log('Items not avilable to buy');
@@ -164,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> retrieveProductIdentifers() async {
     try {
-      Map<String, String> queryparam = {"limit":"10"};
+      Map<String, String> queryparam = {"limit": "10"};
       final result = await Chargebee.retrieveProductIdentifers(queryparam);
       log('result : $result');
 
@@ -183,7 +193,6 @@ class _MyHomePageState extends State<MyHomePage> {
         log('Product Ids not avilable in chargebee');
         _showDialog(context, "Product Ids not avilable in chargebee");
       }
-
     } on PlatformException catch (e) {
       print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
@@ -232,7 +241,6 @@ class _MyHomePageState extends State<MyHomePage> {
         log('Entitlements not found in chargebee system');
         _showDialog(context, "Entitlements not found in system");
       }
-
     } on PlatformException catch (e) {
       print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
@@ -253,19 +261,18 @@ class _MyHomePageState extends State<MyHomePage> {
       List<String> name = [];
       if (result.isNotEmpty) {
         for (var cbPlan in result) {
-          name.add(cbPlan != null? cbPlan.name!: "null");
+          name.add(cbPlan != null ? cbPlan.name! : "null");
         }
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => ItemsView(name,
-                  title: 'List Plans'),
+              builder: (BuildContext context) =>
+                  ItemsView(name, title: 'List Plans'),
             ));
       } else {
         log('Plans not found in chargebee');
         _showDialog(context, "Plans not avilable in chargebee");
       }
-
     } on PlatformException catch (e) {
       print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
@@ -287,20 +294,19 @@ class _MyHomePageState extends State<MyHomePage> {
       List<String> name = [];
       if (result.isNotEmpty) {
         for (var cbItem in result) {
-          name.add(cbItem != null? cbItem.name!: "null");
+          name.add(cbItem != null ? cbItem.name! : "null");
         }
 
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => ItemsView(name,
-                  title: 'List Items'),
+              builder: (BuildContext context) =>
+                  ItemsView(name, title: 'List Items'),
             ));
       } else {
         log('Items not found in chargebee');
         _showDialog(context, "Items not avilable in chargebee");
       }
-
     } on PlatformException catch (e) {
       print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
@@ -338,10 +344,9 @@ class _MyHomePageState extends State<MyHomePage> {
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.red,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -351,11 +356,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.green,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
-
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
@@ -383,79 +386,77 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Chargebee'),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      siteName = value;
-                    });
-                  },
-                  controller: siteNameController,
-                  decoration: const InputDecoration(hintText: "Site Name"),
-                ),
-                TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      apiKey = value;
-                    });
-                  },
-                  controller: apiKeyController,
-                  decoration: const InputDecoration(hintText: "API Key"),
-                ),
-                TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      iosSdkKey = value;
-                    });
-                  },
-                  controller: iosDdkKeyController,
-                  decoration: const InputDecoration(hintText: "iOS SDK Key"),
-                ),
-                TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      androidSdkKey = value;
-                    });
-                  },
-                  controller: sdkKeyController,
-                  decoration: const InputDecoration(hintText: "Android SDK Key"),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    backgroundColor: Colors.red,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
-                child: Text('CANCEL'),
-                onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                  });
-                },
+              title: const Text('Chargebee'),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        siteName = value;
+                      });
+                    },
+                    controller: siteNameController,
+                    decoration: const InputDecoration(hintText: "Site Name"),
+                  ),
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        apiKey = value;
+                      });
+                    },
+                    controller: apiKeyController,
+                    decoration: const InputDecoration(hintText: "API Key"),
+                  ),
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        iosSdkKey = value;
+                      });
+                    },
+                    controller: iosDdkKeyController,
+                    decoration: const InputDecoration(hintText: "iOS SDK Key"),
+                  ),
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        androidSdkKey = value;
+                      });
+                    },
+                    controller: sdkKeyController,
+                    decoration:
+                        const InputDecoration(hintText: "Android SDK Key"),
+                  ),
+                ],
               ),
-              TextButton(
-                style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    backgroundColor: Colors.green,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
-                child: const Text('Initialize'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  log('app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey');
-                  authentication(siteName, apiKey, iosSdkKey, androidSdkKey);
-                }
-              )
-            ]
-          );
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      textStyle: const TextStyle(fontStyle: FontStyle.normal)),
+                  child: Text('CANCEL'),
+                  onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                  },
+                ),
+                TextButton(
+                    style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.green,
+                        textStyle:
+                            const TextStyle(fontStyle: FontStyle.normal)),
+                    child: const Text('Initialize'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      log('app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey');
+                      authentication(
+                          siteName, apiKey, iosSdkKey, androidSdkKey);
+                    })
+              ]);
         });
   }
-
 }
