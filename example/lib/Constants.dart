@@ -14,10 +14,9 @@ class Constants {
   static const String CONFIG = "Configure";
   static const String GET_PRODUCTS = "Get Products";
   static const String PURCHASE = "Purchase";
-
   static const String GET_SUBSCRIPTION_STATUS = "Get Subscription Status";
   static const String GET_PRODUCT_IDENTIFIERS = "Get Product Identifiers";
-  static const String GET_ENTITLEMENTS= "Get Entitlements";
+  static const String GET_ENTITLEMENTS = "Get Entitlements";
   static const String GET_PLANS = "Get Plans";
   static const String GET_ITEMS = "Get Items";
 }

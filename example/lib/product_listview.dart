@@ -7,11 +7,10 @@ import 'package:flutter/services.dart';
 
 class ProductListView extends StatefulWidget {
   final List<Product> listProducts;
+  final String title;
 
   const ProductListView(this.listProducts, {Key? key, required this.title})
       : super(key: key);
-
-  final String title;
 
   @override
   ProductListViewState createState() => ProductListViewState(listProducts);
@@ -22,15 +21,12 @@ class ProductListViewState extends State<ProductListView> {
   late var productPrice;
   late var productId;
   late var currencyCode;
+  late ProgressBarUtil mProgressBarUtil;
+  final TextEditingController productIdTextFieldController =
+      TextEditingController();
+  String? customerId = "";
 
   ProductListViewState(this.listProducts);
-
-  late ProgressBarUtil mProgressBarUtil;
-
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +46,7 @@ class ProductListViewState extends State<ProductListView> {
               child: ListTile(
                 title: Text("$productId",
                     style: const TextStyle(
-                      color: Colors.black54,
+                        color: Colors.black54,
                         fontWeight: FontWeight.bold,
                         fontSize: 18)),
                 subtitle: Text(
@@ -59,8 +55,7 @@ class ProductListViewState extends State<ProductListView> {
                          currencyCode+
                         ")",
                     style: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15)),
+                        fontWeight: FontWeight.normal, fontSize: 15)),
                 trailing: const Text("Subscribe",
                     style: TextStyle(
                         color: Colors.cyan,
@@ -97,9 +92,9 @@ class ProductListViewState extends State<ProductListView> {
 
       mProgressBarUtil.hideProgressDialog();
 
-      if(result.status == "true"){
+      if (result.status == "true") {
         _showSuccessDialog(context, "Success");
-      }else{
+      } else {
         _showSuccessDialog(context, result.subscriptionId);
       }
     } on PlatformException catch (e) {
@@ -108,9 +103,6 @@ class ProductListViewState extends State<ProductListView> {
     }
   }
 
-  final TextEditingController productIdTextFieldController =
-      TextEditingController();
-  String? customerId = "";
   Future<void> _showCustomerIdDialog(
       BuildContext context, Product product) async {
     return showDialog(
@@ -130,10 +122,9 @@ class ProductListViewState extends State<ProductListView> {
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.red,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -143,17 +134,16 @@ class ProductListViewState extends State<ProductListView> {
               ),
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.green,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
                     Navigator.pop(context);
                     mProgressBarUtil.showProgressDialog();
                     try {
-                       purchaseProduct(product);
+                      purchaseProduct(product);
                     } catch (e) {
                       log('error : ${e.toString()}');
                     }
@@ -175,10 +165,9 @@ class ProductListViewState extends State<ProductListView> {
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.green,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: const Text('OK'),
                 onPressed: () {
                   mProgressBarUtil.hideProgressDialog();
