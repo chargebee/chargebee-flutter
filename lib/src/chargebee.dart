@@ -91,17 +91,17 @@ class Chargebee {
 
   /* Get Apple/Google Product ID's from chargebee system */
   @Deprecated('This method will be removed in upcoming release, Use retrieveProductIdentifiers instead')
-  static Future<List> retrieveProductIdentifers(
+  static Future<List<String>> retrieveProductIdentifers(
       [Map<String, String>? queryParams]) async {
     return retrieveProductIdentifiers(queryParams);
   }
 
 /* Get Apple/Google Product ID's from chargebee system */
-  static Future<List> retrieveProductIdentifiers(
+  static Future<List<String>> retrieveProductIdentifiers(
       [Map<String, String>? queryParams]) async {
     String result =
     await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
-    return jsonDecode(result);
+    return CBProductIdentifierWrapper.fromJson(jsonDecode(result)).productIdentifiersList;
   }
 
   /* Get entitlement details from chargebee system */
