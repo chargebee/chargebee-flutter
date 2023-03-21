@@ -11,7 +11,11 @@ class Chargebee {
   static const platform = MethodChannel(Constants.methodChannelName);
   static bool get _isIOS => defaultTargetPlatform == TargetPlatform.iOS;
 
-  /* Configure the app details with chargebee system */
+  /// Configure the app details with your site, publishableApiKey and sdkKey
+  /// [site] site which created in chargebee. eg. xxx.chargebee.com
+  /// [publishableApiKey] Chargebee API Key
+  /// [iosSdkKey] Cconnect the app store with Chargebee and get the iOS sdk key
+  /// [androidSdkKey] Cconnect the app store with Chargebee and get the Android sdk key
   static Future<void> configure(String site, String publishableApiKey,
       [String? iosSdkKey = "", androidSdkKey = ""]) async {
     if (_isIOS) {
@@ -32,7 +36,8 @@ class Chargebee {
     }
   }
 
-  /* Get the product/sku details from Play console/ App Store */
+  /// Get the product/sku details from Play console/ App Store
+  /// [productIDs] list of actual product ids which created in App Store Connect/Google Play Store
   static Future<List<Product>> retrieveProducts(List<String> productIDs) async {
     List<Product> products = [];
     final result = await platform.invokeMethod(
@@ -47,7 +52,10 @@ class Chargebee {
     return products;
   }
 
-  /* Buy the product with/without customer Id */
+  /// Buy the product with/without customer Id
+  /// [product] product information that trying to purchase the subscription
+  /// [customerId] it can be optional. if passed, the subscription will be created by using customerId in chargebee
+  /// if not passed, the value of customerId is same as SubscriptionId
   static Future<PurchaseResult> purchaseProduct(Product product,
       [String? customerId = ""]) async {
     if (customerId == null) customerId = "";
@@ -61,7 +69,8 @@ class Chargebee {
     }
   }
 
-  /* Get the subscription details from chargebee system */
+  /// Get the subscription details from chargebee system
+  /// [queryParams] After purchase the product, fetch the subscription details by using query params like {"customer_id": "abc"}
   static Future<List<Subscripton?>> retrieveSubscriptions(
       Map<String, String> queryParams) async {
     List<Subscripton> subscriptions = [];
@@ -89,14 +98,16 @@ class Chargebee {
     return subscriptions;
   }
 
-  /* Get Apple/Google Product ID's from chargebee system */
+  /// Get Apple/Google Product ID's from chargebee system
+  /// [queryParams] pass the params(Eg. {"limit": "10"}) and fetch the list of product identifiers from chargebee
   @Deprecated('This method will be removed in upcoming release, Use retrieveProductIdentifiers instead')
   static Future<List> retrieveProductIdentifers(
       [Map<String, String>? queryParams]) async {
     return retrieveProductIdentifiers(queryParams);
   }
 
-/* Get Apple/Google Product ID's from chargebee system */
+  /// Get Apple/Google Product ID's from chargebee system
+  /// [queryParams] pass the params(Eg. {"limit": "10"}) and fetch the list of product identifiers from chargebee
   static Future<List> retrieveProductIdentifiers(
       [Map<String, String>? queryParams]) async {
     String result =
@@ -104,7 +115,9 @@ class Chargebee {
     return jsonDecode(result);
   }
 
-  /* Get entitlement details from chargebee system */
+  /// Get entitlement details from chargebee system
+  /// [queryParams] queryParams - eg. {"subscriptionId": "XXXXXXX"}
+  /// Get the list of entitlements associated with the subscription.
   static Future<List> retrieveEntitlements(
       Map<String, String> queryParams) async {
     String result =
@@ -112,7 +125,9 @@ class Chargebee {
     return jsonDecode(result);
   }
 
-  /* Get the list of items from chargebee system */
+  /// Get the list of items from chargebee system
+  /// [queryParams] queryParams - eg. {"limit": "10"}
+  /// Fetch Items associated with a subscription
   static Future<List<CBItem?>> retrieveAllItems(
       [Map<String, String>? queryParams]) async {
     List itemsFromServer = [];
@@ -137,7 +152,9 @@ class Chargebee {
     return listItems;
   }
 
-  /* Get the list of plans from chargebee system */
+  /// Get the list of plans from chargebee system
+  /// [queryParams] queryParams - eg. {"limit": "10"}
+  /// Fetch plans associated with a subscription
   static Future<List<CBPlan?>> retrieveAllPlans(
       [Map<String, String>? queryParams]) async {
     List plansFromServer = [];
