@@ -1,6 +1,6 @@
 import 'dart:core';
 
-class CBPlan{
+class CBPlan {
   String? id;
   String? name;
   String? invoiceName;
@@ -27,33 +27,33 @@ class CBPlan{
   bool? showDescriptionInQuotes;
   String? metaData;
 
-  CBPlan(
-      {this.id,
-        this.name,
-        this.invoiceName,
-        this.price,
-        this.period,
-        this.periodUnit,
-        this.pricingModel,this.freeQuantity,
-        this.setup_cost,
-        this.status,
-        this.enabledInHostedPages,
-        this.enabledInPortal,
-        this.addonApplicability,
-        this.isShippable,
-        this.updatedAt,
-        this.giftable,
-        this.channel,
-        this.resourceVersion,
-        this.object,
-        this.chargeModel,
-        this.taxable,
-        this.currencyCode,
-        this.showDescriptionInInvoices,
-        this.showDescriptionInQuotes,
-        this.metaData,
-        });
-
+  CBPlan({
+    this.id,
+    this.name,
+    this.invoiceName,
+    this.price,
+    this.period,
+    this.periodUnit,
+    this.pricingModel,
+    this.freeQuantity,
+    this.setup_cost,
+    this.status,
+    this.enabledInHostedPages,
+    this.enabledInPortal,
+    this.addonApplicability,
+    this.isShippable,
+    this.updatedAt,
+    this.giftable,
+    this.channel,
+    this.resourceVersion,
+    this.object,
+    this.chargeModel,
+    this.taxable,
+    this.currencyCode,
+    this.showDescriptionInInvoices,
+    this.showDescriptionInQuotes,
+    this.metaData,
+  });
 
   CBPlan.fromJson(Map<String, dynamic> json) {
     id = json['id'] as String;
@@ -75,8 +75,6 @@ class CBPlan{
     updatedAt = json['updated_at'] as int;
     status = json['status'] as String;
     name = json['name'] as String;
-
-
   }
 
   CBPlan.fromJsonAndroid(Map<String, dynamic> json) {
@@ -104,10 +102,8 @@ class CBPlan{
     status = json['status'] as String;
     taxable = json['taxable'] as bool;
     updatedAt = json['updatedAt'] as int;
-    metaData = json['metaData'] !=null ? json['metaData'].toString() : null ;
+    metaData = json['metaData'] != null ? json['metaData'].toString() : null;
   }
-
-
 }
 
 class CBPlansList {
@@ -115,18 +111,17 @@ class CBPlansList {
 
   CBPlansList({this.cbPlan});
 
-  CBPlansList.fromJson(dynamic json) {
+  CBPlansList.fromJson(Map<String, dynamic> json) {
     cbPlan = json['plan'] != null
         ? new CBPlan.fromJson(json['plan'])
         : null;
   }
 
-  CBPlansList.fromJsonAndroid(dynamic json) {
+  CBPlansList.fromJsonAndroid(Map<String, dynamic> json) {
     cbPlan = json['plan'] != null
         ? new CBPlan.fromJsonAndroid(json['plan'])
         : null;
   }
-
 }
 
 class CBPlanWrapper {
@@ -134,16 +129,11 @@ class CBPlanWrapper {
 
   CBPlanWrapper({this.list});
 
-  CBPlanWrapper.fromJson(List<dynamic> json) {
+  CBPlanWrapper.fromJson(List<Map<String, dynamic>> json) {
     print(json);
     List<CBPlan> subsArray = [];
     for (var value in json) {
-      print(value);
       subsArray.add(CBPlan.fromJson(value));
     }
-
   }
 }
-
-
-

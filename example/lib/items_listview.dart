@@ -2,23 +2,22 @@ import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class ItemsView extends StatefulWidget {
-  final List<dynamic> itemsList;
+  final List itemsList;
+  final String title;
 
   const ItemsView(this.itemsList, {Key? key, required this.title})
       : super(key: key);
-
-  final String title;
 
   @override
   ItemnsViewState createState() => ItemnsViewState(itemsList, title);
 }
 
 class ItemnsViewState extends State<ItemsView> {
-  late List<dynamic> itemsList;
+  late List itemsList;
   late String title;
-  ItemnsViewState(this.itemsList, this.title);
-
   late ProgressBarUtil mProgressBarUtil;
+
+  ItemnsViewState(this.itemsList, this.title);
 
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -46,13 +45,9 @@ class ItemnsViewState extends State<ItemsView> {
               child: ListTile(
                 title: Text(itemsList[pos],
                     style: const TextStyle(
-                      color: Colors.black54,
+                        color: Colors.black54,
                         fontWeight: FontWeight.bold,
                         fontSize: 18)),
-
-                // onTap: () {
-                //   onItemClick(pos);
-                // },
               ),
             );
           },

@@ -2,22 +2,23 @@ import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class ProductIdentifiersView extends StatefulWidget {
-  final List<dynamic> listProductIds;
-
-  const ProductIdentifiersView(this.listProductIds, {Key? key, required this.title})
-      : super(key: key);
-
+  final List listProductIds;
   final String title;
 
+  const ProductIdentifiersView(this.listProductIds,
+      {Key? key, required this.title})
+      : super(key: key);
+
   @override
-  ProductIdentifiersViewState createState() => ProductIdentifiersViewState(listProductIds);
+  ProductIdentifiersViewState createState() =>
+      ProductIdentifiersViewState(listProductIds);
 }
 
 class ProductIdentifiersViewState extends State<ProductIdentifiersView> {
-  late List<dynamic> listProducts;
-  ProductIdentifiersViewState(this.listProducts);
-
+  late List listProducts;
   late ProgressBarUtil mProgressBarUtil;
+
+  ProductIdentifiersViewState(this.listProducts);
 
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -43,16 +44,11 @@ class ProductIdentifiersViewState extends State<ProductIdentifiersView> {
           itemBuilder: (context, pos) {
             return Card(
               child: ListTile(
-                title: Text(listProducts[pos],
-                    style: const TextStyle(
-                      color: Colors.black54,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18)),
-
-                // onTap: () {
-                //   onItemClick(pos);
-                // },
-              ),
+                  title: Text(listProducts[pos],
+                      style: const TextStyle(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18))),
             );
           },
         ),
@@ -60,5 +56,4 @@ class ProductIdentifiersViewState extends State<ProductIdentifiersView> {
       debugShowCheckedModeBanner: false,
     );
   }
-
 }

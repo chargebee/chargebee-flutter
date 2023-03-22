@@ -1,14 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
-class ProgressBarUtil{
-
+class ProgressBarUtil {
   static late ProgressDialog pr;
 
-  ProgressBarUtil(BuildContext context){
-    pr  = ProgressDialog(context);
+  ProgressBarUtil(BuildContext context) {
+    pr = ProgressDialog(context);
   }
+
   void showProgressDialog() async {
     pr.style(
         message: 'Loading...',
@@ -23,9 +22,7 @@ class ProgressBarUtil{
         progressTextStyle: TextStyle(
             color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
         messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600)
-    );
-
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
     await pr.show();
   }
 
@@ -33,8 +30,7 @@ class ProgressBarUtil{
     await pr.hide();
   }
 
-  bool isProgressBarShowing(){
+  bool isProgressBarShowing() {
     return pr.isShowing();
   }
-
 }

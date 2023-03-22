@@ -1,6 +1,5 @@
 
 export 'src/chargebee.dart';
-export 'src/utils/product.dart';
-export 'src/utils/cb_exception.dart';
-export 'src/utils/item.dart';
-export 'src/utils/plan.dart';
+export 'src/models/product.dart';
+export 'src/models/item.dart';
+export 'src/models/plan.dart';

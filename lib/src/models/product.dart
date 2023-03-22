@@ -11,8 +11,8 @@ class Product {
 
   Product(this.id, this.price, this.priceString, this.title, this.currencyCode, this.subscriptionPeriod);
 
-  factory Product.fromJson(dynamic json) {
-    if(kDebugMode) print(json);
+  factory Product.fromJson(Map<String, dynamic> json) {
+    debugPrint('json: $json');
     var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
     return Product(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
         json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
@@ -42,10 +42,12 @@ class PurchaseResult {
   String subscriptionId;
   String planId;
   String status;
+
   PurchaseResult(this.subscriptionId, this.planId, this.status);
 
-  factory PurchaseResult.fromJson(dynamic json) {
-    return PurchaseResult(json['subscriptionId'] as String, json['planId'] as String, json['status'] as String);
+  factory PurchaseResult.fromJson(Map<String, dynamic> json) {
+    return PurchaseResult(json['subscriptionId'] as String,
+        json['planId'] as String, json['status'] as String);
   }
   @override
   String toString() {
@@ -84,6 +86,7 @@ class Subscripton {
     planAmount = json['plan_amount']
         .toString(); /*Plan amount sometime we are getting double value sometime Int*/
   }
+
   Subscripton.fromJsonAndroid(Map<String, dynamic> json) {
     activatedAtString = json['activated_at'].toString();
     currentTermEndString = json['current_term_end'].toString();
@@ -100,12 +103,12 @@ class SubscriptonList {
 
   SubscriptonList({this.subscripton});
 
-  SubscriptonList.fromJson(dynamic json) {
+  SubscriptonList.fromJson(Map<String, dynamic> json) {
     subscripton = json['cb_subscription'] != null
         ? new Subscripton.fromJson(json['cb_subscription'])
         : null;
   }
-  SubscriptonList.fromJsonAndroid(dynamic json) {
+  SubscriptonList.fromJsonAndroid(Map<String, dynamic> json) {
     subscripton = json['cb_subscription'] != null
         ? new Subscripton.fromJsonAndroid(json['cb_subscription'])
         : null;
@@ -117,13 +120,39 @@ class CBSubscriptionWrapper {
 
   CBSubscriptionWrapper({this.list});
 
-  CBSubscriptionWrapper.fromJson(List<dynamic> json) {
+  CBSubscriptionWrapper.fromJson(List<Map<String, dynamic>> json) {
     print(json);
     List<Subscripton> subsArray = [];
     for (var value in json) {
-      print(value);
       subsArray.add(Subscripton.fromJson(value));
     }
+  }
+}
 
+class CBProductIdentifierWrapper {
+  late List<String> productIdentifiersList;
+
+  CBProductIdentifierWrapper(this.productIdentifiersList);
+
+  factory CBProductIdentifierWrapper.fromJson(List<dynamic> json) {
+    List<String> productsList = [];
+    for (var value in json) {
+      productsList.add(value);
+    }
+    return CBProductIdentifierWrapper(productsList);
+  }
+}
+
+class CBEntitlementWrapper {
+  late List<String> entitlementsList;
+
+  CBEntitlementWrapper(this.entitlementsList);
+
+  factory CBEntitlementWrapper.fromJson(List<dynamic> json) {
+    List<String> entitlementList = [];
+    for (var value in json) {
+      entitlementList.add(value);
+    }
+    return CBEntitlementWrapper(entitlementList);
   }
 }

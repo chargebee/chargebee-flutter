@@ -1,7 +1,8 @@
+import 'dart:io';
 import 'package:chargebee_flutter/src/constants.dart';
-import 'package:chargebee_flutter/src/utils/item.dart';
-import 'package:chargebee_flutter/src/utils/plan.dart';
-import 'package:chargebee_flutter/src/utils/product.dart';
+import 'package:chargebee_flutter/src/models/item.dart';
+import 'package:chargebee_flutter/src/models/plan.dart';
+import 'package:chargebee_flutter/src/models/product.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -89,19 +90,26 @@ class Chargebee {
   }
 
   /* Get Apple/Google Product ID's from chargebee system */
-  static Future<List> retrieveProductIdentifers(
+  @Deprecated('This method will be removed in upcoming release, Use retrieveProductIdentifiers instead')
+  static Future<List<String>> retrieveProductIdentifers(
+      [Map<String, String>? queryParams]) async {
+    return retrieveProductIdentifiers(queryParams);
+  }
+
+/* Get Apple/Google Product ID's from chargebee system */
+  static Future<List<String>> retrieveProductIdentifiers(
       [Map<String, String>? queryParams]) async {
     String result =
-        await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
-    return jsonDecode(result);
+    await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
+    return CBProductIdentifierWrapper.fromJson(jsonDecode(result)).productIdentifiersList;
   }
 
   /* Get entitlement details from chargebee system */
-  static Future<List> retrieveEntitlements(
+  static Future<List<String>> retrieveEntitlements(
       Map<String, String> queryParams) async {
     String result =
         await platform.invokeMethod(Constants.mGetEntitlements, queryParams);
-    return jsonDecode(result);
+    return CBEntitlementWrapper.fromJson(jsonDecode(result)).entitlementsList;
   }
 
   /* Get the list of items from chargebee system */

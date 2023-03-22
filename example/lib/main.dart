@@ -4,14 +4,12 @@ import 'package:chargebee_flutter/chargebee_flutter.dart';
 import 'package:chargebee_flutter_sdk_example/product_ids_listview.dart';
 import 'package:chargebee_flutter_sdk_example/product_listview.dart';
 import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Constants.dart';
 import 'alertDialog.dart';
-import 'package:chargebee_flutter/src/utils/product.dart';
-
 import 'items_listview.dart';
-import 'product_listview.dart';
 
 void main() => runApp(MyApp());
 
@@ -41,30 +39,43 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _MyHomePageState(this.cbMenu);
-
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController apiKeyController = TextEditingController();
   final TextEditingController sdkKeyController = TextEditingController();
   final TextEditingController iosDdkKeyController = TextEditingController();
-  final TextEditingController productIdTextFieldController = TextEditingController();
+  final TextEditingController productIdTextFieldController =
+      TextEditingController();
 
   List<Product> products = [];
   late List<String> cbMenu;
-  late String siteName="", apiKey="", androidSdkKey="", iosSdkKey = "";
+  late String siteName = "", apiKey = "", androidSdkKey = "", iosSdkKey = "";
   late String productIDs;
   late String userInput;
   late ProgressBarUtil mProgressBarUtil;
 
-  final Map<String, String> queryParams = {"channel": "app_store", "customer_id":"abc"}; // sample query params for retrieveSubscriptions
-  final Map<String, String> params = {"subscriptionId":"AzZlGJTC9U3tw4nF"}; // eg. query params for entitlements
-  final Map<String, String> itemsQueryParams = {"limit": "10","channel[is]": "play_store"}; // eg. query params for getAllItems, limit- default=100, min=1, max=100
-  final Map<String, String> plansQueryParams = {"limit": "5","channel[is]": "play_store"}; // eg. query params for getAllPlans
+  final Map<String, String> queryParams = {
+    "channel": "app_store",
+    "customer_id": "abc"
+  }; // sample query params for retrieveSubscriptions
+  final Map<String, String> params = {
+    "subscriptionId": "AzZlGJTC9U3tw4nF"
+  }; // eg. query params for entitlements
+  final Map<String, String> itemsQueryParams = {
+    "limit": "10",
+    "channel[is]": "play_store"
+  }; // eg. query params for getAllItems, limit- default=100, min=1, max=100
+  final Map<String, String> plansQueryParams = {
+    "limit": "5",
+    "channel[is]": "play_store"
+  }; // eg. query params for getAllPlans
+
+  _MyHomePageState(this.cbMenu);
 
   @override
   void initState() {
     // For both iOS and Android
-    authentication("your-site", "publishable_api_key", "iOS ResourceID/SDK Key", "Android ResourceID/SDK Key");
+    authentication("your-site", "publishable_api_key", "iOS ResourceID/SDK Key",
+        "Android ResourceID/SDK Key");
     super.initState();
   }
 
@@ -126,19 +137,19 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> authentication(String siteName, String apiKey, [String? iosSdkKey="",
-      String? androidSdkKey = ""]) async {
+  Future<void> authentication(String siteName, String apiKey,
+      [String? iosSdkKey = "", String? androidSdkKey = ""]) async {
     try {
       await Chargebee.configure(siteName, apiKey, iosSdkKey, androidSdkKey);
     } on PlatformException catch (e) {
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
     }
   }
 
   Future<void> getProducts(List<String> productIDsList) async {
     try {
       products = await Chargebee.retrieveProducts(productIDsList);
-      log('result : $products');
+      debugPrint('result : $products');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -147,15 +158,15 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => ProductListView(products,
-                  title: 'Google Play-Product List'),
+              builder: (BuildContext context) =>
+                  ProductListView(products, title: 'Google Play-Product List'),
             ));
       } else {
-        log('Items not avilable to buy');
-        _showDialog(context, "Items not avilable to buy");
+        _showDialog(context, "Items not available to buy");
       }
     } on PlatformException catch (e) {
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -164,8 +175,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> retrieveProductIdentifers() async {
     try {
-      Map<String, String> queryparam = {"limit":"10"};
-      final result = await Chargebee.retrieveProductIdentifers(queryparam);
+      Map<String, String> queryparam = {"limit": "10"};
+      final result = await Chargebee.retrieveProductIdentifiers(queryparam);
       log('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
@@ -180,12 +191,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   title: 'Product Identifiers List'),
             ));
       } else {
-        log('Product Ids not avilable in chargebee');
         _showDialog(context, "Product Ids not avilable in chargebee");
       }
-
     } on PlatformException catch (e) {
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -195,21 +205,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveSubscriptions(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveSubscriptions(queryparam);
-      print('result : $result');
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
       if (result.length > 0) {
-        print('status : ${result.first?.status}');
-        print('subscriptionId : ${result.first?.subscriptionId}');
         _showDialog(context, "Subscriptions retrieved successfully!");
       } else {
-        print('Subscription not found in Chargebee System');
         _showDialog(context, "Subscription not found in Chargebee System");
       }
     } on PlatformException catch (e) {
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -220,7 +227,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveEntitlements(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveEntitlements(queryparam);
-      print('result : $result');
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -229,12 +236,10 @@ class _MyHomePageState extends State<MyHomePage> {
       if (result.isNotEmpty) {
         _showDialog(context, "entitlements retrieved successfully!");
       } else {
-        log('Entitlements not found in chargebee system');
         _showDialog(context, "Entitlements not found in system");
       }
-
     } on PlatformException catch (e) {
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -245,7 +250,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveAllPlans(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveAllPlans(queryparam);
-      log('result : $result');
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -253,21 +258,19 @@ class _MyHomePageState extends State<MyHomePage> {
       List<String> name = [];
       if (result.isNotEmpty) {
         for (var cbPlan in result) {
-          name.add(cbPlan != null? cbPlan.name!: "null");
+          name.add(cbPlan != null ? cbPlan.name! : "null");
         }
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => ItemsView(name,
-                  title: 'List Plans'),
+              builder: (BuildContext context) =>
+                  ItemsView(name, title: 'List Plans'),
             ));
       } else {
-        log('Plans not found in chargebee');
-        _showDialog(context, "Plans not avilable in chargebee");
+        _showDialog(context, "Plans not available in chargebee");
       }
-
     } on PlatformException catch (e) {
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -278,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> retrieveAllItems(Map<String, String> queryparam) async {
     try {
       final result = await Chargebee.retrieveAllItems(queryparam);
-      print('result : $result');
+      debugPrint('result : $result');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -287,22 +290,21 @@ class _MyHomePageState extends State<MyHomePage> {
       List<String> name = [];
       if (result.isNotEmpty) {
         for (var cbItem in result) {
-          name.add(cbItem != null? cbItem.name!: "null");
+          name.add(cbItem != null ? cbItem.name! : "null");
         }
 
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => ItemsView(name,
-                  title: 'List Items'),
+              builder: (BuildContext context) =>
+                  ItemsView(name, title: 'List Items'),
             ));
       } else {
-        log('Items not found in chargebee');
-        _showDialog(context, "Items not avilable in chargebee");
+        _showDialog(context, "Items not available in chargebee");
       }
-
     } on PlatformException catch (e) {
-      print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -338,10 +340,9 @@ class _MyHomePageState extends State<MyHomePage> {
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.red,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -351,17 +352,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               TextButton(
                 style: TextButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.green,
-                    textStyle:
-                    const TextStyle(fontStyle: FontStyle.normal)),
-
+                    textStyle: const TextStyle(fontStyle: FontStyle.normal)),
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
                     try {
                       Navigator.pop(context);
-                      log('productIDs with comma from user : $productIDs');
+                      debugPrint('productIds from user : $productIDs');
                       mProgressBarUtil.showProgressDialog();
 
                       List<String> listItems = productIDs.split(',');
@@ -449,7 +448,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Text('Initialize'),
                 onPressed: () {
                   Navigator.pop(context);
-                  log('app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey');
+                  debugPrint('app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey');
                   authentication(siteName, apiKey, iosSdkKey, androidSdkKey);
                 }
               )
@@ -457,5 +456,4 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         });
   }
-
 }
