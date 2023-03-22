@@ -101,28 +101,28 @@ class Chargebee {
   /// Get Apple/Google Product ID's from chargebee system
   /// [queryParams] pass the params(Eg. {"limit": "10"}) and fetch the list of product identifiers from chargebee
   @Deprecated('This method will be removed in upcoming release, Use retrieveProductIdentifiers instead')
-  static Future<List> retrieveProductIdentifers(
+  static Future<List<String>> retrieveProductIdentifers(
       [Map<String, String>? queryParams]) async {
     return retrieveProductIdentifiers(queryParams);
   }
 
   /// Get Apple/Google Product ID's from chargebee system
   /// [queryParams] pass the params(Eg. {"limit": "10"}) and fetch the list of product identifiers from chargebee
-  static Future<List> retrieveProductIdentifiers(
+  static Future<List<String>> retrieveProductIdentifiers(
       [Map<String, String>? queryParams]) async {
     String result =
     await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
-    return jsonDecode(result);
+    return CBProductIdentifierWrapper.fromJson(jsonDecode(result)).productIdentifiersList;
   }
 
   /// Get entitlement details from chargebee system
   /// [queryParams] queryParams - eg. {"subscriptionId": "XXXXXXX"}
   /// Get the list of entitlements associated with the subscription.
-  static Future<List> retrieveEntitlements(
+  static Future<List<String>> retrieveEntitlements(
       Map<String, String> queryParams) async {
     String result =
         await platform.invokeMethod(Constants.mGetEntitlements, queryParams);
-    return jsonDecode(result);
+    return CBEntitlementWrapper.fromJson(jsonDecode(result)).entitlementsList;
   }
 
   /// Get the list of items from chargebee system

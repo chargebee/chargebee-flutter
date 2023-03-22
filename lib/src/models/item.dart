@@ -77,12 +77,12 @@ class CBItemsList {
   CBItemsList({this.cbItem});
 
   /// Convert item object into CBItem for iOS
-  CBItemsList.fromJson(dynamic json) {
+  CBItemsList.fromJson(Map<String, dynamic> json) {
     cbItem = json['item'] != null ? new CBItem.fromJson(json['item']) : null;
   }
 
   /// Convert item object into CBItem for Android
-  CBItemsList.fromJsonAndroid(dynamic json) {
+  CBItemsList.fromJsonAndroid(Map<String, dynamic> json) {
     cbItem =
         json['item'] != null ? new CBItem.fromJsonAndroid(json['item']) : null;
   }
@@ -93,7 +93,8 @@ class CBItemWrapper {
 
   CBItemWrapper({this.list});
 
-  CBItemWrapper.fromJson(List<dynamic> json) {
+  CBItemWrapper.fromJson(List<Map<String, dynamic>> json) {
+    print(json);
     List<CBItem> subsArray = [];
     for (var value in json) {
       subsArray.add(CBItem.fromJson(value));
