@@ -10,7 +10,7 @@ void main() {
   ChargebeeTest chargebeeTest;
 
   group('end-to-end-test', () {
-    testWidgets('Chargebee sdk test', (tester) async {
+    testWidgets('Chargebee sdk integration test', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -19,6 +19,8 @@ void main() {
       await chargebeeTest.retrieveProductIdentifiersWithoutParam();
       await chargebeeTest.retrieveProductIdentifiersWithParam();
       await chargebeeTest.retrieveProducts();
+      await chargebeeTest.purchaseProducts_withCustomerInfo();
+      await chargebeeTest.purchaseProducts_withoutCustomerInfo();
       await chargebeeTest.retrieveSubscriptions();
       await chargebeeTest.retrieveEntitlements();
       await chargebeeTest.retrieveAllItems();
@@ -29,6 +31,12 @@ void main() {
 
 class ChargebeeTest {
   final WidgetTester tester;
+  final platformName = Chargebee.platform.name;
+  late Product product;
+  final productIdForiOS = "chargebee.pro.ios";
+  final productIdForAndroid = "merchant.premium.android";
+  late List<String> productList;
+
   ChargebeeTest(this.tester);
 
   Future<void> configureAndLaunchApp() async {
@@ -79,10 +87,11 @@ class ChargebeeTest {
 
   Future<void> retrieveProducts() async {
     tester.printToConsole('Fetch product details from store(apple or google)');
-
-    /// Need to pass the list of product ids based on stores
-    //List<String> productList = ['chargebee.pro.ios']; ///'chargebee.pro.ios'
-    List<String> productList = ['merchant.pro.android'];
+    if (platformName == 'ios') {
+      productList = [productIdForiOS];
+    } else {
+      productList = [productIdForAndroid];
+    }
     try {
       final product = await Chargebee.retrieveProducts(productList);
       debugPrint('Product : $product');
@@ -93,21 +102,49 @@ class ChargebeeTest {
     }
   }
 
-  Future<void> purchaseProducts() async {
-    tester.printToConsole('Starting to subscribe the product');
-
-    Product product = new Product(
-        "merchant.pro.android",
+  Product _getProduct(String productId) {
+    return product = new Product(
+        productId,
         0.0,
         'priceString',
         'title',
         'currencyCode',
         SubscriptionPeriod.fromMap(
             {"periodUnit": "month", "numberOfUnits": 3}));
+  }
+
+  Future<void> purchaseProducts_withCustomerInfo() async {
+    tester.printToConsole('Starting to subscribe the product');
+
+    if (platformName == 'ios') {
+      _getProduct(productIdForiOS);
+    } else {
+      _getProduct(productIdForAndroid);
+    }
+
     try {
       final result = await Chargebee.purchaseProduct(product, 'abc');
       debugPrint('purchase result: $result');
-      expect(result != null, true);
+      expect(result.status, 'true');
+      tester.printToConsole('Product subscribed successfully!');
+    } on PlatformException catch (e) {
+      fail('Error: ${e.message}');
+    }
+  }
+
+  Future<void> purchaseProducts_withoutCustomerInfo() async {
+    tester.printToConsole('Starting to subscribe the product');
+
+    if (platformName == 'ios') {
+      _getProduct(productIdForiOS);
+    } else {
+      _getProduct(productIdForAndroid);
+    }
+
+    try {
+      final result = await Chargebee.purchaseProduct(product, 'abc');
+      debugPrint('purchase result: $result');
+      expect(result.status, 'true');
       tester.printToConsole('Product subscribed successfully!');
     } on PlatformException catch (e) {
       fail('Error: ${e.message}');
