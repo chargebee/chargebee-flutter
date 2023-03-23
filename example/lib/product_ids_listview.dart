@@ -6,7 +6,7 @@ class ProductIdentifiersView extends StatefulWidget {
   final String title;
 
   const ProductIdentifiersView(this.listProductIds,
-      {Key? key, required this.title})
+      {Key? key, required this.title,})
       : super(key: key);
 
   @override

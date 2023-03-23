@@ -8,7 +8,7 @@ class ProgressBarUtil {
     pr = ProgressDialog(context);
   }
 
-  void showProgressDialog() async {
+  Future<void> showProgressDialog() async {
     pr.style(
         message: 'Loading...',
         borderRadius: 10.0,

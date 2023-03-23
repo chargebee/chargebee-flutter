@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 class Product {
@@ -13,15 +12,13 @@ class Product {
 
   factory Product.fromJson(dynamic json) {
     debugPrint('json: $json');
-    var subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
+    final subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
     return Product(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
-        json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod);
+        json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod,);
   }
 
   @override
-  String toString() {
-      return 'Product(id: $id, price: $price, priceString: $priceString title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
-  }
+  String toString() => 'Product(id: $id, price: $price, priceString: $priceString title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
 }
 
 class SubscriptionPeriod {
@@ -45,14 +42,10 @@ class PurchaseResult {
 
   PurchaseResult(this.subscriptionId, this.planId, this.status);
 
-  factory PurchaseResult.fromJson(dynamic json) {
-    return PurchaseResult(json['subscriptionId'] as String,
-        json['planId'] as String, json['status'] as String);
-  }
+  factory PurchaseResult.fromJson(dynamic json) => PurchaseResult(json['subscriptionId'] as String,
+        json['planId'] as String, json['status'] as String,);
   @override
-  String toString() {
-    return 'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, status: $status)';
-  }
+  String toString() => 'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, status: $status)';
 }
 
 class Subscripton {

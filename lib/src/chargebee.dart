@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:convert';
 import 'package:chargebee_flutter/src/constants.dart';
 import 'package:chargebee_flutter/src/models/item.dart';
 import 'package:chargebee_flutter/src/models/plan.dart';
@@ -17,7 +17,7 @@ class Chargebee {
       final args = {
         Constants.siteName: site,
         Constants.apiKey: publishableApiKey,
-        Constants.sdkKey: iosSdkKey
+        Constants.sdkKey: iosSdkKey,
       };
 
       await platform.invokeMethod(Constants.mAuthentication, args);
@@ -34,7 +34,7 @@ class Chargebee {
   /* Get the product/sku details from Play console/ App Store */
   static Future<List<Product>> retrieveProducts(List<String> productIDs) async {
     final products = <Product>[];
-    final String result = await platform.invokeMethod(
+    final List result = await platform.invokeMethod(
         Constants.mGetProducts, {Constants.productIDs: productIDs},);
     if (result.isNotEmpty) {
       for (var i = 0; i < result.length; i++) {
@@ -91,14 +91,12 @@ class Chargebee {
   /* Get Apple/Google Product ID's from chargebee system */
   @Deprecated('This method will be removed in upcoming release, Use retrieveProductIdentifiers instead')
   static Future<List> retrieveProductIdentifers(
-      [Map<String, String>? queryParams]) async {
-    return retrieveProductIdentifiers(queryParams);
-  }
+      [Map<String, String>? queryParams,]) async => retrieveProductIdentifiers(queryParams);
 
 /* Get Apple/Google Product ID's from chargebee system */
   static Future<List> retrieveProductIdentifiers(
-      [Map<String, String>? queryParams]) async {
-    String result =
+      [Map<String, String>? queryParams,]) async {
+    final String result =
     await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
     return jsonDecode(result);
   }
