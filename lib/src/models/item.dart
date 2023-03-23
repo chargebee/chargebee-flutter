@@ -61,11 +61,11 @@ class CBItemsList {
 
   CBItemsList({this.cbItem});
 
-  CBItemsList.fromJson(dynamic json) {
-    cbItem = json['item'] != null ? CBItem.fromJson(json['item']) : null;
+  CBItemsList.fromJson(Map<String, dynamic> json) {
+    cbItem = json['item'] != null ? new CBItem.fromJson(json['item']) : null;
   }
 
-  CBItemsList.fromJsonAndroid(dynamic json) {
+  CBItemsList.fromJsonAndroid(Map<String, dynamic> json) {
     cbItem =
         json['item'] != null ? CBItem.fromJsonAndroid(json['item']) : null;
   }
@@ -76,9 +76,10 @@ class CBItemWrapper {
 
   CBItemWrapper({this.list});
 
-  CBItemWrapper.fromJson(List<dynamic> json) {
-    final subsArray = <CBItem>[];
-    for (final value in json) {
+  CBItemWrapper.fromJson(List<Map<String, dynamic>> json) {
+    print(json);
+    List<CBItem> subsArray = [];
+    for (var value in json) {
       subsArray.add(CBItem.fromJson(value));
     }
   }

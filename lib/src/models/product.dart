@@ -10,7 +10,7 @@ class Product {
 
   Product(this.id, this.price, this.priceString, this.title, this.currencyCode, this.subscriptionPeriod);
 
-  factory Product.fromJson(dynamic json) {
+  factory Product.fromJson(Map<String, dynamic> json) {
     debugPrint('json: $json');
     final subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
     return Product(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
@@ -42,8 +42,10 @@ class PurchaseResult {
 
   PurchaseResult(this.subscriptionId, this.planId, this.status);
 
-  factory PurchaseResult.fromJson(dynamic json) => PurchaseResult(json['subscriptionId'] as String,
-        json['planId'] as String, json['status'] as String,);
+  factory PurchaseResult.fromJson(Map<String, dynamic> json) {
+    return PurchaseResult(json['subscriptionId'] as String,
+        json['planId'] as String, json['status'] as String);
+  }
   @override
   String toString() => 'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, status: $status)';
 }
@@ -96,13 +98,12 @@ class SubscriptonList {
 
   SubscriptonList({this.subscripton});
 
-  SubscriptonList.fromJson(dynamic json) {
+  SubscriptonList.fromJson(Map<String, dynamic> json) {
     subscripton = json['cb_subscription'] != null
         ? Subscripton.fromJson(json['cb_subscription'])
         : null;
   }
-
-  SubscriptonList.fromJsonAndroid(dynamic json) {
+  SubscriptonList.fromJsonAndroid(Map<String, dynamic> json) {
     subscripton = json['cb_subscription'] != null
         ? Subscripton.fromJsonAndroid(json['cb_subscription'])
         : null;
@@ -114,10 +115,39 @@ class CBSubscriptionWrapper {
 
   CBSubscriptionWrapper({this.list});
 
-  CBSubscriptionWrapper.fromJson(List<dynamic> json) {
-    final subsArray = <Subscripton>[];
-    for (final value in json) {
+  CBSubscriptionWrapper.fromJson(List<Map<String, dynamic>> json) {
+    print(json);
+    List<Subscripton> subsArray = [];
+    for (var value in json) {
       subsArray.add(Subscripton.fromJson(value));
     }
+  }
+}
+
+class CBProductIdentifierWrapper {
+  late List<String> productIdentifiersList;
+
+  CBProductIdentifierWrapper(this.productIdentifiersList);
+
+  factory CBProductIdentifierWrapper.fromJson(List<dynamic> json) {
+    List<String> productsList = [];
+    for (var value in json) {
+      productsList.add(value);
+    }
+    return CBProductIdentifierWrapper(productsList);
+  }
+}
+
+class CBEntitlementWrapper {
+  late List<String> entitlementsList;
+
+  CBEntitlementWrapper(this.entitlementsList);
+
+  factory CBEntitlementWrapper.fromJson(List<dynamic> json) {
+    List<String> entitlementList = [];
+    for (var value in json) {
+      entitlementList.add(value);
+    }
+    return CBEntitlementWrapper(entitlementList);
   }
 }
