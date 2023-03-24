@@ -11,11 +11,21 @@ class Chargebee {
   static const platform = MethodChannel(Constants.methodChannelName);
   static bool get _isIOS => defaultTargetPlatform == TargetPlatform.iOS;
 
-  /// Configure the app details with your site, publishableApiKey and sdkKey
-  /// [site] site which created in chargebee. eg. xxx.chargebee.com
-  /// [publishableApiKey] Chargebee API Key
-  /// [iosSdkKey] Cconnect the app store with Chargebee and get the iOS sdk key
-  /// [androidSdkKey] Cconnect the app store with Chargebee and get the Android sdk key
+  /// Sets up Chargebee SDK with site, API key and SDK key for Android and iOS.
+  ///
+  /// [site] site Chargebee site.
+  /// Example: If the Chargebee domain url is https://mobile-test.chargebee.com, then the site value is 'mobile-test'.
+  ///
+  /// [publishableApiKey] publishableApiKey Publishable API key generated for your Chargebee Site.
+  /// Refer: https://www.chargebee.com/docs/2.0/api_keys.html#types-of-api-keys_publishable-key.
+  ///
+  /// [iosSdkKey] iosSdkKey iOS SDK key.
+  /// Refer: https://www.chargebee.com/docs/1.0/mobile-playstore-notifications.html#app-id.
+  ///
+  /// [androidSdkKey] androidSdkKey Android SDK key.
+  /// Refer: https://www.chargebee.com/docs/1.0/mobile-app-store-product-iap.html#connection-keys_app-id.
+  ///
+  /// Throws an [PlatformException] in case of configure api fails.
   static Future<void> configure(String site, String publishableApiKey,
       [String? iosSdkKey = "", androidSdkKey = ""]) async {
     if (_isIOS) {
@@ -36,8 +46,13 @@ class Chargebee {
     }
   }
 
-  /// Get the product/sku details from Play console/ App Store
-  /// [productIDs] list of actual product ids which created in App Store Connect/Google Play Store
+  /// Retrieves products from Google/Apple Store for give product identifiers.
+  ///
+  /// [productIDs] The list of product identifiers to be passed to productIDs.
+  /// Example: ['cbtest'].
+  ///
+  /// The list of [Product] object be returned if api success.
+  /// Throws an [PlatformException] in case of failure.
   static Future<List<Product>> retrieveProducts(List<String> productIDs) async {
     List<Product> products = [];
     final result = await platform.invokeMethod(
@@ -52,10 +67,16 @@ class Chargebee {
     return products;
   }
 
-  /// Buy the product with/without customer Id
-  /// [product] product information that trying to purchase the subscription
-  /// [customerId] it can be optional. if passed, the subscription will be created by using customerId in chargebee
-  /// if not passed, the value of customerId is same as SubscriptionId
+  /// Buy the product with/without customer id.
+  ///
+  /// [product] product object to be passed.
+  ///
+  /// [customerId] it can be optional.
+  /// if passed, the subscription will be created by using customerId in chargebee.
+  /// if not passed, the value of customerId is same as SubscriptionId.
+  ///
+  /// If purchase success [PurchaseResult] object be returned.
+  /// Throws an [PlatformException] in case of failure.
   static Future<PurchaseResult> purchaseProduct(Product product,
       [String? customerId = ""]) async {
     if (customerId == null) customerId = "";
@@ -69,8 +90,13 @@ class Chargebee {
     }
   }
 
-  /// Get the subscription details from chargebee system
-  /// [queryParams] After purchase the product, fetch the subscription details by using query params like {"customer_id": "abc"}
+  /// Retrieves the subscriptions by customer_id or subscription_id.
+  ///
+  /// [queryParams] The map value to be passed as queryParams.
+  /// Example: {"customer_id": "abc"}.
+  ///
+  /// The list of [Subscripton] object be returned if api success.
+  /// Throws an [PlatformException] in case of failure.
   static Future<List<Subscripton?>> retrieveSubscriptions(
       Map<String, String> queryParams) async {
     List<Subscripton> subscriptions = [];
@@ -98,16 +124,26 @@ class Chargebee {
     return subscriptions;
   }
 
-  /// Get Apple/Google Product ID's from chargebee system
-  /// [queryParams] pass the params(Eg. {"limit": "10"}) and fetch the list of product identifiers from chargebee
+  /// Retrieves available product identifiers.
+  ///
+  /// [queryParams] The map value to be passed as queryParams.
+  /// Example: {"limit": "10"}.
+  ///
+  /// The list of product identifiers be returned if api success.
+  /// Throws an [PlatformException] in case of failure.
   @Deprecated('This method will be removed in upcoming release, Use retrieveProductIdentifiers instead')
   static Future<List<String>> retrieveProductIdentifers(
       [Map<String, String>? queryParams]) async {
     return retrieveProductIdentifiers(queryParams);
   }
 
-  /// Get Apple/Google Product ID's from chargebee system
-  /// [queryParams] pass the params(Eg. {"limit": "10"}) and fetch the list of product identifiers from chargebee
+  /// Retrieves available product identifiers.
+  ///
+  /// [queryParams] The map value to be passed as queryParams.
+  /// Example: {"limit": "10"}.
+  ///
+  /// The list of product identifiers be returned if api success.
+  /// Throws an [PlatformException] in case of failure.
   static Future<List<String>> retrieveProductIdentifiers(
       [Map<String, String>? queryParams]) async {
     String result =
@@ -115,9 +151,13 @@ class Chargebee {
     return CBProductIdentifierWrapper.fromJson(jsonDecode(result)).productIdentifiersList;
   }
 
-  /// Get entitlement details from chargebee system
-  /// [queryParams] queryParams - eg. {"subscriptionId": "XXXXXXX"}
-  /// Get the list of entitlements associated with the subscription.
+  /// Retrieves entitlements for the subscription.
+  ///
+  /// [queryParams] The map value to be passed passed as queryParams.
+  /// Example: {"subscriptionId": "XXXXXXX"}.
+  ///
+  /// The list of entitlement details be returned if api success.
+  /// Throws an [PlatformException] in case of failure.
   static Future<List<String>> retrieveEntitlements(
       Map<String, String> queryParams) async {
     String result =
@@ -125,9 +165,13 @@ class Chargebee {
     return CBEntitlementWrapper.fromJson(jsonDecode(result)).entitlementsList;
   }
 
-  /// Get the list of items from chargebee system
-  /// [queryParams] queryParams - eg. {"limit": "10"}
-  /// Fetch Items associated with a subscription
+  /// Retrieves list of item object.
+  ///
+  /// [queryParams] The map value to be passed as queryParams.
+  /// Example: {"limit": "10"}.
+  ///
+  /// The list of [CBItem] object be returned if api success.
+  /// Throws an [PlatformException] in case of failure.
   static Future<List<CBItem?>> retrieveAllItems(
       [Map<String, String>? queryParams]) async {
     List itemsFromServer = [];
@@ -152,9 +196,13 @@ class Chargebee {
     return listItems;
   }
 
-  /// Get the list of plans from chargebee system
-  /// [queryParams] queryParams - eg. {"limit": "10"}
-  /// Fetch plans associated with a subscription
+  /// Retrieves list of plan object.
+  ///
+  /// [queryParams] The map value to be passed as queryParams.
+  /// Example: {"limit": "10"}.
+  ///
+  /// The list of [CBPlan] object be returned if api success.
+  /// Throws an [PlatformException] in case of failure.
   static Future<List<CBPlan?>> retrieveAllPlans(
       [Map<String, String>? queryParams]) async {
     List plansFromServer = [];
