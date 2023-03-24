@@ -22,19 +22,18 @@ class MyApp extends StatelessWidget {
     theme: ThemeData(
       primarySwatch: Colors.blue,
     ),
-    home: const MyHomePage(Constants.menu, title: 'Chargebee-Flutter SDK'),
+    home: const MyHomePage(title: 'Chargebee-Flutter SDK'),
   );
 }
 
 class MyHomePage extends StatefulWidget {
-  final List<String> cbMenu;
   final String title;
 
-  const MyHomePage(this.cbMenu, {Key? key, required this.title})
+  const MyHomePage( {Key? key, required this.title})
       : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState(cbMenu);
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -46,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController();
 
   List<Product> products = [];
-  late List<String> cbMenu;
+  late List<String> cbMenu = Constants.menu;
   late String siteName = '',
       apiKey = '',
       androidSdkKey = '',
@@ -71,13 +70,13 @@ class _MyHomePageState extends State<MyHomePage> {
     'channel[is]': 'play_store'
   }; // eg. query params for getAllPlans
 
-  _MyHomePageState(this.cbMenu);
+  _MyHomePageState();
 
   @override
   void initState() {
     // For both iOS and Android
     authentication('your-site', 'publishable_api_key', 'iOS ResourceID/SDK Key',
-        'Android ResourceID/SDK Key');
+        'Android ResourceID/SDK Key',);
     super.initState();
   }
 
@@ -264,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       final name = <String>[];
       if (result.isNotEmpty) {
-        for (var cbPlan in result) {
+        for (final cbPlan in result) {
           name.add(cbPlan != null ? cbPlan.name! : 'null');
         }
         Navigator.push(
@@ -297,7 +296,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       final name = <String>[];
       if (result.isNotEmpty) {
-        for (var cbItem in result) {
+        for (final cbItem in result) {
           name.add(cbItem != null ? cbItem.name! : 'null');
         }
 
@@ -419,7 +418,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                       controller: iosDdkKeyController,
                       decoration: const InputDecoration(
-                          hintText: 'iOS SDK Key'),
+                          hintText: 'iOS SDK Key',),
                     ),
                     TextField(
                       onChanged: (value) {
@@ -429,17 +428,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                       controller: sdkKeyController,
                       decoration: const InputDecoration(
-                          hintText: 'Android SDK Key'),
+                          hintText: 'Android SDK Key',),
                     ),
                   ],
                 ),
                 actions: <Widget>[
                   TextButton(
                     style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white, backgroundColor: Colors.red,
                         textStyle:
-                        const TextStyle(fontStyle: FontStyle.normal)),
+                        const TextStyle(fontStyle: FontStyle.normal),),
                     child: const Text('CANCEL'),
                     onPressed: () {
                       setState(() {
@@ -449,19 +447,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   TextButton(
                       style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white, backgroundColor: Colors.green,
                           textStyle:
-                          const TextStyle(fontStyle: FontStyle.normal)),
+                          const TextStyle(fontStyle: FontStyle.normal),),
                       child: const Text('Initialize'),
                       onPressed: () {
                         Navigator.pop(context);
                         debugPrint(
-                            'app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey');
+                            'app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey',);
                         authentication(
-                            siteName, apiKey, iosSdkKey, androidSdkKey);
+                            siteName, apiKey, iosSdkKey, androidSdkKey,);
                       }
-                  )
+                  ,)
                 ],
             ),);
 

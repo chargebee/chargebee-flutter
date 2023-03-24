@@ -1,7 +1,5 @@
 import 'dart:core';
 
-import 'package:flutter/foundation.dart';
-
 class CBPlan{
   String? id;
   String? name;
@@ -114,13 +112,13 @@ class CBPlansList {
 
   CBPlansList.fromJson(Map<String, dynamic> json) {
     cbPlan = json['plan'] != null
-        ? new CBPlan.fromJson(json['plan'])
+        ? CBPlan.fromJson(json['plan'])
         : null;
   }
 
   CBPlansList.fromJsonAndroid(Map<String, dynamic> json) {
     cbPlan = json['plan'] != null
-        ? new CBPlan.fromJsonAndroid(json['plan'])
+        ? CBPlan.fromJsonAndroid(json['plan'])
         : null;
   }
 }
@@ -131,9 +129,8 @@ class CBPlanWrapper {
   CBPlanWrapper({this.list});
 
   CBPlanWrapper.fromJson(List<Map<String, dynamic>> json) {
-    print(json);
-    List<CBPlan> subsArray = [];
-    for (var value in json) {
+    final subsArray = <CBPlan>[];
+    for (final value in json) {
       subsArray.add(CBPlan.fromJson(value));
     }
   }

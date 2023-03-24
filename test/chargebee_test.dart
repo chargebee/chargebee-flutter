@@ -82,7 +82,7 @@ void main() {
       // debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final queryparam = <String, String>{'limit': '100'};
       final productIdentifiers =
-          await Chargebee.retrieveProductIdentifers(queryparam);
+          await Chargebee.retrieveProductIdentifiers(queryparam);
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mProductIdentifiers,
@@ -99,7 +99,7 @@ void main() {
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final queryparam = <String, String>{'limit': '100'};
-      await expectLater(() => Chargebee.retrieveProductIdentifers(queryparam),
+      await expectLater(() => Chargebee.retrieveProductIdentifiers(queryparam),
           throwsA(isA<PlatformException>()),);
       channel.setMockMethodCallHandler(null);
     });

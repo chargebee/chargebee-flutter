@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 
 class CBItem {
   String? id;
@@ -62,7 +61,7 @@ class CBItemsList {
   CBItemsList({this.cbItem});
 
   CBItemsList.fromJson(Map<String, dynamic> json) {
-    cbItem = json['item'] != null ? new CBItem.fromJson(json['item']) : null;
+    cbItem = json['item'] != null ? CBItem.fromJson(json['item']) : null;
   }
 
   CBItemsList.fromJsonAndroid(Map<String, dynamic> json) {
@@ -77,9 +76,8 @@ class CBItemWrapper {
   CBItemWrapper({this.list});
 
   CBItemWrapper.fromJson(List<Map<String, dynamic>> json) {
-    print(json);
-    List<CBItem> subsArray = [];
-    for (var value in json) {
+    final subsArray = <CBItem>[];
+    for (final value in json) {
       subsArray.add(CBItem.fromJson(value));
     }
   }

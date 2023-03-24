@@ -12,7 +12,7 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     debugPrint('json: $json');
-    final subscriptionPeriod = new SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
+    final subscriptionPeriod = SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
     return Product(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
         json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod,);
   }
@@ -42,10 +42,8 @@ class PurchaseResult {
 
   PurchaseResult(this.subscriptionId, this.planId, this.status);
 
-  factory PurchaseResult.fromJson(Map<String, dynamic> json) {
-    return PurchaseResult(json['subscriptionId'] as String,
-        json['planId'] as String, json['status'] as String);
-  }
+  factory PurchaseResult.fromJson(Map<String, dynamic> json) => PurchaseResult(json['subscriptionId'] as String,
+        json['planId'] as String, json['status'] as String,);
   @override
   String toString() => 'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, status: $status)';
 }
@@ -116,9 +114,8 @@ class CBSubscriptionWrapper {
   CBSubscriptionWrapper({this.list});
 
   CBSubscriptionWrapper.fromJson(List<Map<String, dynamic>> json) {
-    print(json);
-    List<Subscripton> subsArray = [];
-    for (var value in json) {
+    final subsArray = <Subscripton>[];
+    for (final value in json) {
       subsArray.add(Subscripton.fromJson(value));
     }
   }
@@ -130,8 +127,8 @@ class CBProductIdentifierWrapper {
   CBProductIdentifierWrapper(this.productIdentifiersList);
 
   factory CBProductIdentifierWrapper.fromJson(List<dynamic> json) {
-    List<String> productsList = [];
-    for (var value in json) {
+    final productsList = <String>[];
+    for (final value in json) {
       productsList.add(value);
     }
     return CBProductIdentifierWrapper(productsList);
@@ -144,8 +141,8 @@ class CBEntitlementWrapper {
   CBEntitlementWrapper(this.entitlementsList);
 
   factory CBEntitlementWrapper.fromJson(List<dynamic> json) {
-    List<String> entitlementList = [];
-    for (var value in json) {
+    final entitlementList = <String>[];
+    for (final value in json) {
       entitlementList.add(value);
     }
     return CBEntitlementWrapper(entitlementList);
