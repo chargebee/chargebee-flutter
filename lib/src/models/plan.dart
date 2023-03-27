@@ -1,30 +1,49 @@
 import 'dart:core';
-
+/// This class contains all the information related to the Plans which associated with a subscription
 class CBPlan {
+  /// The plan identifier as same as product id.
   String? id;
+  /// The plan name as same as product id.
   String? name;
   String? invoiceName;
+  /// The cost of the plan price when the pricing model is flat_fee.
   int? price;
+  /// If subscriptions or invoices exist for this plan price, period cannot be changed.
   int? period;
+  /// The unit of time for period. eg. day, week, month and year.
   String? periodUnit;
+  //// If subscriptions, invoices or differential prices exist for this plan price, pricing_model cannot be changed.
   String? pricingModel;
+  /// the subscriptions of this plan price will have.
   int? freeQuantity;
   int? setup_cost;
+  /// Plan status, eg. active, archived and delete.
   String? status;
+  /// Allow the plan to subscribed to via Checkout.
   bool? enabledInHostedPages;
+  /// Allow customers to change their subscription to this plan via the Self-Serve Portal.
   bool? enabledInPortal;
   String? addonApplicability;
+  /// Indicates that the plan is a physical product.
   bool? isShippable;
+  /// Timestamp indicating when the plan was last updated.
   int? updatedAt;
+  /// Specifies if gift subscriptions can be created for this plan.
   bool? giftable;
+  /// Plan channel as app_store/play_store/web
   String? channel;
+  /// The version of the resource.
   int? resourceVersion;
+  /// the plan object model
   String? object;
   String? chargeModel;
+  /// Specifies whether taxes apply to this plan price.
   bool? taxable;
+  /// The currency code of the plan
   String? currencyCode;
   bool? showDescriptionInInvoices;
   bool? showDescriptionInQuotes;
+  /// A set of key-value pairs stored as additional information for the subscription and it can be optional
   String? metaData;
 
   CBPlan({
@@ -55,6 +74,7 @@ class CBPlan {
     this.metaData,
   });
 
+  /// Mapping json data into CBPlan for iOS
   CBPlan.fromJson(Map<String, dynamic> json) {
     id = json['id'] as String;
     chargeModel = json['charge_model'] as String;
@@ -77,6 +97,7 @@ class CBPlan {
     name = json['name'] as String;
   }
 
+  /// Mapping json data into CBPlan for Android
   CBPlan.fromJsonAndroid(Map<String, dynamic> json) {
     addonApplicability = json['addonApplicability'] as String;
     channel = json['channel'] as String;
@@ -106,17 +127,20 @@ class CBPlan {
   }
 }
 
+/// This class holds the list of chargebee plans
 class CBPlansList {
   CBPlan? cbPlan;
 
   CBPlansList({this.cbPlan});
 
+  /// Convert plan object into CBPlan for iOS
   CBPlansList.fromJson(Map<String, dynamic> json) {
     cbPlan = json['plan'] != null
         ? new CBPlan.fromJson(json['plan'])
         : null;
   }
 
+  /// Convert plan object into CBPlan for Android
   CBPlansList.fromJsonAndroid(Map<String, dynamic> json) {
     cbPlan = json['plan'] != null
         ? new CBPlan.fromJsonAndroid(json['plan'])
