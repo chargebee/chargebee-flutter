@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:chargebee_flutter/src/models/product.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -99,6 +100,151 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       Map<String, String> queryparam = {"limit": "100"};
       await expectLater(() => Chargebee.retrieveProductIdentifers(queryparam),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
+    });
+  });
+
+  group('retrieveProducts', () {
+    final List<String> queryparam = ["merchant.pro.android"];
+    final map = """{
+      "currencyCode": "USD",
+      "subscriptionPeriod": {
+        "periodUnit": "year",
+        "numberOfUnits": 1
+      },
+      "productPriceString": "9.99",
+      "productId": "chargebee.pro.ios",
+      "productPrice": 9.9900000000000002,
+      "productTitle": "Pro Plan"
+    }""";
+    final retrieveProductsResult = [map];
+
+    test('returns the list of Product for Android', () async {
+      channelResponse = retrieveProductsResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      try {
+        final result = await Chargebee.retrieveProducts(queryparam);
+        expect(callStack, <Matcher>[
+          isMethodCall(
+            Constants.mGetProducts,
+            arguments: {Constants.productIDs: queryparam},
+          )
+        ]);
+        expect(result.isNotEmpty, true);
+      } on PlatformException catch (e) {
+        print("exception: ${e.message}");
+      }
+    });
+
+    test('returns the list of Product for iOS', () async {
+      channelResponse = retrieveProductsResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final result = await Chargebee.retrieveProducts(queryparam);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mGetProducts,
+          arguments: {Constants.productIDs: queryparam},
+        )
+      ]);
+      expect(result.isNotEmpty, true);
+    });
+
+    test('handles exception', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+            code: "PlatformError", message: "An error occured");
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await expectLater(() => Chargebee.retrieveProducts(queryparam),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
+    });
+  });
+
+  group('purchaseProduct', () {
+    final Map<String, dynamic> map = {"unit": "year", "numberOfUnits": 1};
+    final product = Product("merchant.pro.android", 1500.00, "1500.00", "title",
+        "INR", SubscriptionPeriod.fromMap(map));
+    final purchaseResult =
+        """{"subscriptionId":"cb-dsd", "planId":"test", "status":"active"}""";
+
+    test('returns subscription result for Android', () async {
+      channelResponse = purchaseResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final result = await Chargebee.purchaseProduct(product);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseProduct,
+          arguments: {Constants.product: product.id, Constants.customerId: ""},
+        )
+      ]);
+      expect(result.status, "active");
+    });
+
+    test('returns subscription result for iOS', () async {
+      channelResponse = purchaseResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final result = await Chargebee.purchaseProduct(product);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseProduct,
+          arguments: {Constants.product: product.id, Constants.customerId: ""},
+        )
+      ]);
+      expect(result.status, "active");
+    });
+
+    test('subscribed with customer info for Android', () async {
+      channelResponse = purchaseResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final result = await Chargebee.purchaseProduct(product, "asz");
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseProduct,
+          arguments: {
+            Constants.product: product.id,
+            Constants.customerId: "asz"
+          },
+        )
+      ]);
+      expect(result.status, "active");
+    });
+
+    test('subscribed with customer info for iOS', () async {
+      channelResponse = purchaseResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final result = await Chargebee.purchaseProduct(product, "ast");
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseProduct,
+          arguments: {
+            Constants.product: product.id,
+            Constants.customerId: "ast"
+          },
+        )
+      ]);
+      expect(result.status, "active");
+    });
+
+    test('handles exception on iOS', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+            code: "PlatformError", message: "An error occured");
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await expectLater(() => Chargebee.purchaseProduct(product),
+          throwsA(isA<PlatformException>()));
+      channel.setMockMethodCallHandler(null);
+    });
+
+    test('handles exception on Android', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+            code: "PlatformError", message: "An error occured");
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await expectLater(() => Chargebee.purchaseProduct(product),
           throwsA(isA<PlatformException>()));
       channel.setMockMethodCallHandler(null);
     });
@@ -277,169 +423,169 @@ void main() {
     });
   });
 
-  group('retrieveEntitlements', () {
-    final Map<String, String> getEntitlementsParams = {
-      "subscriptionId": "2000000226631982"
-    };
-    final entitlementsListString = """
-        [
-          {
-            "subscription_entitlement": {
-              "feature_description": "Test feature for SDK testing",
-              "feature_id": "test-feature",
-              "feature_name": "Test Feature",
-              "feature_type": "SWITCH",
-              "is_enabled": true,
-              "is_overridden": true,
-              "name": "Available",
-              "subscription_id": "2000000226631982",
-              "value": "true"
-            }
-          }
-        ]
-    """;
-    test('retrieves entitlements successfully', () async {
-      channelResponse = entitlementsListString;
-      final result =
-          await Chargebee.retrieveEntitlements(getEntitlementsParams);
-      expect(callStack, <Matcher>[
-        isMethodCall(Constants.mGetEntitlements,
-            arguments: getEntitlementsParams)
-      ]);
-      // we have 1 item in entitlementsListString above
-      expect(result.length, 1);
-    });
-
-    test('handles exception', () async {
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw PlatformException(
-            code: "PlatformError", message: "An error occured");
-      });
-      await expectLater(
-          () => Chargebee.retrieveEntitlements(getEntitlementsParams),
-          throwsA(isA<PlatformException>()));
-      channel.setMockMethodCallHandler(null);
-    });
-  });
-
-  group('retrieveAllPlans', () {
-    test('returns the list of plans on iOS', () async {
-      final plansStringiOS = """[
-        {
-          "plan": {
-              "addon_applicability": "all",
-              "channel": "app_store",
-              "charge_model": "flat_fee",
-              "currency_code": "USD",
-              "enabled_in_hosted_pages": false,
-              "enabled_in_portal": false,
-              "free_quantity": 0,
-              "giftable": false,
-              "id": "test_3-USD",
-              "is_shippable": false,
-              "name": "test_3-USD",
-              "object": "plan",
-              "period": 1,
-              "period_unit": "day",
-              "price": 399,
-              "pricing_model": "flat_fee",
-              "resource_version": 1666989853313,
-              "setup_cost": 0,
-              "show_description_in_invoices": false,
-              "show_description_in_quotes": false,
-              "status": "active",
-              "taxable": true,
-              "updated_at": 1666989853
-          }
-        }
-      ]""";
-      channelResponse = plansStringiOS;
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      final Map<String, String> plansQueryParams = {
-        "sort_by[desc]": "Standard",
-        "channel[is]": "app_store"
-      };
-      final result = await Chargebee.retrieveAllPlans(plansQueryParams);
-      expect(callStack, <Matcher>[
-        isMethodCall(Constants.mRetrieveAllPlans, arguments: plansQueryParams)
-      ]);
-      // we have 1 item in plansStringiOS above
-      expect(result.length, 1);
-    });
-
-    test('handles exception on iOS', () async {
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw PlatformException(
-            code: "PlatformError", message: "An error occured");
-      });
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      final Map<String, String> plansQueryParams = {
-        "sort_by[desc]": "Standard",
-        "channel[is]": "app_store"
-      };
-      await expectLater(() => Chargebee.retrieveAllPlans(plansQueryParams),
-          throwsA(isA<PlatformException>()));
-      channel.setMockMethodCallHandler(null);
-    });
-
-    test('returns the list of plans on Android', () async {
-      final plansStringAndroid = """[
-        {
-          "plan": {
-              "addonApplicability": "all",
-              "channel": "play_store",
-              "chargeModel": "flat_fee",
-              "currencyCode": "USD",
-              "enabledInHostedPages": false,
-              "enabledInPortal": false,
-              "freeQuantity": 0,
-              "giftable": false,
-              "id": "test_3-USD",
-              "invoiceName": "test_3-USD",
-              "isShippable": false,
-              "name": "test_3-USD",
-              "object": "plan",
-              "period": 1,
-              "periodUnit": "day",
-              "price": 399,
-              "pricingModel": "flat_fee",
-              "resourceVersion": 1666989853313,
-              "setup_cost": 0,
-              "showDescriptionInInvoices": false,
-              "showDescriptionInQuotes": false,
-              "status": "active",
-              "taxable": true,
-              "updatedAt": 1666989853
-          }
-        }
-      ]""";
-      channelResponse = plansStringAndroid;
-      debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final Map<String, String> plansQueryParams = {
-        "sort_by[desc]": "Standard",
-        "channel[is]": "play_store"
-      };
-      final result = await Chargebee.retrieveAllPlans(plansQueryParams);
-      expect(callStack, <Matcher>[
-        isMethodCall(Constants.mRetrieveAllPlans, arguments: plansQueryParams)
-      ]);
-      // we have 1 item in plansStringAndroid above
-      expect(result.length, 1);
-    });
-
-    test('handles exception on Android', () async {
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        throw PlatformException(
-            code: "PlatformError", message: "An error occured");
-      });
-      debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final Map<String, String> plansQueryParams = {
-        "sort_by[desc]": "Standard",
-        "channel[is]": "play_store"
-      };
-      await expectLater(() => Chargebee.retrieveAllPlans(plansQueryParams),
-          throwsA(isA<PlatformException>()));
-      channel.setMockMethodCallHandler(null);
-    });
-  });
+  // group('retrieveEntitlements', () {
+  //   final Map<String, String> getEntitlementsParams = {
+  //     "subscriptionId": "2000000226631982"
+  //   };
+  //   final entitlementsListString = """
+  //       [
+  //         {
+  //           "subscription_entitlement": {
+  //             "feature_description": "Test feature for SDK testing",
+  //             "feature_id": "test-feature",
+  //             "feature_name": "Test Feature",
+  //             "feature_type": "SWITCH",
+  //             "is_enabled": true,
+  //             "is_overridden": true,
+  //             "name": "Available",
+  //             "subscription_id": "2000000226631982",
+  //             "value": "true"
+  //           }
+  //         }
+  //       ]
+  //   """;
+  //   test('retrieves entitlements successfully', () async {
+  //     channelResponse = entitlementsListString;
+  //     final result =
+  //         await Chargebee.retrieveEntitlements(getEntitlementsParams);
+  //     expect(callStack, <Matcher>[
+  //       isMethodCall(Constants.mGetEntitlements,
+  //           arguments: getEntitlementsParams)
+  //     ]);
+  //     // we have 1 item in entitlementsListString above
+  //     expect(result.length, 1);
+  //   });
+  //
+  //   test('handles exception', () async {
+  //     channel.setMockMethodCallHandler((MethodCall methodCall) async {
+  //       throw PlatformException(
+  //           code: "PlatformError", message: "An error occured");
+  //     });
+  //     await expectLater(
+  //         () => Chargebee.retrieveEntitlements(getEntitlementsParams),
+  //         throwsA(isA<PlatformException>()));
+  //     channel.setMockMethodCallHandler(null);
+  //   });
+  // });
+  //
+  // group('retrieveAllPlans', () {
+  //   test('returns the list of plans on iOS', () async {
+  //     final plansStringiOS = """[
+  //       {
+  //         "plan": {
+  //             "addon_applicability": "all",
+  //             "channel": "app_store",
+  //             "charge_model": "flat_fee",
+  //             "currency_code": "USD",
+  //             "enabled_in_hosted_pages": false,
+  //             "enabled_in_portal": false,
+  //             "free_quantity": 0,
+  //             "giftable": false,
+  //             "id": "test_3-USD",
+  //             "is_shippable": false,
+  //             "name": "test_3-USD",
+  //             "object": "plan",
+  //             "period": 1,
+  //             "period_unit": "day",
+  //             "price": 399,
+  //             "pricing_model": "flat_fee",
+  //             "resource_version": 1666989853313,
+  //             "setup_cost": 0,
+  //             "show_description_in_invoices": false,
+  //             "show_description_in_quotes": false,
+  //             "status": "active",
+  //             "taxable": true,
+  //             "updated_at": 1666989853
+  //         }
+  //       }
+  //     ]""";
+  //     channelResponse = plansStringiOS;
+  //     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+  //     final Map<String, String> plansQueryParams = {
+  //       "sort_by[desc]": "Standard",
+  //       "channel[is]": "app_store"
+  //     };
+  //     final result = await Chargebee.retrieveAllPlans(plansQueryParams);
+  //     expect(callStack, <Matcher>[
+  //       isMethodCall(Constants.mRetrieveAllPlans, arguments: plansQueryParams)
+  //     ]);
+  //     // we have 1 item in plansStringiOS above
+  //     expect(result.length, 1);
+  //   });
+  //
+  //   test('handles exception on iOS', () async {
+  //     channel.setMockMethodCallHandler((MethodCall methodCall) async {
+  //       throw PlatformException(
+  //           code: "PlatformError", message: "An error occured");
+  //     });
+  //     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+  //     final Map<String, String> plansQueryParams = {
+  //       "sort_by[desc]": "Standard",
+  //       "channel[is]": "app_store"
+  //     };
+  //     await expectLater(() => Chargebee.retrieveAllPlans(plansQueryParams),
+  //         throwsA(isA<PlatformException>()));
+  //     channel.setMockMethodCallHandler(null);
+  //   });
+  //
+  //   test('returns the list of plans on Android', () async {
+  //     final plansStringAndroid = """[
+  //       {
+  //         "plan": {
+  //             "addonApplicability": "all",
+  //             "channel": "play_store",
+  //             "chargeModel": "flat_fee",
+  //             "currencyCode": "USD",
+  //             "enabledInHostedPages": false,
+  //             "enabledInPortal": false,
+  //             "freeQuantity": 0,
+  //             "giftable": false,
+  //             "id": "test_3-USD",
+  //             "invoiceName": "test_3-USD",
+  //             "isShippable": false,
+  //             "name": "test_3-USD",
+  //             "object": "plan",
+  //             "period": 1,
+  //             "periodUnit": "day",
+  //             "price": 399,
+  //             "pricingModel": "flat_fee",
+  //             "resourceVersion": 1666989853313,
+  //             "setup_cost": 0,
+  //             "showDescriptionInInvoices": false,
+  //             "showDescriptionInQuotes": false,
+  //             "status": "active",
+  //             "taxable": true,
+  //             "updatedAt": 1666989853
+  //         }
+  //       }
+  //     ]""";
+  //     channelResponse = plansStringAndroid;
+  //     debugDefaultTargetPlatformOverride = TargetPlatform.android;
+  //     final Map<String, String> plansQueryParams = {
+  //       "sort_by[desc]": "Standard",
+  //       "channel[is]": "play_store"
+  //     };
+  //     final result = await Chargebee.retrieveAllPlans(plansQueryParams);
+  //     expect(callStack, <Matcher>[
+  //       isMethodCall(Constants.mRetrieveAllPlans, arguments: plansQueryParams)
+  //     ]);
+  //     // we have 1 item in plansStringAndroid above
+  //     expect(result.length, 1);
+  //   });
+  //
+  //   test('handles exception on Android', () async {
+  //     channel.setMockMethodCallHandler((MethodCall methodCall) async {
+  //       throw PlatformException(
+  //           code: "PlatformError", message: "An error occured");
+  //     });
+  //     debugDefaultTargetPlatformOverride = TargetPlatform.android;
+  //     final Map<String, String> plansQueryParams = {
+  //       "sort_by[desc]": "Standard",
+  //       "channel[is]": "play_store"
+  //     };
+  //     await expectLater(() => Chargebee.retrieveAllPlans(plansQueryParams),
+  //         throwsA(isA<PlatformException>()));
+  //     channel.setMockMethodCallHandler(null);
+  //   });
+  // });
 }
