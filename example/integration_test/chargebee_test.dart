@@ -1,9 +1,9 @@
+import 'package:chargebee_flutter/chargebee_flutter.dart';
+import 'package:chargebee_flutter_sdk_example/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:chargebee_flutter/chargebee_flutter.dart';
-import 'package:chargebee_flutter_sdk_example/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +14,7 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
-      chargebeeTest = new ChargebeeTest(tester);
+      chargebeeTest = ChargebeeTest(tester);
       await chargebeeTest.configureAndLaunchApp();
       await chargebeeTest.retrieveProductIdentifiersWithoutParam();
       await chargebeeTest.retrieveProductIdentifiersWithParam();
@@ -33,17 +33,17 @@ class ChargebeeTest {
   final WidgetTester tester;
   final platformName = Chargebee.platform.name;
   late Product product;
-  final productIdForiOS = "chargebee.pro.ios";
-  final productIdForAndroid = "merchant.premium.android";
+  final productIdForiOS = 'chargebee.pro.ios';
+  final productIdForAndroid = 'merchant.premium.android';
   late List<String> productList;
 
   ChargebeeTest(this.tester);
 
   Future<void> configureAndLaunchApp() async {
-    final String siteName = "cb-test";
-    final String apiKey = "test_****";
-    final String iosSDKKey = "cb-*****";
-    final String androidSDKKey = "cb-*****";
+    const siteName = 'cb-test';
+    const apiKey = 'test_****';
+    const iosSDKKey = 'cb-****';
+    const androidSDKKey = 'cb-****';
     await tester.pumpAndSettle();
     try {
       tester.printToConsole('Start configuring app with chargebee');
@@ -64,7 +64,7 @@ class ChargebeeTest {
   Future<void> retrieveProductIdentifiersWithoutParam() async {
     tester.printToConsole('Fetch store specific product Ids from chargebee');
     try {
-      final list = await Chargebee.retrieveProductIdentifers();
+      final list = await Chargebee.retrieveProductIdentifiers();
       expect(list.isNotEmpty, true);
       tester.printToConsole('Product Ids retrieved successfully!');
     } on PlatformException catch (e) {
@@ -76,7 +76,7 @@ class ChargebeeTest {
     tester.printToConsole(
         'Fetch store specific product Ids from chargebee with params');
     try {
-      final list = await Chargebee.retrieveProductIdentifers({"limit": "10"});
+      final list = await Chargebee.retrieveProductIdentifiers({'limit': '10'});
       debugPrint('list: $list');
       expect(list.isNotEmpty, true);
       tester.printToConsole('Product Ids retrieved successfully!');
@@ -102,16 +102,14 @@ class ChargebeeTest {
     }
   }
 
-  Product _getProduct(String productId) {
-    return product = new Product(
+  Product _getProduct(String productId) => product = Product(
         productId,
         0.0,
         'priceString',
         'title',
         'currencyCode',
         SubscriptionPeriod.fromMap(
-            {"periodUnit": "month", "numberOfUnits": 3}));
-  }
+            {'periodUnit': 'month', 'numberOfUnits': 3},),);
 
   Future<void> purchaseProducts_withCustomerInfo() async {
     tester.printToConsole('Starting to subscribe the product');
@@ -155,7 +153,7 @@ class ChargebeeTest {
     tester.printToConsole('Start retrieving subscriptions');
     try {
       final subscriptions = await Chargebee.retrieveSubscriptions(
-          {"channel": "play_store", "customer_id": "abc"});
+          {'channel': 'play_store', 'customer_id': 'abc'},);
       debugPrint('Subscriptions: $subscriptions');
       expect(subscriptions.isNotEmpty, true);
       tester.printToConsole('Subscription retrieved successfully!');
@@ -168,7 +166,7 @@ class ChargebeeTest {
     tester.printToConsole('Start retrieving entitlements');
     try {
       final entitlements = await Chargebee.retrieveEntitlements(
-          {"subscriptionId": "AzZlGJTC9U3tw4nF"});
+          {'subscriptionId': 'AzZlGJTC9U3tw4nF'},);
       debugPrint('Entitlements : $entitlements');
       expect(entitlements.isNotEmpty, true);
       tester.printToConsole('Entitlements retrieved successfully!');
@@ -181,7 +179,7 @@ class ChargebeeTest {
     tester.printToConsole('Start retrieving all items');
     try {
       final subscriptions = await Chargebee.retrieveAllItems(
-          {"limit": "5", "channel[is]": "play_store"});
+          {'limit': '5', 'channel[is]': 'play_store'},);
       debugPrint('Items : $subscriptions');
       expect(subscriptions.isNotEmpty, true);
       tester.printToConsole('Items retrieved successfully!');
@@ -194,7 +192,7 @@ class ChargebeeTest {
     tester.printToConsole('Start retrieving all plans');
     try {
       final subscriptions = await Chargebee.retrieveAllPlans(
-          {"limit": "5", "channel[is]": "app_store"});
+          {'limit': '5', 'channel[is]': 'app_store'},);
       debugPrint('Plans : $subscriptions');
       expect(subscriptions.isNotEmpty, true);
       tester.printToConsole('Plans retrieved successfully!');
