@@ -6,7 +6,7 @@ class ProductIdentifiersView extends StatefulWidget {
   final String title;
 
   const ProductIdentifiersView(this.listProductIds,
-      {Key? key, required this.title})
+      {Key? key, required this.title,})
       : super(key: key);
 
   @override
@@ -35,22 +35,21 @@ class ProductIdentifiersViewState extends State<ProductIdentifiersView> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
           ),
           title: const Text('Product Identifiers List'),
         ),
         body: ListView.builder(
           itemCount: listProducts.length,
-          itemBuilder: (context, pos) {
-            return Card(
+          itemBuilder: (context, pos) => Card(
               child: ListTile(
-                  title: Text(listProducts[pos],
-                      style: const TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18))),
-            );
-          },
+                title: Text(listProducts[pos],
+                    style: const TextStyle(
+                      color: Colors.black54,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,),),
+              ),
+            ),
         ),
       ),
       debugShowCheckedModeBanner: false,
