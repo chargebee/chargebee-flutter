@@ -43,7 +43,7 @@ class CBItem {
       this.enabledForCheckout,
       this.enabledInPortal,
       this.metered,
-      this.object});
+      this.object,});
 
   /// Mapping json data into CBItem for iOS
   CBItem.fromJson(Map<String, dynamic> json) {
@@ -78,13 +78,13 @@ class CBItemsList {
 
   /// Convert item object into CBItem for iOS
   CBItemsList.fromJson(Map<String, dynamic> json) {
-    cbItem = json['item'] != null ? new CBItem.fromJson(json['item']) : null;
+    cbItem = json['item'] != null ? CBItem.fromJson(json['item']) : null;
   }
 
   /// Convert item object into CBItem for Android
   CBItemsList.fromJsonAndroid(Map<String, dynamic> json) {
     cbItem =
-        json['item'] != null ? new CBItem.fromJsonAndroid(json['item']) : null;
+        json['item'] != null ? CBItem.fromJsonAndroid(json['item']) : null;
   }
 }
 
@@ -94,9 +94,8 @@ class CBItemWrapper {
   CBItemWrapper({this.list});
 
   CBItemWrapper.fromJson(List<Map<String, dynamic>> json) {
-    print(json);
-    List<CBItem> subsArray = [];
-    for (var value in json) {
+    final subsArray = <CBItem>[];
+    for (final value in json) {
       subsArray.add(CBItem.fromJson(value));
     }
   }

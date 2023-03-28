@@ -46,33 +46,32 @@ class CBPlan {
   /// A set of key-value pairs stored as additional information for the subscription and it can be optional
   String? metaData;
 
-  CBPlan({
-    this.id,
-    this.name,
-    this.invoiceName,
-    this.price,
-    this.period,
-    this.periodUnit,
-    this.pricingModel,
-    this.freeQuantity,
-    this.setup_cost,
-    this.status,
-    this.enabledInHostedPages,
-    this.enabledInPortal,
-    this.addonApplicability,
-    this.isShippable,
-    this.updatedAt,
-    this.giftable,
-    this.channel,
-    this.resourceVersion,
-    this.object,
-    this.chargeModel,
-    this.taxable,
-    this.currencyCode,
-    this.showDescriptionInInvoices,
-    this.showDescriptionInQuotes,
-    this.metaData,
-  });
+  CBPlan(
+      {this.id,
+        this.name,
+        this.invoiceName,
+        this.price,
+        this.period,
+        this.periodUnit,
+        this.pricingModel,this.freeQuantity,
+        this.setup_cost,
+        this.status,
+        this.enabledInHostedPages,
+        this.enabledInPortal,
+        this.addonApplicability,
+        this.isShippable,
+        this.updatedAt,
+        this.giftable,
+        this.channel,
+        this.resourceVersion,
+        this.object,
+        this.chargeModel,
+        this.taxable,
+        this.currencyCode,
+        this.showDescriptionInInvoices,
+        this.showDescriptionInQuotes,
+        this.metaData,
+        });
 
   /// Mapping json data into CBPlan for iOS
   CBPlan.fromJson(Map<String, dynamic> json) {
@@ -123,7 +122,7 @@ class CBPlan {
     status = json['status'] as String;
     taxable = json['taxable'] as bool;
     updatedAt = json['updatedAt'] as int;
-    metaData = json['metaData'] != null ? json['metaData'].toString() : null;
+    metaData = json['metaData'] ? null : json['metaData'].toString();
   }
 }
 
@@ -136,14 +135,14 @@ class CBPlansList {
   /// Convert plan object into CBPlan for iOS
   CBPlansList.fromJson(Map<String, dynamic> json) {
     cbPlan = json['plan'] != null
-        ? new CBPlan.fromJson(json['plan'])
+        ? CBPlan.fromJson(json['plan'])
         : null;
   }
 
   /// Convert plan object into CBPlan for Android
   CBPlansList.fromJsonAndroid(Map<String, dynamic> json) {
     cbPlan = json['plan'] != null
-        ? new CBPlan.fromJsonAndroid(json['plan'])
+        ? CBPlan.fromJsonAndroid(json['plan'])
         : null;
   }
 }
@@ -154,9 +153,8 @@ class CBPlanWrapper {
   CBPlanWrapper({this.list});
 
   CBPlanWrapper.fromJson(List<Map<String, dynamic>> json) {
-    print(json);
-    List<CBPlan> subsArray = [];
-    for (var value in json) {
+    final subsArray = <CBPlan>[];
+    for (final value in json) {
       subsArray.add(CBPlan.fromJson(value));
     }
   }
