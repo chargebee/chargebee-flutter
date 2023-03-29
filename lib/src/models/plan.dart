@@ -122,7 +122,7 @@ class CBPlan {
     status = json['status'] as String;
     taxable = json['taxable'] as bool;
     updatedAt = json['updatedAt'] as int;
-    metaData = json['metaData'] ? null : json['metaData'].toString();
+    metaData = json['metaData'] != null ? json['metaData'].toString() : null;
   }
 }
 
