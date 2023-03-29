@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:chargebee_flutter/src/chargebee.dart';
+import 'package:chargebee_flutter/chargebee_flutter.dart';
 import 'package:chargebee_flutter/src/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -68,8 +68,10 @@ void main() {
         throw PlatformException(code: 'Dummy');
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      await expectLater(() => Chargebee.configure(siteName, apiKey, iosSDKKey),
-          throwsA(isA<PlatformException>()),);
+      await expectLater(
+        () => Chargebee.configure(siteName, apiKey, iosSDKKey),
+        throwsA(isA<PlatformException>()),
+      );
       channel.setMockMethodCallHandler(null);
     });
   });
@@ -79,7 +81,6 @@ void main() {
       const productIdentifiersString =
           '''["chargebee.price.change","chargebee.premium.android","merchant.start.android"]''';
       channelResponse = productIdentifiersString;
-      // debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final queryparam = <String, String>{'limit': '100'};
       final productIdentifiers =
           await Chargebee.retrieveProductIdentifiers(queryparam);
@@ -95,19 +96,23 @@ void main() {
     test('handles exception', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: 'PlatformError', message: 'An error occured',);
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final queryparam = <String, String>{'limit': '100'};
-      await expectLater(() => Chargebee.retrieveProductIdentifiers(queryparam),
-          throwsA(isA<PlatformException>()),);
+      await expectLater(
+        () => Chargebee.retrieveProductIdentifiers(queryparam),
+        throwsA(isA<PlatformException>()),
+      );
       channel.setMockMethodCallHandler(null);
     });
   });
 
   group('retrieveProducts', () {
-    final List<String> queryparam = ["merchant.pro.android"];
-    final map = """{
+    final queryparam = <String>['merchant.pro.android'];
+    const map = '''{
       "currencyCode": "USD",
       "subscriptionPeriod": {
         "periodUnit": "year",
@@ -117,7 +122,7 @@ void main() {
       "productId": "chargebee.pro.ios",
       "productPrice": 9.9900000000000002,
       "productTitle": "Pro Plan"
-    }""";
+    }''';
     final retrieveProductsResult = [map];
 
     test('returns the list of Product for Android', () async {
@@ -133,7 +138,7 @@ void main() {
         ]);
         expect(result.isNotEmpty, true);
       } on PlatformException catch (e) {
-        print("exception: ${e.message}");
+        debugPrint('exception: ${e.message}');
       }
     });
 
@@ -153,7 +158,7 @@ void main() {
     test('handles exception', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: "PlatformError", message: "An error occured");
+            code: 'PlatformError', message: 'An error occured');
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await expectLater(() => Chargebee.retrieveProducts(queryparam),
@@ -163,11 +168,17 @@ void main() {
   });
 
   group('purchaseProduct', () {
-    final Map<String, dynamic> map = {"unit": "year", "numberOfUnits": 1};
-    final product = Product("merchant.pro.android", 1500.00, "1500.00", "title",
-        "INR", SubscriptionPeriod.fromMap(map));
-    final purchaseResult =
-        """{"subscriptionId":"cb-dsd", "planId":"test", "status":"active"}""";
+    final map = <String, dynamic>{'unit': 'year', 'numberOfUnits': 1};
+    final product = Product(
+      'merchant.pro.android',
+      1500.00,
+      '1500.00',
+      'title',
+      'INR',
+      SubscriptionPeriod.fromMap(map),
+    );
+    const purchaseResult =
+        '''{"subscriptionId":"cb-dsd", "planId":"test", "status":"active"}''';
 
     test('returns subscription result for Android', () async {
       channelResponse = purchaseResult;
@@ -179,7 +190,7 @@ void main() {
           arguments: {Constants.product: product.id, Constants.customerId: ""},
         )
       ]);
-      expect(result.status, "active");
+      expect(result.status, 'active');
     });
 
     test('returns subscription result for iOS', () async {
@@ -189,48 +200,48 @@ void main() {
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
-          arguments: {Constants.product: product.id, Constants.customerId: ""},
+          arguments: {Constants.product: product.id, Constants.customerId: ''},
         )
       ]);
-      expect(result.status, "active");
+      expect(result.status, 'active');
     });
 
     test('subscribed with customer info for Android', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseProduct(product, "asz");
+      final result = await Chargebee.purchaseProduct(product, 'asz');
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
           arguments: {
             Constants.product: product.id,
-            Constants.customerId: "asz"
+            Constants.customerId: 'asz'
           },
         )
       ]);
-      expect(result.status, "active");
+      expect(result.status, 'active');
     });
 
     test('subscribed with customer info for iOS', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseProduct(product, "ast");
+      final result = await Chargebee.purchaseProduct(product, 'ast');
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
           arguments: {
             Constants.product: product.id,
-            Constants.customerId: "ast"
+            Constants.customerId: 'ast'
           },
         )
       ]);
-      expect(result.status, "active");
+      expect(result.status, 'active');
     });
 
     test('handles exception on iOS', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: "PlatformError", message: "An error occured");
+            code: 'PlatformError', message: 'An error occured');
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await expectLater(() => Chargebee.purchaseProduct(product),
@@ -241,7 +252,7 @@ void main() {
     test('handles exception on Android', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: "PlatformError", message: "An error occured");
+            code: 'PlatformError', message: 'An error occured');
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       await expectLater(() => Chargebee.purchaseProduct(product),
@@ -286,14 +297,17 @@ void main() {
       expect(callStack, <Matcher>[
         isMethodCall(Constants.mRetrieveAllItems, arguments: itemsQueryParams)
       ]);
-      // we have 1 item in itemsString above
+
+      /// we have 1 item in itemsString above
       expect(result.length, 1);
     });
 
     test('handles exception on iOS', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: 'PlatformError', message: 'An error occured',);
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final itemsQueryParams = <String, String>{
@@ -301,8 +315,10 @@ void main() {
         'sort_by[desc]': 'Standard',
         'channel[is]': 'app_store'
       };
-      await expectLater(() => Chargebee.retrieveAllItems(itemsQueryParams),
-          throwsA(isA<PlatformException>()),);
+      await expectLater(
+        () => Chargebee.retrieveAllItems(itemsQueryParams),
+        throwsA(isA<PlatformException>()),
+      );
       channel.setMockMethodCallHandler(null);
     });
 
@@ -318,14 +334,17 @@ void main() {
       expect(callStack, <Matcher>[
         isMethodCall(Constants.mRetrieveAllItems, arguments: itemsQueryParams)
       ]);
-      // we have 1 item in itemsString above
+
+      /// we have 1 item in itemsString above
       expect(result.length, 1);
     });
 
     test('handles exception on Android', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: 'PlatformError', message: 'An error occured',);
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final itemsQueryParams = <String, String>{
@@ -333,8 +352,10 @@ void main() {
         'sort_by[desc]': 'Standard',
         'channel[is]': 'app_store'
       };
-      await expectLater(() => Chargebee.retrieveAllItems(itemsQueryParams),
-          throwsA(isA<PlatformException>()),);
+      await expectLater(
+        () => Chargebee.retrieveAllItems(itemsQueryParams),
+        throwsA(isA<PlatformException>()),
+      );
       channel.setMockMethodCallHandler(null);
     });
   });
@@ -379,22 +400,28 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final result = await Chargebee.retrieveSubscriptions(getSubsQueryParams);
       expect(callStack, <Matcher>[
-        isMethodCall(Constants.mSubscriptionMethod,
-            arguments: getSubsQueryParams,)
+        isMethodCall(
+          Constants.mSubscriptionMethod,
+          arguments: getSubsQueryParams,
+        )
       ]);
-      // we have 1 item in subscriptionsListString above
+
+      /// we have 1 item in subscriptionsListString above
       expect(result.length, 1);
     });
 
     test('handles exception on iOS', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: 'PlatformError', message: 'An error occured',);
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await expectLater(
-          () => Chargebee.retrieveSubscriptions(getSubsQueryParams),
-          throwsA(isA<PlatformException>()),);
+        () => Chargebee.retrieveSubscriptions(getSubsQueryParams),
+        throwsA(isA<PlatformException>()),
+      );
       channel.setMockMethodCallHandler(null);
     });
 
@@ -403,22 +430,28 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final result = await Chargebee.retrieveSubscriptions(getSubsQueryParams);
       expect(callStack, <Matcher>[
-        isMethodCall(Constants.mSubscriptionMethod,
-            arguments: getSubsQueryParams,)
+        isMethodCall(
+          Constants.mSubscriptionMethod,
+          arguments: getSubsQueryParams,
+        )
       ]);
-      // we have 1 item in subscriptionsListString above
+
+      /// we have 1 item in subscriptionsListString above
       expect(result.length, 1);
     });
 
     test('handles exception on Android', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: 'PlatformError', message: 'An error occured',);
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       await expectLater(
-          () => Chargebee.retrieveSubscriptions(getSubsQueryParams),
-          throwsA(isA<PlatformException>()),);
+        () => Chargebee.retrieveSubscriptions(getSubsQueryParams),
+        throwsA(isA<PlatformException>()),
+      );
       channel.setMockMethodCallHandler(null);
     });
   });
@@ -449,21 +482,27 @@ void main() {
       final result =
           await Chargebee.retrieveEntitlements(getEntitlementsParams);
       expect(callStack, <Matcher>[
-        isMethodCall(Constants.mGetEntitlements,
-            arguments: getEntitlementsParams,)
+        isMethodCall(
+          Constants.mGetEntitlements,
+          arguments: getEntitlementsParams,
+        )
       ]);
-      // we have 1 item in entitlementsListString above
+
+      /// we have 1 item in entitlementsListString above
       expect(result.length, 1);
     });
 
     test('handles exception', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: 'PlatformError', message: 'An error occured',);
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
       });
       await expectLater(
-          () => Chargebee.retrieveEntitlements(getEntitlementsParams),
-          throwsA(isA<PlatformException>()),);
+        () => Chargebee.retrieveEntitlements(getEntitlementsParams),
+        throwsA(isA<PlatformException>()),
+      );
       channel.setMockMethodCallHandler(null);
     });
   });
@@ -509,22 +548,27 @@ void main() {
       expect(callStack, <Matcher>[
         isMethodCall(Constants.mRetrieveAllPlans, arguments: plansQueryParams)
       ]);
-      // we have 1 item in plansStringiOS above
+
+      /// we have 1 item in plansStringiOS above
       expect(result.length, 1);
     });
 
     test('handles exception on iOS', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: 'PlatformError', message: 'An error occured',);
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final plansQueryParams = <String, String>{
         'sort_by[desc]': 'Standard',
         'channel[is]': 'app_store'
       };
-      await expectLater(() => Chargebee.retrieveAllPlans(plansQueryParams),
-          throwsA(isA<PlatformException>()),);
+      await expectLater(
+        () => Chargebee.retrieveAllPlans(plansQueryParams),
+        throwsA(isA<PlatformException>()),
+      );
       channel.setMockMethodCallHandler(null);
     });
 
@@ -569,22 +613,27 @@ void main() {
       expect(callStack, <Matcher>[
         isMethodCall(Constants.mRetrieveAllPlans, arguments: plansQueryParams)
       ]);
-      // we have 1 item in plansStringAndroid above
+
+      /// we have 1 item in plansStringAndroid above
       expect(result.length, 1);
     });
 
     test('handles exception on Android', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: 'PlatformError', message: 'An error occured',);
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final plansQueryParams = <String, String>{
         'sort_by[desc]': 'Standard',
         'channel[is]': 'play_store'
       };
-      await expectLater(() => Chargebee.retrieveAllPlans(plansQueryParams),
-          throwsA(isA<PlatformException>()),);
+      await expectLater(
+        () => Chargebee.retrieveAllPlans(plansQueryParams),
+        throwsA(isA<PlatformException>()),
+      );
       channel.setMockMethodCallHandler(null);
     });
   });
