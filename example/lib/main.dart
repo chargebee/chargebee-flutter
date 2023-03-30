@@ -239,6 +239,15 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
       if (result.isNotEmpty) {
+        final entitlement = result.first.cbEntitlement;
+        debugPrint('${entitlement?.subscriptionId}');
+        debugPrint('${entitlement?.featureId}');
+        debugPrint('${entitlement?.featureName}');
+        debugPrint('${entitlement?.featureType}');
+        debugPrint('${entitlement?.name}');
+        debugPrint('${entitlement?.value}');
+        debugPrint('${entitlement?.isOverridden}');
+        debugPrint('${entitlement?.isEnabled}');
         _showDialog(context, 'entitlements retrieved successfully!');
       } else {
         _showDialog(context, 'Entitlements not found in system');
