@@ -26,4 +26,4 @@ jobs:
       - name: Get Flutter Dependencies
         run: flutter pub get
       - name: Unit Test
-        run: flutter test ${GITHUB_WORKSPACE}/test/chargebee_test.dart
+        run: flutter test
