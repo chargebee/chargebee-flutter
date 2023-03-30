@@ -167,11 +167,11 @@ class CBProductIdentifierWrapper {
 
 class CBEntitlement {
   late String subscriptionId;
-  late String featureId;
-  late String featureName;
-  late String featureType;
-  late String value;
-  late String name;
+  late String? featureId;
+  late String? featureName;
+  late String? featureType;
+  late String? value;
+  late String? name;
   late bool isOverridden;
   late bool isEnabled;
 
@@ -184,8 +184,8 @@ class CBEntitlement {
       );
   /// convert json data and returned CBEntitlement object
   factory CBEntitlement.fromJson(Map<String, dynamic> json) => CBEntitlement(json['subscription_id'] as String,
-    json['feature_id'] as String, json['feature_name'] as String,json['feature_type'] as String,json['value'] as String,
-    json['name'] as String,json['is_overridden'] as bool,json['is_enabled'] as bool,);
+    json['feature_id'] ?? '', json['feature_name'] ?? '', json['feature_type'] ?? '', json['value'] ?? '', json['name'] ?? '',
+    json['is_overridden'] as bool, json['is_enabled'] as bool,);
 }
 
 /// This class holds the list of entitlements
