@@ -165,16 +165,53 @@ class CBProductIdentifierWrapper {
   }
 }
 
+class CBEntitlement {
+  late String subscriptionId;
+  late String? featureId;
+  late String? featureName;
+  late String? featureType;
+  late String? value;
+  late String? name;
+  late bool isOverridden;
+  late bool isEnabled;
+
+  CBEntitlement(this.subscriptionId, this.featureId,
+      this.featureName,
+      this.featureType,
+      this.value,
+      this.name,
+      this.isOverridden,this.isEnabled,
+      );
+  /// convert json data and returned CBEntitlement object
+  factory CBEntitlement.fromJson(Map<String, dynamic> json) => CBEntitlement(json['subscription_id'] as String,
+    json['feature_id'] ?? '', json['feature_name'] ?? '', json['feature_type'] ?? '', json['value'] ?? '', json['name'] ?? '',
+    json['is_overridden'] as bool, json['is_enabled'] as bool,);
+}
+
+/// This class holds the list of entitlements
 class CBEntitlementWrapper {
-  late List<String> entitlementsList;
+  CBEntitlement? cbEntitlement;
 
-  CBEntitlementWrapper(this.entitlementsList);
+  CBEntitlementWrapper({this.cbEntitlement});
 
-  factory CBEntitlementWrapper.fromJson(List<dynamic> json) {
-    final entitlementList = <String>[];
+  /// Convert entitlement object into CBEntitlement
+  CBEntitlementWrapper.fromJson(dynamic json) {
+    cbEntitlement = json['subscription_entitlement'] != null
+        ? CBEntitlement.fromJson(json['subscription_entitlement'])
+        : null;
+  }
+}
+
+class CBEntitlementList {
+  late List<CBEntitlementWrapper> entitlementsList;
+
+  CBEntitlementList(this.entitlementsList);
+
+  factory CBEntitlementList.fromJson(List<dynamic> json) {
+    final entitlementList = <CBEntitlementWrapper>[];
     for (final value in json) {
-      entitlementList.add(value);
+      entitlementList.add(CBEntitlementWrapper.fromJson(value));
     }
-    return CBEntitlementWrapper(entitlementList);
+    return CBEntitlementList(entitlementList);
   }
 }

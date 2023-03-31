@@ -153,13 +153,13 @@ class Chargebee {
   /// [queryParams] The map value to be passed passed as queryParams.
   /// Example: {"subscriptionId": "XXXXXXX"}.
   ///
-  /// The list of entitlement details be returned if api success.
+  /// The list of [CBEntitlementWrapper] object to be returned if api success.
   /// Throws an [PlatformException] in case of failure.
-  static Future<List<String>> retrieveEntitlements(
+  static Future<List<CBEntitlementWrapper>> retrieveEntitlements(
       Map<String, String> queryParams,) async {
     final String result =
         await platform.invokeMethod(Constants.mGetEntitlements, queryParams);
-    return CBEntitlementWrapper.fromJson(jsonDecode(result)).entitlementsList;
+    return CBEntitlementList.fromJson(jsonDecode(result)).entitlementsList;
   }
 
   /// Retrieves list of item object.
