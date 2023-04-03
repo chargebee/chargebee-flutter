@@ -1,4 +1,4 @@
-## 1.0.0
+## 0.0.11
 SDK Improvements
 * Package `utils` renamed to `models` and Added sdk method `retrieveProductIdentifiers` instead of `retrieveProductIdentifers` (#52)
 * Removed `dynamic` object for all API methods and updated with appropriate data type (#50)
