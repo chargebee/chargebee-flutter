@@ -1,3 +1,12 @@
+## 0.0.11
+SDK Improvements
+* Package `utils` renamed to `models` and Added sdk method `retrieveProductIdentifiers` instead of `retrieveProductIdentifers` (#52)
+* Removed `dynamic` object for all API methods and updated with appropriate data type (#50)
+* Standardize the dart documentation for the API's (#57)
+* Added `CBEntitlement` model to showcase list of entitlements instead of dynamic list and improvements (#58)
+* Unit test added for the API `retrieveProducts` and `purchaseProduct` (#58)
+* Added integration test (#56)
+* Added linting support (#53)
 ## 0.0.10
 Bug fixes
 * Additional information added to Product model (#45) 
