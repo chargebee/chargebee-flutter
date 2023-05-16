@@ -9,7 +9,7 @@ class Product {
   /// Currency code for the price
   late String currencyCode;
   /// Local currency price for the product in double
-  late double price;
+  late num price;
   /// Local currency price for the product in string
   late String priceString;
   /// Subscription period, which consists of unit and number of units
@@ -21,7 +21,7 @@ class Product {
   factory Product.fromJson(Map<String, dynamic> json) {
     debugPrint('json: $json');
     final subscriptionPeriod = SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
-    return Product(json['productId'] as String, json['productPrice'] as double, json['productPriceString'] as String,
+    return Product(json['productId'] as String, json['productPrice'] as num, json['productPriceString'] as String,
         json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod,);
   }
 

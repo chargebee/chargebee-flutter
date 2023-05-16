@@ -132,6 +132,10 @@ class _MyHomePageState extends State<MyHomePage> {
         mProgressBarUtil.showProgressDialog();
         retrieveAllItems(itemsQueryParams);
         break;
+      case Constants.restorePurchase:
+        mProgressBarUtil.showProgressDialog();
+        restorePurchases();
+        break;
       default:
         break;
     }
@@ -326,6 +330,34 @@ class _MyHomePageState extends State<MyHomePage> {
         mProgressBarUtil.hideProgressDialog();
       }
       _showDialog(context, '${e.message}');
+    }
+  }
+
+  Future<void> restorePurchases() async {
+    try {
+      final result = await Chargebee.restorePurchases(true);
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+      if (result.isNotEmpty) {
+        for (final subscription in result) {
+          if (subscription.storeStatus == StoreStatus.active.name) {
+            debugPrint('Active Subscriptions : $subscription');
+          }  else {
+            debugPrint('All Subscriptions : $subscription');
+          }
+        }
+        _showDialog(context, '${result.length} Purchases Restored Successfully');
+      }  else{
+        _showDialog(context, 'Purchase not found to restore');
+      }
+    } on PlatformException catch (e) {
+      debugPrint('Error Message: ${e.message}, Error Details: ${e
+          .details}, Error Code: ${e.code}');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
     }
   }
 

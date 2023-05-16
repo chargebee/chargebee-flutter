@@ -14,7 +14,6 @@ import com.chargebee.android.exceptions.CBException
 import com.chargebee.android.exceptions.CBProductIDResult
 import com.chargebee.android.exceptions.ChargebeeResult
 import com.chargebee.android.models.*
-import com.chargebee.android.models.CBProduct.*
 import com.chargebee.android.network.ReceiptDetail
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -37,6 +36,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     private lateinit var context: Context
     private lateinit var activity: Activity
     var queryParam = arrayOf<String>()
+    var restoreSubscription = ArrayList<String>()
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "chargebee_flutter")
@@ -88,6 +88,10 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     retrieveEntitlements(params, result)
                 }
             }
+            "restorePurchases" -> {
+                val params = call.arguments() as? Map<String, Boolean>?
+                restorePurchases(result, params)
+            }
             else -> {
                 Log.d(javaClass.simpleName, "Implementation not Found")
                 result.notImplemented()
@@ -137,6 +141,28 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
                 override fun onError(error: CBException) {
                     onError(error, result)
+                }
+            })
+    }
+
+
+    private fun restorePurchases(resultCallback: Result, queryParams: Map<String, Boolean>?) {
+        val includeInActivePurchases = queryParams?.get("includeInActivePurchase") as Boolean
+        CBPurchase.restorePurchases(
+            activity,
+            includeInActivePurchases,
+            object : CBCallback.RestorePurchaseCallback {
+                override fun onSuccess(result: List<CBRestoreSubscription>) {
+                    restoreSubscription.clear()
+                    result.forEach { subscription ->
+                        val jsonMapString = Gson().toJson(subscription.toMap())
+                        restoreSubscription.add(jsonMapString)
+                    }
+                    resultCallback.success(restoreSubscription)
+                }
+
+                override fun onError(error: CBException) {
+                    onError(error, resultCallback)
                 }
             })
     }
@@ -369,5 +395,13 @@ fun CBProduct.periodUnit(): String {
         "D" -> "day"
         else -> ""
     }
+}
+
+internal fun CBRestoreSubscription.toMap(): Map<String, String> {
+    return mapOf(
+        "subscriptionId" to subscriptionId,
+        "planId" to planId,
+        "storeStatus" to storeStatus,
+    )
 }
 

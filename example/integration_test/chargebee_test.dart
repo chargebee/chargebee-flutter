@@ -25,6 +25,7 @@ void main() {
       await chargebeeTest.retrieveEntitlements();
       await chargebeeTest.retrieveAllItems();
       await chargebeeTest.retrieveAllPlans();
+      await chargebeeTest.restorePurchases(true);
     });
   });
 }
@@ -200,4 +201,17 @@ class ChargebeeTest {
       fail('Error: ${e.message}');
     }
   }
+
+  Future<void> restorePurchases(bool includeInActivePurchase) async {
+    tester.printToConsole('Start restore purchases and sync with Chargebee');
+    try {
+      final subscriptions = await Chargebee.restorePurchases(includeInActivePurchase);
+      debugPrint('Purchases : $subscriptions');
+      expect(subscriptions.isNotEmpty, true);
+      tester.printToConsole('Purchases restored successfully!');
+    } on PlatformException catch (e) {
+      fail('Error: ${e.message}');
+    }
+  }
+
 }

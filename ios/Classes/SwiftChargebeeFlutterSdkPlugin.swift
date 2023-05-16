@@ -37,7 +37,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             guard let args = call.arguments as? [String: String] else {
                 return _result(FlutterError.noArgsError)
             }
-
+            
             Chargebee.shared.retrieveSubscriptions(queryParams: args) { result in
                 switch result {
                 case let .success(list):
@@ -212,6 +212,31 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     _result(FlutterError.chargebeeError(error))
                 }
             }
+        case "restorePurchases":
+            let params = call.arguments as? [String: Bool]
+            let includeInActivePurchase = params?["includeInActivePurchase"] ?? false
+            CBPurchase.shared.restorePurchases(includeInActiveProducts: includeInActivePurchase) { result in
+                switch result {
+                case .success(let response):
+                    debugPrint("Purchase products history:",response)
+                    var array = [String]()
+                    for subscription in response {
+                        if let theJSONData = try? JSONSerialization.data(
+                            withJSONObject: subscription.toMap(),
+                            options: []) {
+                            if let jsonString = String(data: theJSONData,
+                                                       encoding: .ascii) {
+                                array.append(jsonString)
+                            }
+                        }
+                    }
+                    _result(array)
+                case .failure(let error):
+                    debugPrint("noReceipt",error)                    
+                    _result(FlutterError.restoreError(error))
+                }
+            }
+            
         default:
             print("Default statement")
         }
@@ -239,14 +264,14 @@ extension SKProduct {
         return map
     }
     func subscriptionPeriod() -> [String:Any?]  {
-       let period:String = periodUnit()
-       let subscriptionPeriod: [String: Any?] = [
+        let period:String = periodUnit()
+        let subscriptionPeriod: [String: Any?] = [
             "periodUnit": period,
             "numberOfUnits": self.subscriptionPeriod?.numberOfUnits ?? 0
         ];
         return subscriptionPeriod
     }
-
+    
     func periodUnit() -> String {
         switch self.subscriptionPeriod?.unit {
         case .day: return "day"
@@ -258,7 +283,16 @@ extension SKProduct {
     }
 }
 
-
+extension InAppSubscription{
+    func toMap() -> [String: Any?] {
+        let map: [String: Any?] = [
+            "subscriptionId": subscriptionID,
+            "planId": planID,
+            "storeStatus": storeStatus.rawValue
+        ]
+        return map
+    }
+}
 
 
 
