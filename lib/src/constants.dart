@@ -11,7 +11,7 @@ class Constants {
   static const product = "product";
   static const params = "params";
   static const customerId = "customerId";
-  static const includeInActivePurchase = "includeInActivePurchase";
+  static const includeInactivePurchases = "includeInactivePurchases";
 
 
   /// API name for both iOS and Android

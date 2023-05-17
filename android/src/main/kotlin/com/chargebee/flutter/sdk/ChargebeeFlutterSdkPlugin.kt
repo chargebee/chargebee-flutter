@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED
 import com.chargebee.android.Chargebee
 import com.chargebee.android.ErrorDetail
 import com.chargebee.android.billingservice.CBCallback
@@ -36,7 +38,6 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     private lateinit var context: Context
     private lateinit var activity: Activity
     var queryParam = arrayOf<String>()
-    var restoreSubscription = ArrayList<String>()
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "chargebee_flutter")
@@ -145,12 +146,12 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             })
     }
 
-
     private fun restorePurchases(resultCallback: Result, queryParams: Map<String, Boolean>?) {
-        val includeInActivePurchases = queryParams?.get("includeInActivePurchase") as Boolean
+        val includeInactivePurchases = queryParams?.get("includeInactivePurchases") as Boolean
+        val restoreSubscription = ArrayList<String>()
         CBPurchase.restorePurchases(
             activity,
-            includeInActivePurchases,
+            includeInactivePurchases,
             object : CBCallback.RestorePurchaseCallback {
                 override fun onSuccess(result: List<CBRestoreSubscription>) {
                     restoreSubscription.clear()
@@ -162,7 +163,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
 
                 override fun onError(error: CBException) {
-                    onError(error, resultCallback)
+                    onStoreError(error, resultCallback)
                 }
             })
     }
@@ -347,9 +348,18 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
 
     private fun onError(error: CBException, result: Result) {
+        error("${error.httpStatusCode}", error, result)
+    }
+
+    private fun onStoreError(error: CBException, result: Result) {
+        val errorCode = error.httpStatusCode?.let { CBNativeError.billingResponseCode(it).code }
+        error("$errorCode", error, result)
+    }
+
+    private fun error(errorCode: String, error: CBException, result: Result) {
         try {
             result.error(
-                "${error.httpStatusCode}", "${
+                errorCode, "${
                     Gson().fromJson(
                         error.message,
                         ErrorDetail::class.java
@@ -357,9 +367,8 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }", error.localizedMessage
             )
         } catch (exp: Exception) {
-            result.error("${error.httpStatusCode}", "${error.message}", error.localizedMessage)
+            result.error(errorCode, "${error.message}", error.localizedMessage)
         }
-
     }
 }
 
@@ -403,5 +412,40 @@ internal fun CBRestoreSubscription.toMap(): Map<String, String> {
         "planId" to planId,
         "storeStatus" to storeStatus,
     )
+}
+
+enum class CBNativeError(val code: Int) {
+    // Restore Error
+    SERVICE_TIMEOUT(2014),
+    FEATURE_NOT_SUPPORTED(2015),
+    SERVICE_UNAVAILABLE(2016),
+    DEVELOPER_ERROR(2017),
+    ERROR(2018),
+    SERVICE_DISCONNECTED(2019),
+    USER_CANCELED(2020),
+    BILLING_UNAVAILABLE(2021),
+    ITEM_UNAVAILABLE(2022),
+    ITEM_NOT_OWNED(2023),
+    ITEM_ALREADY_OWNED(2024),
+    UNKNOWN(0);
+
+    companion object {
+        fun billingResponseCode(code: Int): CBNativeError {
+            return when (code) {
+                BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> SERVICE_TIMEOUT
+                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> FEATURE_NOT_SUPPORTED
+                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> SERVICE_UNAVAILABLE
+                BillingClient.BillingResponseCode.DEVELOPER_ERROR -> DEVELOPER_ERROR
+                BillingClient.BillingResponseCode.ERROR -> ERROR
+                BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> SERVICE_DISCONNECTED
+                BillingClient.BillingResponseCode.USER_CANCELED -> USER_CANCELED
+                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> BILLING_UNAVAILABLE
+                BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> ITEM_UNAVAILABLE
+                BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> ITEM_NOT_OWNED
+                BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> ITEM_ALREADY_OWNED
+                else -> UNKNOWN
+            }
+        }
+    }
 }
 

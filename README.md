@@ -137,13 +137,6 @@ These are the possible error codes and their descriptions:
 | 2018         | This error occurs when the data contained within the receipt is not valid or cannot be parsed.                          |
 | 2019         | This error occurs when there are no products available to restore.                             |
 | 2020         | This error occurs when there is an error with the Chargebee service during the restore process.
-| -3            | The request has reached the maximum timeout before Google Play responds.       |
-| -2 | The requested feature is not supported by the Play Store on the current device.                                             |
-| -1         | The app is not connected to the Play Store service via the Google Play Billing Library.                             |
-| -4         | Unknown error occurred.
-| 2        | The service is currently unavailable.         |
-| 5  | Error resulting from incorrect usage of the API.                                                          |
-| 6         | Fatal error during the API action.                             |
 
 #### Get Subscription Status for Existing Subscribers using Query Parameters
 

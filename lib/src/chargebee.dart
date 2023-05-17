@@ -231,10 +231,11 @@ class Chargebee {
   ///
   /// The list of [CBRestoreSubscription] object be returned.
   /// Throws an [PlatformException] in case of failure.
-  static Future<List<CBRestoreSubscription>> restorePurchases([bool includeInActivePurchases = false]) async {
+  static Future<List<CBRestoreSubscription>> restorePurchases([bool includeInactivePurchases = false]) async {
     final restorePurchases = <CBRestoreSubscription>[];
     final List result = await platform.invokeMethod(
-      Constants.mRestorePurchase, {Constants.includeInActivePurchase: includeInActivePurchases},);
+      Constants.mRestorePurchase, {Constants.includeInactivePurchases: includeInactivePurchases},);
+    debugPrint('result $result');
     if (result.isNotEmpty) {
       for (var i = 0; i < result.length; i++) {
         final subscription = CBRestoreSubscription.fromJson(jsonDecode(result[i].toString()));
