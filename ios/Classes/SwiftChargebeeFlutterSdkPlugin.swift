@@ -218,7 +218,6 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
             CBPurchase.shared.restorePurchases(includeInActiveProducts: includeInActivePurchase) { result in
                 switch result {
                 case .success(let response):
-                    debugPrint("Purchase products history:",response)
                     var array = [String]()
                     for subscription in response {
                         if let theJSONData = try? JSONSerialization.data(
@@ -232,7 +231,6 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     }
                     _result(array)
                 case .failure(let error):
-                    debugPrint("noReceipt",error)                    
                     _result(FlutterError.restoreError(error))
                 }
             }

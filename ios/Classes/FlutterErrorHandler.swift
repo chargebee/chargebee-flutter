@@ -45,6 +45,13 @@ extension FlutterError {
                             details: "JSON Serialization Error")
         
     }
+    
+    static func restoreError(_ error: RestoreError) -> FlutterError {
+        return FlutterError (code: "\(CBNativeError.errorCode(restoreError: error).rawValue)",
+                             message: error.localizedDescription,
+                             details: "Restore Error")
+    }
+
 }
 
 extension CBPurchaseError {
@@ -72,6 +79,38 @@ extension CBPurchaseError {
         case .invalidCustomerId:return 18
         case .invalidCatalogVersion:return 19
         case .invalidPurchase:return 20
+        }
+    }
+}
+
+enum CBNativeError: Int {
+    // MARK: Restore Error
+    case noReceipt = 2014
+    case refreshReceiptFailed = 2015
+    case restoreFailed = 2016
+    case invalidReceiptURL = 2017
+    case invalidReceiptData = 2018
+    case noProductsToRestore = 2019
+    case serviceError = 2020
+}
+
+extension CBNativeError {
+    static func errorCode(restoreError: RestoreError) -> CBNativeError {
+        switch restoreError {
+        case .noReceipt:
+            return CBNativeError.noReceipt
+        case .refreshReceiptFailed:
+            return CBNativeError.refreshReceiptFailed
+        case .restoreFailed:
+            return CBNativeError.restoreFailed
+        case .invalidReceiptURL:
+            return CBNativeError.invalidReceiptURL
+        case .invalidReceiptData:
+            return CBNativeError.invalidReceiptData
+        case .noProductsToRestore:
+            return CBNativeError.noProductsToRestore
+        case .serviceError:
+            return CBNativeError.serviceError
         }
     }
 }
