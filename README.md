@@ -25,14 +25,14 @@ To use Chargebee SDK in your Flutter app, follow these steps:
 
 1.  Add Chargebee as a dependency in your [pubspec.yaml](https://flutter.io/platform-plugins/ "https://flutter.io/platform-plugins/")file.
 
-    ```dart
+    ``` dart
     dependencies: 
-     chargebee_flutter: ^0.0.11
+     chargebee_flutter: ^0.0.12
     ```
     
 2.  Install dependency.
 
-    ```dart
+    ``` dart
     flutter pub get
     ```
 
@@ -51,7 +51,7 @@ Before configuring the Chargebee Flutter SDK for syncing In-App Purchases, follo
 
 Initialize the Chargebee Flutter SDK with your Chargebee site, Publishable API Key, and SDK Keys by including the following snippets in your app delegate during app startup.
 
-```dart
+``` dart
 import 'package:chargebee_flutter/chargebee_flutter.dart';
 try {
   await Chargebee.configure("SITE_NAME", "API-KEY", "iOS SDK Key", "Android SDK Key");
@@ -68,7 +68,7 @@ This section describes how to use the SDK to integrate In-App Purchase informati
 
 Every In-App Purchase subscription product that you configure in your account, can be configured in Chargebee as a Plan. Start by retrieving the IAP Product IDs from your Chargebee account using the following function.
 
-```dart
+``` dart
 try {
   final result = await Chargebee.retrieveProductIdentifiers(queryparam);
 } on PlatformException catch (e) {
@@ -81,7 +81,7 @@ For example, query parameters can be passed as **"limit": "100"**.
 
 Retrieve the IAP Product objects with Product IDs using the following function.
 
-```dart
+``` dart
 try {
   List<Product> products = await Chargebee.retrieveProducts({productList: "[Product ID's from Google or Apple]"});
 } on PlatformException catch (e) {
@@ -97,7 +97,7 @@ Pass the product and customer identifier to the following function when your cus
 `customerId` -  **Optional parameter**. Although this is an optional parameter, we recommend passing customerId if it is available before user subscribes on your App. Passing this parameter ensures that customerId in your database matches with the customerId in Chargebee.
 In case this parameter is not passed, then the **customerId** will be the same as the **SubscriptionId** created in Chargebee.
 
-```dart
+``` dart
 try {
   final result = await Chargebee.purchaseProduct(product, customerId);
   print("subscription id : ${result.subscriptionId}");
@@ -109,13 +109,49 @@ try {
 
 The above function will handle the purchase against Apple App Store or Google Play Store and send the in-app purchase receipt for server-side receipt verification to your Chargebee account. Use the Subscription ID returned by the above function to check for Subscription status on Chargebee and confirm the access - granted or denied.
 
+#### Restore Purchases
+
+The `restorePurchases()` function helps to recover your app user's previous purchases without making them pay again. Sometimes, your app user may want to restore their previous purchases after switching to a new device or reinstalling your app. You can use the `restorePurchases()` function to allow your app user to easily restore their previous purchases.
+
+To retrieve **inactive** purchases along with the **active** purchases for your app user, you can call the `restorePurchases()` function with the `includeInactivePurchases` parameter set to true. If you only want to restore active subscriptions, set the parameter to false. Here is an example of how to use the restorePurchases() function in your code with the `includeInactivePurchases` parameter set to true.
+
+``` dart
+try {
+  final result = await Chargebee.restorePurchases(true);
+  print("result : $result");
+} on PlatformException catch (e) {
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+}
+```
+
+##### Error Handling
+In the event of any failures while finding associated subscriptions for the restored items, The SDK will return an error, as mentioned in the following table.
+
+These are the possible error codes and their descriptions:
+| Error Code                        | Description                                                                                                                 |
+|-----------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| 2014            | This error occurs when the user attempts to restore a purchase, but there is no receipt associated with the purchase.       |
+| 2015 | This error occurs when the attempt to refresh the receipt for a purchase fails.                                             |
+| 2016        | This error occurs when the attempt to restore a purchase fails for reasons other than a missing or invalid receipt.         |
+| 2017  | This error occurs when the URL for the receipt bundle provided during the restore process is invalid or cannot be accessed.                                                         |
+| 2018         | This error occurs when the data contained within the receipt is not valid or cannot be parsed.                          |
+| 2019         | This error occurs when there are no products available to restore.                             |
+| 2020         | This error occurs when there is an error with the Chargebee service during the restore process.
+| -3            | The request has reached the maximum timeout before Google Play responds.       |
+| -2 | The requested feature is not supported by the Play Store on the current device.                                             |
+| -1         | The app is not connected to the Play Store service via the Google Play Billing Library.                             |
+| -4         | Unknown error occurred.
+| 2        | The service is currently unavailable.         |
+| 5  | Error resulting from incorrect usage of the API.                                                          |
+| 6         | Fatal error during the API action.                             |
+
 #### Get Subscription Status for Existing Subscribers using Query Parameters
 
 Use this method to check the subscription status of a subscriber who has already purchased the product.
 
 Use query parameters - Subscription ID, Customer ID, or Status for checking the Subscription status on Chargebee and confirm the access - granted or denied.
 
-```dart
+``` dart
 try {
   final result = await Chargebee.retrieveSubscriptions(queryparam);
 } on PlatformException catch (e) {
@@ -129,7 +165,7 @@ For example, query parameters can be passed as **"customer_id" : "id"**, **"subs
 
 Use the query parameter - Subscription ID for retrieving the list of [entitlements](https://www.chargebee.com/docs/2.0/entitlements.html) associated with the subscription.
 
-```dart
+``` dart
 try {
   final result = await Chargebee.retrieveEntitlements(queryparam);
 } on PlatformException catch (e) {
@@ -144,7 +180,7 @@ For example, query parameters can be passed as **"subscriptionId": "id"**.
 
 If your Chargebee site is configured to Product Catalog 2.0, use the following functions to retrieve the item list.
 
-```dart
+``` dart
 try {
   final result = await Chargebee.retrieveAllItems(queryparam);
 } on PlatformException catch (e) {
@@ -157,7 +193,7 @@ For example, query parameters can be passed as **"sort_by[desc]" : "name"** or *
 
 If your Chargebee site is configured to Product Catalog 1.0, use the relevant functions to retrieve the plan list.
 
-```dart
+``` dart
 try {
   final result = await Chargebee.retrieveAllPlans(queryparam);
 } on PlatformException catch (e) {

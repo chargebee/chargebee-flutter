@@ -1,3 +1,6 @@
+## 0.0.12
+New Feature
+* Added restore purchases (#61)
 ## 0.0.11
 SDK Improvements
 * Package `utils` renamed to `models` and Added sdk method `retrieveProductIdentifiers` instead of `retrieveProductIdentifers` (#52)

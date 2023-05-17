@@ -640,9 +640,9 @@ void main() {
 
   group('restorePurchases', () {
     const map = '''{
-      "subscription_id": "2000000291590740",
-      "plan_id": "New007",
-      "store_status": "cancelled"
+      "subscriptionId": "2000000291590740",
+      "planId": "New007",
+      "storeStatus": "cancelled"
     }''';
     final restorePurchaseResult = [map];
 
