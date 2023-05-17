@@ -281,16 +281,6 @@ extension SKProduct {
     }
 }
 
-extension InAppSubscription{
-    func toMap() -> [String: Any?] {
-        let map: [String: Any?] = [
-            "subscriptionId": subscriptionID,
-            "planId": planID,
-            "storeStatus": storeStatus.rawValue
-        ]
-        return map
-    }
-}
 
 
 
