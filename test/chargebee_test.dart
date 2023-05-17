@@ -654,7 +654,7 @@ void main() {
         expect(callStack, <Matcher>[
           isMethodCall(
             Constants.mRestorePurchase,
-            arguments: {Constants.status: true},
+            arguments: {Constants.includeInActivePurchase: true},
           )
         ]);
         expect(result.isNotEmpty, true);
@@ -670,7 +670,7 @@ void main() {
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mRestorePurchase,
-          arguments: {Constants.status: true},
+          arguments: {Constants.includeInActivePurchase: true},
         )
       ]);
       expect(result.isNotEmpty, true);
