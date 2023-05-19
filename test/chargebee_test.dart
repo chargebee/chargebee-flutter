@@ -637,4 +637,73 @@ void main() {
       channel.setMockMethodCallHandler(null);
     });
   });
+
+  group('restorePurchases', () {
+    const map = '''{
+      "subscriptionId": "2000000291590740",
+      "planId": "New007",
+      "storeStatus": "cancelled"
+    }''';
+    final restorePurchaseResult = [map];
+
+    test('returns the list of Restored Subscription for Android', () async {
+      channelResponse = restorePurchaseResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      try {
+        final result = await Chargebee.restorePurchases(true);
+        expect(callStack, <Matcher>[
+          isMethodCall(
+            Constants.mRestorePurchase,
+            arguments: {Constants.includeInactivePurchases: true},
+          )
+        ]);
+        expect(result.isNotEmpty, true);
+      } on PlatformException catch (e) {
+        debugPrint('exception: ${e.message}');
+      }
+    });
+
+    test('returns the list of Restored Subscription for iOS', () async {
+      channelResponse = restorePurchaseResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final result = await Chargebee.restorePurchases(true);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mRestorePurchase,
+          arguments: {Constants.includeInactivePurchases: true},
+        )
+      ]);
+      expect(result.isNotEmpty, true);
+    });
+
+    test('handles exception for iOS', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await expectLater(
+        () => Chargebee.restorePurchases(true),
+        throwsA(isA<PlatformException>()),
+      );
+      channel.setMockMethodCallHandler(null);
+    });
+
+    test('handles exception for Android', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await expectLater(
+        () => Chargebee.restorePurchases(true),
+        throwsA(isA<PlatformException>()),
+      );
+      channel.setMockMethodCallHandler(null);
+    });
+  });
 }

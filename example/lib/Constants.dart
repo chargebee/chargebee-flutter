@@ -8,7 +8,8 @@ class Constants {
     'Get Product Identifiers',
     'Get Entitlements',
     'Get Plans',
-    'Get Items'
+    'Get Items',
+    'Restore Purchase'
   ];
 
   static const String config = 'Configure';
@@ -20,4 +21,5 @@ class Constants {
   static const String getEntitlements= 'Get Entitlements';
   static const String getAllPlans = 'Get Plans';
   static const String getAllItems = 'Get Items';
+  static const String restorePurchase = 'Restore Purchase';
 }

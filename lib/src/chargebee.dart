@@ -3,6 +3,7 @@ import 'package:chargebee_flutter/src/constants.dart';
 import 'package:chargebee_flutter/src/models/item.dart';
 import 'package:chargebee_flutter/src/models/plan.dart';
 import 'package:chargebee_flutter/src/models/product.dart';
+import 'package:chargebee_flutter/src/models/restore_subscription.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -222,5 +223,25 @@ class Chargebee {
       }
     }
     return listPlans;
+  }
+
+  /// Restores the subscriptions for the user logged in the device.
+  ///
+  /// [bool] includeInactivePurchases When set to true, the inactive purchases are also synced to Chargebee.
+  ///
+  /// The list of [CBRestoreSubscription] object be returned.
+  /// Throws an [PlatformException] in case of failure.
+  static Future<List<CBRestoreSubscription>> restorePurchases([bool includeInactivePurchases = false]) async {
+    final restorePurchases = <CBRestoreSubscription>[];
+    final List result = await platform.invokeMethod(
+      Constants.mRestorePurchase, {Constants.includeInactivePurchases: includeInactivePurchases},);
+    debugPrint('result $result');
+    if (result.isNotEmpty) {
+      for (var i = 0; i < result.length; i++) {
+        final subscription = CBRestoreSubscription.fromJson(jsonDecode(result[i].toString()));
+        restorePurchases.add(subscription);
+      }
+    }
+    return restorePurchases;
   }
 }

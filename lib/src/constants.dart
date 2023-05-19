@@ -11,6 +11,8 @@ class Constants {
   static const product = "product";
   static const params = "params";
   static const customerId = "customerId";
+  static const includeInactivePurchases = "includeInactivePurchases";
+
 
   /// API name for both iOS and Android
   static const mAuthentication = "authentication";
@@ -21,4 +23,5 @@ class Constants {
   static const mSubscriptionMethod = 'retrieveSubscriptions';
   static const mProductIdentifiers = 'retrieveProductIdentifiers';
   static const mGetEntitlements = 'retrieveEntitlements';
+  static const mRestorePurchase = 'restorePurchases';
 }

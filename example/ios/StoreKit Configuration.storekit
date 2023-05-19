@@ -1,0 +1,33 @@
+{
+  "identifier" : "393F510B",
+  "nonRenewingSubscriptions" : [
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "0F260BA9",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.temporary.id",
+      "referenceName" : "Testing",
+      "type" : "NonRenewingSubscription"
+    }
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 1,
+    "minor" : 1
+  }
+}

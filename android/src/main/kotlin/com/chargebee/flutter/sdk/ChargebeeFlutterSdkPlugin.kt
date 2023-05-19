@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED
 import com.chargebee.android.Chargebee
 import com.chargebee.android.ErrorDetail
 import com.chargebee.android.billingservice.CBCallback
@@ -14,7 +16,6 @@ import com.chargebee.android.exceptions.CBException
 import com.chargebee.android.exceptions.CBProductIDResult
 import com.chargebee.android.exceptions.ChargebeeResult
 import com.chargebee.android.models.*
-import com.chargebee.android.models.CBProduct.*
 import com.chargebee.android.network.ReceiptDetail
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -88,6 +89,10 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     retrieveEntitlements(params, result)
                 }
             }
+            "restorePurchases" -> {
+                val params = call.arguments() as? Map<String, Boolean>?
+                restorePurchases(result, params)
+            }
             else -> {
                 Log.d(javaClass.simpleName, "Implementation not Found")
                 result.notImplemented()
@@ -137,6 +142,25 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
                 override fun onError(error: CBException) {
                     onError(error, result)
+                }
+            })
+    }
+
+    private fun restorePurchases(resultCallback: Result, queryParams: Map<String, Boolean>?) {
+        val includeInactivePurchases = queryParams?.get("includeInactivePurchases") as Boolean
+        CBPurchase.restorePurchases(
+            activity,
+            includeInactivePurchases,
+            object : CBCallback.RestorePurchaseCallback {
+                override fun onSuccess(result: List<CBRestoreSubscription>) {
+                    val restoreSubscription = result.map { subscription ->
+                        Gson().toJson(subscription.toMap())
+                    }
+                    resultCallback.success(restoreSubscription)
+                }
+
+                override fun onError(error: CBException) {
+                    onStoreError(error, resultCallback)
                 }
             })
     }
@@ -321,9 +345,18 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
 
     private fun onError(error: CBException, result: Result) {
+        error("${error.httpStatusCode}", error, result)
+    }
+
+    private fun onStoreError(error: CBException, result: Result) {
+        val errorCode = error.httpStatusCode?.let { CBNativeError.billingResponseCode(it).code }
+        error("$errorCode", error, result)
+    }
+
+    private fun error(errorCode: String, error: CBException, result: Result) {
         try {
             result.error(
-                "${error.httpStatusCode}", "${
+                errorCode, "${
                     Gson().fromJson(
                         error.message,
                         ErrorDetail::class.java
@@ -331,9 +364,8 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }", error.localizedMessage
             )
         } catch (exp: Exception) {
-            result.error("${error.httpStatusCode}", "${error.message}", error.localizedMessage)
+            result.error(errorCode, "${error.message}", error.localizedMessage)
         }
-
     }
 }
 
@@ -371,3 +403,10 @@ fun CBProduct.periodUnit(): String {
     }
 }
 
+internal fun CBRestoreSubscription.toMap(): Map<String, String> {
+    return mapOf(
+        "subscriptionId" to subscriptionId,
+        "planId" to planId,
+        "storeStatus" to storeStatus,
+    )
+}
