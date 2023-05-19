@@ -341,7 +341,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       if (result.isNotEmpty) {
         for (final subscription in result) {
-          if (subscription.storeStatus == StoreStatus.active.name) {
+          if (subscription.storeStatus == StoreStatus.active) {
             debugPrint('Active Subscriptions : $subscription');
           }  else {
             debugPrint('All Subscriptions : $subscription');
