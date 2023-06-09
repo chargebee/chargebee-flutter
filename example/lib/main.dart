@@ -1,14 +1,18 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:chargebee_flutter/chargebee_flutter.dart';
 import 'package:chargebee_flutter_sdk_example/Constants.dart';
 import 'package:chargebee_flutter_sdk_example/alertDialog.dart';
 import 'package:chargebee_flutter_sdk_example/items_listview.dart';
+import 'package:chargebee_flutter_sdk_example/network_connectivity.dart';
 import 'package:chargebee_flutter_sdk_example/product_ids_listview.dart';
 import 'package:chargebee_flutter_sdk_example/product_listview.dart';
 import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(const MyApp());
 
@@ -69,17 +73,54 @@ class _MyHomePageState extends State<MyHomePage> {
     'limit': '5',
     'channel[is]': 'play_store'
   }; // eg. query params for getAllPlans
+  Map _source = {ConnectivityResult.none: false};
+  final NetworkConnectivity _networkConnectivity = NetworkConnectivity.instance;
+  String string = '';
 
   _MyHomePageState();
 
   @override
   void initState() {
-    // For both iOS and Android
-    authentication('your-site', 'publishable_api_key', 'iOS ResourceID/SDK Key',
-        'Android ResourceID/SDK Key',);
     super.initState();
+    _networkConnectivity.initialise();
+    _networkConnectivity.myStream.listen((source) {
+      _source = source;
+      switch (_source.keys.toList()[0]) {
+        case ConnectivityResult.mobile:
+          string = _source.values.toList()[0] ? 'Mobile: Online' : 'Mobile: Offline';
+          debugPrint(string);
+          _verifyLocalCache();
+          _configure();
+          break;
+        case ConnectivityResult.wifi:
+          string = _source.values.toList()[0] ? 'WiFi: Online' : 'WiFi: Offline';
+          debugPrint(string);
+          _verifyLocalCache();
+          _configure();
+          break;
+        case ConnectivityResult.none:
+        default:
+          string = 'Offline';
+          debugPrint(string);
+      }
+    });
   }
 
+  _verifyLocalCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    final productId = prefs.getString('productId');
+    if (productId !=null) {
+      validateReceipt(productId);
+    }else{
+      debugPrint('Local cache empty!');
+    }
+  }
+
+  _configure() async {
+    /// For both iOS and Android
+    authentication('your-site', 'publishable_api_key', 'iOS ResourceID/SDK Key',
+         'Android ResourceID/SDK Key',);
+  }
   @override
   Widget build(BuildContext context) {
     mProgressBarUtil = ProgressBarUtil(context);
@@ -358,6 +399,24 @@ class _MyHomePageState extends State<MyHomePage> {
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
+    }
+  }
+
+  Future<void> validateReceipt(String productId) async {
+    try {
+      final customer = CBCustomer('', '', '', '',);
+      final result = await Chargebee.validateReceipt(productId,customer);
+      debugPrint('subscription result : $result');
+      debugPrint('subscription id : ${result.subscriptionId}');
+      debugPrint('plan id : ${result.planId}');
+      debugPrint('subscription status : ${result.status}');
+      mProgressBarUtil.hideProgressDialog();
+      /// if validateReceipt success, clear the cache
+      final prefs = await SharedPreferences.getInstance();
+      prefs.remove('productId');
+    } on PlatformException catch (e) {
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      mProgressBarUtil.hideProgressDialog();
     }
   }
 

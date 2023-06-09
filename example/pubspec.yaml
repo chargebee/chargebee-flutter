@@ -12,6 +12,8 @@ dependencies:
   chargebee_flutter:
     path: ../
   cupertino_icons: ^1.0.2
+  connectivity_plus: ^2.3.0
+  shared_preferences: ^2.0.6
 
 dev_dependencies:
   integration_test:

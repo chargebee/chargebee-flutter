@@ -4,6 +4,7 @@ import 'package:chargebee_flutter/chargebee_flutter.dart';
 import 'package:chargebee_flutter_sdk_example/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductListView extends StatefulWidget {
   final List<Product> listProducts;
@@ -92,6 +93,35 @@ class ProductListViewState extends State<ProductListView> {
       mProgressBarUtil.hideProgressDialog();
 
       if (result.status == 'true') {
+        _showSuccessDialog(context, 'Success');
+      } else {
+        _showSuccessDialog(context, result.subscriptionId);
+      }
+    } on PlatformException catch (e) {
+      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      if (e.code.isNotEmpty) {
+        final responseCode = int.parse(e.code);
+        if (responseCode >= 500 && responseCode <=599 ) {
+          /// Cache the productId in SharedPreferences if failed synching with Chargebee.
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString('productId',product.id);
+          /// validate the receipt
+          validateReceipt(product.id);
+        }
+      }
+    }
+  }
+
+  Future<void> validateReceipt(String product) async {
+    try {
+      final result = await Chargebee.validateReceipt(product);
+      debugPrint('subscription result : $result');
+      mProgressBarUtil.hideProgressDialog();
+
+      if (result.status == 'true') {
+        /// if validateReceipt success, clear the cache
+        final prefs = await SharedPreferences.getInstance();
+        prefs.remove('productId');
         _showSuccessDialog(context, 'Success');
       } else {
         _showSuccessDialog(context, result.subscriptionId);

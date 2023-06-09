@@ -4,35 +4,50 @@ import 'package:flutter/foundation.dart';
 class Product {
   /// Id of the product
   late String id;
+
   /// title of the product
   late String title;
+
   /// Currency code for the price
   late String currencyCode;
+
   /// Local currency price for the product in double
   late num price;
+
   /// Local currency price for the product in string
   late String priceString;
+
   /// Subscription period, which consists of unit and number of units
   late SubscriptionPeriod subscriptionPeriod;
 
-  Product(this.id, this.price, this.priceString, this.title, this.currencyCode, this.subscriptionPeriod);
+  Product(this.id, this.price, this.priceString, this.title, this.currencyCode,
+      this.subscriptionPeriod);
 
   /// convert json data into Product model
   factory Product.fromJson(Map<String, dynamic> json) {
     debugPrint('json: $json');
-    final subscriptionPeriod = SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
-    return Product(json['productId'] as String, json['productPrice'] as num, json['productPriceString'] as String,
-        json['productTitle'] as String, json['currencyCode'] as String, subscriptionPeriod,);
+    final subscriptionPeriod = SubscriptionPeriod.fromMap(
+        json['subscriptionPeriod'] as Map<String, dynamic>);
+    return Product(
+      json['productId'] as String,
+      json['productPrice'] as num,
+      json['productPriceString'] as String,
+      json['productTitle'] as String,
+      json['currencyCode'] as String,
+      subscriptionPeriod,
+    );
   }
 
   @override
-  String toString() => 'Product(id: $id, price: $price, priceString: $priceString title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
+  String toString() =>
+      'Product(id: $id, price: $price, priceString: $priceString title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
 }
 
 class SubscriptionPeriod {
   /// unit represent the duration of an interval, from a day up to a year.
   /// For example, unit value would be a month, year, day and week.
   late String unit;
+
   /// The number of units per subscription period.
   /// For example, if the number of units is 6, then the subscription period would be 6 months.
   late int numberOfUnits;
@@ -48,6 +63,7 @@ class SubscriptionPeriod {
 class PurchaseResult {
   /// product subscriptions id
   String subscriptionId;
+
   /// plan id associated with subscription
   String planId;
   //// status of the subscription
@@ -56,42 +72,55 @@ class PurchaseResult {
   PurchaseResult(this.subscriptionId, this.planId, this.status);
 
   /// convert json data and returned PurchaseResult object
-  factory PurchaseResult.fromJson(Map<String, dynamic> json) => PurchaseResult(json['subscriptionId'] as String,
-        json['planId'] as String, json['status'] as String,);
+  factory PurchaseResult.fromJson(Map<String, dynamic> json) => PurchaseResult(
+        json['subscriptionId'] as String,
+        json['planId'] as String,
+        json['status'] as String,
+      );
   @override
-  String toString() => 'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, status: $status)';
+  String toString() =>
+      'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, status: $status)';
 }
 
 /// Store information about the list of subscriptions
 class Subscripton {
   /// subscription id
   String? subscriptionId;
+
   /// customer id associated with subscription
   String? customerId;
+
   /// status of the subscription
   String? status;
+
   /// the subscription got activated time
   int? activatedAt;
+
   /// subscription term start
   int? currentTermStart;
+
   /// subscription term end
   int? currentTermEnd;
   String? planAmount;
+
   /// the subscription got activated time in string format
   String? activatedAtString;
+
   /// subscription term end
   String? currentTermEndString;
+
   /// subscription term start
   String? currentTermStartString;
 
-  Subscripton(
-      {this.subscriptionId,
-      this.customerId,
-      this.status,
-      this.activatedAt,
-      this.currentTermStart,
-      this.currentTermEnd,
-      this.planAmount,});
+  Subscripton({
+    this.subscriptionId,
+    this.customerId,
+    this.status,
+    this.activatedAt,
+    this.currentTermStart,
+    this.currentTermEnd,
+    this.planAmount,
+  });
 
   /// convert json data into Subscripton model for iOS
   Subscripton.fromJson(Map<String, dynamic> json) {
@@ -101,8 +130,9 @@ class Subscripton {
     activatedAt = json['activated_at'] as int;
     currentTermStart = json['current_term_start'] as int;
     currentTermEnd = json['current_term_end'] as int;
-    planAmount = json['plan_amount']
-        .toString(); /// Plan amount sometime we are getting double value sometime Int
+    planAmount = json['plan_amount'].toString();
+
+    /// Plan amount sometime we are getting double value sometime Int
   }
 
   /// convert json data into Subscripton model for Android
@@ -130,6 +160,7 @@ class SubscriptonList {
         ? Subscripton.fromJson(json['cb_subscription'])
         : null;
   }
+
   /// json data converts into SubscriptonList for Android
   SubscriptonList.fromJsonAndroid(Map<String, dynamic> json) {
     subscripton = json['cb_subscription'] != null
@@ -175,17 +206,28 @@ class CBEntitlement {
   late bool isOverridden;
   late bool isEnabled;
 
-  CBEntitlement(this.subscriptionId, this.featureId,
-      this.featureName,
-      this.featureType,
-      this.value,
-      this.name,
-      this.isOverridden,this.isEnabled,
-      );
+  CBEntitlement(
+    this.subscriptionId,
+    this.featureId,
+    this.featureName,
+    this.featureType,
+    this.value,
+    this.name,
+    this.isOverridden,
+    this.isEnabled,
+  );
+
   /// convert json data and returned CBEntitlement object
-  factory CBEntitlement.fromJson(Map<String, dynamic> json) => CBEntitlement(json['subscription_id'] as String,
-    json['feature_id'] ?? '', json['feature_name'] ?? '', json['feature_type'] ?? '', json['value'] ?? '', json['name'] ?? '',
-    json['is_overridden'] as bool, json['is_enabled'] as bool,);
+  factory CBEntitlement.fromJson(Map<String, dynamic> json) => CBEntitlement(
+        json['subscription_id'] as String,
+        json['feature_id'] ?? '',
+        json['feature_name'] ?? '',
+        json['feature_type'] ?? '',
+        json['value'] ?? '',
+        json['name'] ?? '',
+        json['is_overridden'] as bool,
+        json['is_enabled'] as bool,
+      );
 }
 
 /// This class holds the list of entitlements
