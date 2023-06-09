@@ -138,6 +138,26 @@ These are the possible error codes and their descriptions:
 | 2019         | This error occurs when there are no products available to restore.                             |
 | 2020         | This error occurs when there is an error with the Chargebee service during the restore process.
 
+#### Synchronization of Apple App Store/Google Play Store Purchases with Chargebee through Receipt Validation
+Receipt validation is crucial to ensure that the purchases made by your users are synced with Chargebee. In rare cases, when a purchase is made at the Apple App Store/Google Play Store, and the network connection goes off or the server not responding, the purchase details may not be updated in Chargebee. In such cases, you can use a retry mechanism by following these steps:
+
+* Add a network listener, as shown in the example project.
+* Save the product identifier in the cache once the purchase is initiated and clear the cache once the purchase is successful.
+* When the network connectivity is lost after the purchase is completed at Apple App Store/Google Play Store but not synced with Chargebee, retrieve the product from the cache once the network connection is back and initiate validateReceipt() by passing `productId` and `CBCustomer(optional)` as input. This will validate the receipt and sync the purchase in Chargebee as a subscription. For subscriptions, use the function to validateReceipt().
+
+Use the function available for the retry mechanism.
+##### Function for validating the receipt
+
+``` dart
+try {
+  final result = await Chargebee.validateReceipt(productId);
+  print("subscription id : ${result.subscriptionId}");
+  print("subscription status : ${result.status}");
+} on PlatformException catch (e) {
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+}
+```
+
 #### Get Subscription Status for Existing Subscribers using Query Parameters
 
 Use this method to check the subscription status of a subscriber who has already purchased the product.
