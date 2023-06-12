@@ -1,3 +1,8 @@
+## 0.0.13
+SDK Improvements
+* Added cache retry mechanism for validating the receipt. (#62)
+* Use `Chargebee.validateReceipt` to validate the receipt if syncing failed with Chargebee after the successful purchase on Google
+  Play Store.
 ## 0.0.12
 New Feature
 * Added restore purchases (#61)
