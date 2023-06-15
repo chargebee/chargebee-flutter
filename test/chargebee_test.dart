@@ -158,11 +158,11 @@ void main() {
     test('handles exception', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: 'PlatformError', message: 'An error occured');
+            code: 'PlatformError', message: 'An error occured',);
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await expectLater(() => Chargebee.retrieveProducts(queryparam),
-          throwsA(isA<PlatformException>()));
+          throwsA(isA<PlatformException>()),);
       channel.setMockMethodCallHandler(null);
     });
   });
@@ -187,7 +187,7 @@ void main() {
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
-          arguments: {Constants.product: product.id, Constants.customerId: ""},
+          arguments: {Constants.product: product.id, Constants.customerId: ''},
         )
       ]);
       expect(result.status, 'active');
@@ -241,22 +241,22 @@ void main() {
     test('handles exception on iOS', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: 'PlatformError', message: 'An error occured');
+            code: 'PlatformError', message: 'An error occured',);
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await expectLater(() => Chargebee.purchaseProduct(product),
-          throwsA(isA<PlatformException>()));
+          throwsA(isA<PlatformException>()),);
       channel.setMockMethodCallHandler(null);
     });
 
     test('handles exception on Android', () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         throw PlatformException(
-            code: 'PlatformError', message: 'An error occured');
+            code: 'PlatformError', message: 'An error occured',);
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       await expectLater(() => Chargebee.purchaseProduct(product),
-          throwsA(isA<PlatformException>()));
+          throwsA(isA<PlatformException>()),);
       channel.setMockMethodCallHandler(null);
     });
   });
@@ -706,4 +706,87 @@ void main() {
       channel.setMockMethodCallHandler(null);
     });
   });
+
+  group('validateReceipt', () {
+    const subscriptionResult = '''{
+      "subscriptionId": "2000000291590740",
+      "planId": "New007",
+      "status": "active"
+    }''';
+
+    test('returns the subscription result for Android', () async {
+      channelResponse = subscriptionResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      try {
+        final params = {
+          Constants.product: 'chargebee.pro.android',
+          Constants.customerId: '',
+          Constants.firstName: '',
+          Constants.lastName: '',
+          Constants.email: '',
+        };
+        final result = await Chargebee.validateReceipt('chargebee.pro.android');
+        expect(callStack, <Matcher>[
+          isMethodCall(
+            Constants.mValidateReceipt,
+            arguments: params,
+          )
+        ]);
+        expect(result.status, 'active');
+      } on PlatformException catch (e) {
+        debugPrint('exception: ${e.message}');
+      }
+    });
+
+    test('returns the subscription result for iOS', () async {
+      channelResponse = subscriptionResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final params = {
+        Constants.product: 'test',
+        Constants.customerId: '',
+        Constants.firstName: '',
+        Constants.lastName: '',
+        Constants.email: '',
+      };
+      final result = await Chargebee.validateReceipt('test');
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mValidateReceipt,
+          arguments: params,
+        )
+      ]);
+      expect(result.status, 'active');
+    });
+
+    test('handles exception for iOS', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await expectLater(
+            () => Chargebee.validateReceipt('test'),
+        throwsA(isA<PlatformException>()),
+      );
+      channel.setMockMethodCallHandler(null);
+    });
+
+    test('handles exception for Android', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await expectLater(
+            () => Chargebee.validateReceipt('chargebee.pro.android'),
+        throwsA(isA<PlatformException>()),
+      );
+      channel.setMockMethodCallHandler(null);
+    });
+  });
+
 }

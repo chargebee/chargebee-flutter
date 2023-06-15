@@ -16,6 +16,7 @@ import com.chargebee.android.exceptions.CBException
 import com.chargebee.android.exceptions.CBProductIDResult
 import com.chargebee.android.exceptions.ChargebeeResult
 import com.chargebee.android.models.*
+import com.chargebee.android.network.CBCustomer
 import com.chargebee.android.network.ReceiptDetail
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -92,6 +93,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             "restorePurchases" -> {
                 val params = call.arguments() as? Map<String, Boolean>?
                 restorePurchases(result, params)
+            }
+            "validateReceipt" -> {
+                if (args != null) {
+                    validateReceipt(args, result)
+                }
             }
             else -> {
                 Log.d(javaClass.simpleName, "Implementation not Found")
@@ -189,19 +195,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                                 receiptDetail: ReceiptDetail,
                                 status: Boolean
                             ) {
-                                Log.i(
-                                    javaClass.simpleName,
-                                    "Subscription ID:  ${receiptDetail.subscription_id}"
-                                )
-                                Log.i(javaClass.simpleName, "Status:  $status")
-                                Log.i(
-                                    javaClass.simpleName,
-                                    "Plan ID:  ${receiptDetail.plan_id}"
-                                )
                                 result.success(
                                     onResultMap(
                                         receiptDetail.subscription_id,
                                         receiptDetail.plan_id,
+                                        receiptDetail.customer_id,
                                         "$status"
                                     )
                                 )
@@ -219,10 +217,13 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             })
     }
 
-    fun onResultMap(id: String, planId: String, status: String): String {
-        subscriptionStatus.put("subscriptionId", id)
-        subscriptionStatus.put("planId", planId)
-        subscriptionStatus.put("status", status)
+    private fun onResultMap(
+        id: String, planId: String, customerId: String, status: String
+    ): String {
+        subscriptionStatus["subscriptionId"] = id
+        subscriptionStatus["planId"] = planId
+        subscriptionStatus["customerId"] = customerId
+        subscriptionStatus["status"] = status
         return Gson().toJson(subscriptionStatus)
     }
 
@@ -321,6 +322,55 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
             }
         }
+    }
+
+    private fun validateReceipt(args: Map<String, Any>, result: Result) {
+        val customer = CBCustomer(
+            args["customerId"] as String,
+            args["firstName"] as String,
+            args["lastName"] as String,
+            args["email"] as String
+        )
+        val arrayList: ArrayList<String> = ArrayList<String>()
+        arrayList.add(args["product"] as String)
+        CBPurchase.retrieveProducts(activity,
+            arrayList,
+            object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
+                override fun onSuccess(productIDs: ArrayList<CBProduct>) {
+                    if (productIDs.size == 0) {
+                        onError(
+                            CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)),
+                            result
+                        )
+                        return
+                    }
+                    CBPurchase.validateReceipt(context = activity,
+                        product = productIDs.first(),
+                        customer = customer,
+                        completionCallback = object : CBCallback.PurchaseCallback<String> {
+                            override fun onSuccess(
+                                receiptDetail: ReceiptDetail, status: Boolean
+                            ) {
+                                result.success(
+                                    onResultMap(
+                                        receiptDetail.subscription_id,
+                                        receiptDetail.plan_id,
+                                        receiptDetail.customer_id,
+                                        "$status"
+                                    )
+                                )
+                            }
+
+                            override fun onError(error: CBException) {
+                                onError(error, result)
+                            }
+                        })
+                }
+
+                override fun onError(error: CBException) {
+                    onError(error, result)
+                }
+            })
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {

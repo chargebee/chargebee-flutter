@@ -75,7 +75,7 @@ class ChargebeeTest {
 
   Future<void> retrieveProductIdentifiersWithParam() async {
     tester.printToConsole(
-        'Fetch store specific product Ids from chargebee with params');
+        'Fetch store specific product Ids from chargebee with params',);
     try {
       final list = await Chargebee.retrieveProductIdentifiers({'limit': '10'});
       debugPrint('list: $list');

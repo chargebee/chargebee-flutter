@@ -1,9 +1,6 @@
 import 'dart:convert';
+import 'package:chargebee_flutter/chargebee_flutter.dart';
 import 'package:chargebee_flutter/src/constants.dart';
-import 'package:chargebee_flutter/src/models/item.dart';
-import 'package:chargebee_flutter/src/models/plan.dart';
-import 'package:chargebee_flutter/src/models/product.dart';
-import 'package:chargebee_flutter/src/models/restore_subscription.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -26,8 +23,12 @@ class Chargebee {
   /// Refer: https://www.chargebee.com/docs/1.0/mobile-app-store-product-iap.html#connection-keys_app-id.
   ///
   /// Throws an [PlatformException] in case of configure api fails.
-  static Future<void> configure(String site, String publishableApiKey,
-      [String? iosSdkKey = '', androidSdkKey = '',]) async {
+  static Future<void> configure(
+    String site,
+    String publishableApiKey, [
+    String? iosSdkKey = '',
+    androidSdkKey = '',
+  ]) async {
     if (_isIOS) {
       final args = {
         Constants.siteName: site,
@@ -56,7 +57,9 @@ class Chargebee {
   static Future<List<Product>> retrieveProducts(List<String> productIDs) async {
     final products = <Product>[];
     final List result = await platform.invokeMethod(
-        Constants.mGetProducts, {Constants.productIDs: productIDs},);
+      Constants.mGetProducts,
+      {Constants.productIDs: productIDs},
+    );
     if (result.isNotEmpty) {
       for (var i = 0; i < result.length; i++) {
         final obj = result[i].toString();
@@ -77,12 +80,15 @@ class Chargebee {
   ///
   /// If purchase success [PurchaseResult] object be returned.
   /// Throws an [PlatformException] in case of failure.
-  static Future<PurchaseResult> purchaseProduct(Product product,
-      [String? customerId = '',]) async {
+  static Future<PurchaseResult> purchaseProduct(
+    Product product, [
+    String? customerId = '',
+  ]) async {
     customerId ??= '';
     final String purchaseResult = await platform.invokeMethod(
-        Constants.mPurchaseProduct,
-        {Constants.product: product.id, Constants.customerId: customerId},);
+      Constants.mPurchaseProduct,
+      {Constants.product: product.id, Constants.customerId: customerId},
+    );
     if (purchaseResult.isNotEmpty) {
       return PurchaseResult.fromJson(jsonDecode(purchaseResult.toString()));
     } else {
@@ -98,11 +104,14 @@ class Chargebee {
   /// The list of [Subscripton] object be returned if api success.
   /// Throws an [PlatformException] in case of failure.
   static Future<List<Subscripton?>> retrieveSubscriptions(
-      Map<String, String> queryParams,) async {
+    Map<String, String> queryParams,
+  ) async {
     final subscriptions = <Subscripton>[];
     if (_isIOS) {
       final String result = await platform.invokeMethod(
-          Constants.mSubscriptionMethod, queryParams,);
+        Constants.mSubscriptionMethod,
+        queryParams,
+      );
       final List jsonData = jsonDecode(result.toString());
       if (jsonData.isNotEmpty) {
         for (final value in jsonData) {
@@ -112,7 +121,9 @@ class Chargebee {
       }
     } else {
       final String result = await platform.invokeMethod(
-          Constants.mSubscriptionMethod, queryParams,);
+        Constants.mSubscriptionMethod,
+        queryParams,
+      );
       final List jsonData = jsonDecode(result);
       if (jsonData.isNotEmpty) {
         for (final value in jsonData) {
@@ -131,9 +142,13 @@ class Chargebee {
   ///
   /// The list of product identifiers be returned if api success.
   /// Throws an [PlatformException] in case of failure.
-  @Deprecated('This method will be removed in upcoming release, Use retrieveProductIdentifiers instead')
-  static Future<List<String>> retrieveProductIdentifers(
-      [Map<String, String>? queryParams,]) async => retrieveProductIdentifiers(queryParams);
+  @Deprecated(
+    'This method will be removed in upcoming release, Use retrieveProductIdentifiers instead',
+  )
+  static Future<List<String>> retrieveProductIdentifers([
+    Map<String, String>? queryParams,
+  ]) async =>
+      retrieveProductIdentifiers(queryParams);
 
   /// Retrieves available product identifiers.
   ///
@@ -142,11 +157,13 @@ class Chargebee {
   ///
   /// The list of product identifiers be returned if api success.
   /// Throws an [PlatformException] in case of failure.
-  static Future<List<String>> retrieveProductIdentifiers(
-      [Map<String, String>? queryParams,]) async {
+  static Future<List<String>> retrieveProductIdentifiers([
+    Map<String, String>? queryParams,
+  ]) async {
     final String result =
-    await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
-    return CBProductIdentifierWrapper.fromJson(jsonDecode(result)).productIdentifiersList;
+        await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
+    return CBProductIdentifierWrapper.fromJson(jsonDecode(result))
+        .productIdentifiersList;
   }
 
   /// Retrieves entitlements for the subscription.
@@ -157,7 +174,8 @@ class Chargebee {
   /// The list of [CBEntitlementWrapper] object to be returned if api success.
   /// Throws an [PlatformException] in case of failure.
   static Future<List<CBEntitlementWrapper>> retrieveEntitlements(
-      Map<String, String> queryParams,) async {
+    Map<String, String> queryParams,
+  ) async {
     final String result =
         await platform.invokeMethod(Constants.mGetEntitlements, queryParams);
     return CBEntitlementList.fromJson(jsonDecode(result)).entitlementsList;
@@ -170,8 +188,9 @@ class Chargebee {
   ///
   /// The list of [CBItem] object be returned if api success.
   /// Throws an [PlatformException] in case of failure.
-  static Future<List<CBItem?>> retrieveAllItems(
-      [Map<String, String>? queryParams,]) async {
+  static Future<List<CBItem?>> retrieveAllItems([
+    Map<String, String>? queryParams,
+  ]) async {
     var itemsFromServer = [];
     final listItems = <CBItem>[];
     if (_isIOS) {
@@ -201,8 +220,9 @@ class Chargebee {
   ///
   /// The list of [CBPlan] object be returned if api success.
   /// Throws an [PlatformException] in case of failure.
-  static Future<List<CBPlan?>> retrieveAllPlans(
-      [Map<String, String>? queryParams,]) async {
+  static Future<List<CBPlan?>> retrieveAllPlans([
+    Map<String, String>? queryParams,
+  ]) async {
     var plansFromServer = [];
     final listPlans = <CBPlan>[];
     if (_isIOS) {
@@ -231,17 +251,55 @@ class Chargebee {
   ///
   /// The list of [CBRestoreSubscription] object be returned.
   /// Throws an [PlatformException] in case of failure.
-  static Future<List<CBRestoreSubscription>> restorePurchases([bool includeInactivePurchases = false]) async {
+  static Future<List<CBRestoreSubscription>> restorePurchases([
+    bool includeInactivePurchases = false,
+  ]) async {
     final restorePurchases = <CBRestoreSubscription>[];
     final List result = await platform.invokeMethod(
-      Constants.mRestorePurchase, {Constants.includeInactivePurchases: includeInactivePurchases},);
+      Constants.mRestorePurchase,
+      {Constants.includeInactivePurchases: includeInactivePurchases},
+    );
     debugPrint('result $result');
     if (result.isNotEmpty) {
       for (var i = 0; i < result.length; i++) {
-        final subscription = CBRestoreSubscription.fromJson(jsonDecode(result[i].toString()));
+        final subscription =
+            CBRestoreSubscription.fromJson(jsonDecode(result[i].toString()));
         restorePurchases.add(subscription);
       }
     }
     return restorePurchases;
+  }
+
+  /// This method will be used to validate the receipt with Chargebee,
+  /// when syncing with Chargebee fails after the successful purchase in Google Play Store.
+  ///
+  /// [productId] productId to be passed.
+  ///
+  /// [customer] customer object is optional.
+  /// if passed, the subscription will be created with customer info provided in chargebee.
+  /// if not passed, the value of customerId is same as subscriptionId.
+  ///
+  /// If validate receipt success [PurchaseResult] object be returned.
+  /// Throws an [PlatformException] in case of failure.
+  static Future<PurchaseResult> validateReceipt(
+    String productId, [
+    CBCustomer? customer,
+  ]) async {
+    var purchaseResult = PurchaseResult('', '', '');
+    final params = {
+      Constants.product: productId,
+      Constants.customerId: customer?.id ?? '',
+      Constants.firstName: customer?.firstName ?? '',
+      Constants.lastName: customer?.lastName ?? '',
+      Constants.email: customer?.email ?? '',
+    };
+    final String result = await platform.invokeMethod(
+      Constants.mValidateReceipt,
+      params,
+    );
+    if (result.isNotEmpty) {
+      purchaseResult = PurchaseResult.fromJson(jsonDecode(result.toString()));
+    }
+    return purchaseResult;
   }
 }

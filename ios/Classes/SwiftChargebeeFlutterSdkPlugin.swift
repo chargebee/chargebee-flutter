@@ -49,7 +49,6 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                             _result(jsonString)
                         }
                     }else {
-
                         _result(FlutterError.jsonSerializationError("Serialization Issue"))
                     }
                 case let .error(error):
@@ -86,11 +85,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                                     _result(FlutterError.jsonSerializationError("Serialization Issue"))
                                 }
                             case .failure(let error):
-                                if let error = error as? CBPurchaseError {
-                                    _result(FlutterError.purchaseError(error))
-                                } else {
-                                    _result(FlutterError.purchaseError(CBPurchaseError.unknown))
-                                }
+                                self.onPurchaseError(error, completion: _result)
                             }
                         }
                     case let .failure(error):
@@ -234,9 +229,57 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     _result(FlutterError.restoreError(error))
                 }
             }
-            
+        case "validateReceipt":
+            guard let params = call.arguments as?  [String: String] else {
+                return _result(FlutterError.noArgsError)
+            }
+            let productId = params["product"]
+            let customer = CBCustomer(customerID: params["customerId"], firstName:params["firstName"], lastName: params["lastName"], email:params["email"])
+    
+            var dict = [String:String]()
+            CBPurchase.shared.retrieveProducts(withProductID: [productId!], completion: { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case let .success(products):
+                        debugPrint("products: \(products)");
+                        let  product: CBProduct = products.self.first!;
+                        CBPurchase.shared.validateReceipt(product) { result in
+                            switch result {
+                            case .success(let result):
+                                if let subscriptionId = result.subscriptionId, let planId = result.planId{
+                                    dict = ["status": "\(result.status)", "subscriptionId": "\(subscriptionId)", "planId": "\(planId)"]
+                                }
+                                if let data = try? JSONSerialization.data(
+                                    withJSONObject:dict,
+                                    options: []) {
+                                    if let jsonString = String(data: data,
+                                                               encoding: .ascii) {
+                                        _result(jsonString)
+                                    }
+                                }else {
+                                    _result(FlutterError.jsonSerializationError("Serialization Issue"))
+                                }
+                            case .failure(let error):
+                                self.onPurchaseError(error, completion: _result)
+                            }
+                        }
+                    case let .failure(error):
+                        _result(FlutterError.purchaseError(error ))
+                    }
+                }
+            })
         default:
             print("Default statement")
+        }
+    }
+    
+    private func onPurchaseError(_ error: Error, completion: @escaping FlutterResult){
+        if let error = error as? CBPurchaseError {
+            completion(FlutterError.purchaseError(error))
+        } else if let error = error as? CBError {
+            completion(FlutterError.chargebeeError(error))
+        } else {
+            completion(FlutterError.purchaseError(CBPurchaseError.unknown))
         }
     }
 }
@@ -280,7 +323,3 @@ extension SKProduct {
         }
     }
 }
-
-
-
-
