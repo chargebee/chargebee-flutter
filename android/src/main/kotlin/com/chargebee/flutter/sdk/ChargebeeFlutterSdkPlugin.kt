@@ -4,13 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED
 import com.chargebee.android.Chargebee
 import com.chargebee.android.ErrorDetail
-import com.chargebee.android.billingservice.CBCallback
-import com.chargebee.android.billingservice.CBPurchase
-import com.chargebee.android.billingservice.GPErrorCode
+import com.chargebee.android.billingservice.*
 import com.chargebee.android.network.CBAuthResponse
 import com.chargebee.android.exceptions.CBException
 import com.chargebee.android.exceptions.CBProductIDResult
@@ -64,6 +60,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     purchaseProduct(args, result)
                 }
             }
+            "purchaseNonSubscriptionProduct" -> {
+                if (args != null) {
+                    purchaseNonSubscriptionProduct(args, result)
+                }
+            }
             "retrieveSubscriptions" -> {
                 val params = call.arguments() as? Map<String, String>?
                 if (params != null) {
@@ -97,6 +98,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             "validateReceipt" -> {
                 if (args != null) {
                     validateReceipt(args, result)
+                }
+            }
+            "validateReceiptForNonSubscriptions" -> {
+                if (args != null) {
+                    validateReceiptForNonSubscriptions(args, result)
                 }
             }
             else -> {
@@ -213,6 +219,53 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
                 override fun onError(error: CBException) {
                     onError(error, result)
+                }
+            })
+    }
+
+    private fun purchaseNonSubscriptionProduct(args: Map<String, Any>, callback: Result) {
+        val customer = CBCustomer(
+            args["customerId"] as String,
+            args["firstName"] as String,
+            args["lastName"] as String,
+            args["email"] as String
+        )
+        val type = args["product_type"] as String
+        val productType = if (type == OneTimeProductType.CONSUMABLE.value)
+            OneTimeProductType.CONSUMABLE
+        else
+            OneTimeProductType.NON_CONSUMABLE
+
+        val product = arrayListOf(args["product"] as String)
+        CBPurchase.retrieveProducts(
+            activity,
+            product,
+            object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
+                override fun onSuccess(productIDs: ArrayList<CBProduct>) {
+                    if (productIDs.size == 0) {
+                        onError(
+                            CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)),
+                            callback
+                        )
+                        return
+                    }
+                    CBPurchase.purchaseNonSubscriptionProduct(
+                        productIDs.first(),
+                        customer,
+                        productType,
+                        object : CBCallback.OneTimePurchaseCallback {
+                            override fun onSuccess(result: NonSubscription, status: Boolean) {
+                                callback.success(result.toMap(status))
+                            }
+
+                            override fun onError(error: CBException) {
+                                onError(error, callback)
+                            }
+                        })
+                }
+
+                override fun onError(error: CBException) {
+                    onError(error, callback)
                 }
             })
     }
@@ -373,6 +426,52 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             })
     }
 
+    private fun validateReceiptForNonSubscriptions(args: Map<String, Any>, callback: Result) {
+        val customer = CBCustomer(
+            args["customerId"] as String,
+            args["firstName"] as String,
+            args["lastName"] as String,
+            args["email"] as String
+        )
+        val type = args["product_type"] as String
+        val productType = if (type == OneTimeProductType.CONSUMABLE.value)
+            OneTimeProductType.CONSUMABLE
+        else
+            OneTimeProductType.NON_CONSUMABLE
+
+        val product = arrayListOf(args["product"] as String)
+        CBPurchase.retrieveProducts(activity,
+            product,
+            object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
+                override fun onSuccess(productIDs: ArrayList<CBProduct>) {
+                    if (productIDs.size == 0) {
+                        onError(
+                            CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)),
+                            callback
+                        )
+                        return
+                    }
+                    CBPurchase.validateReceiptForNonSubscriptions(context = activity,
+                        product = productIDs.first(),
+                        customer = customer,
+                        productType = productType,
+                        object : CBCallback.OneTimePurchaseCallback {
+                            override fun onSuccess(result: NonSubscription, status: Boolean) {
+                                callback.success(result.toMap(status))
+                            }
+
+                            override fun onError(error: CBException) {
+                                onError(error, callback)
+                            }
+                        })
+                }
+
+                override fun onError(error: CBException) {
+                    onError(error, callback)
+                }
+            })
+    }
+
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         if (channel != null) {
             channel.setMethodCallHandler(null);
@@ -435,12 +534,20 @@ fun CBProduct.convertPriceAmountInMicros(): Double {
 }
 
 fun CBProduct.subscriptionPeriod(): Map<String, Any> {
-    val subscriptionPeriod = skuDetails.subscriptionPeriod
-    val numberOfUnits = subscriptionPeriod.substring(1, subscriptionPeriod.length - 1).toInt()
-    return mapOf(
-        "periodUnit" to periodUnit(),
-        "numberOfUnits" to numberOfUnits
-    )
+    val subscriptionPeriodMap = if (skuDetails.type == ProductType.SUBS.value) {
+        val subscriptionPeriod = skuDetails.subscriptionPeriod
+        val numberOfUnits = subscriptionPeriod.substring(1, subscriptionPeriod.length - 1).toInt()
+        mapOf(
+            "periodUnit" to periodUnit(),
+            "numberOfUnits" to numberOfUnits
+        )
+    } else {
+        mapOf(
+            "periodUnit" to "",
+            "numberOfUnits" to 0
+        )
+    }
+    return subscriptionPeriodMap
 }
 
 fun CBProduct.periodUnit(): String {
@@ -459,4 +566,13 @@ internal fun CBRestoreSubscription.toMap(): Map<String, String> {
         "planId" to planId,
         "storeStatus" to storeStatus,
     )
+}
+
+internal fun NonSubscription.toMap(status: Boolean): String {
+    val resultMap = mapOf(
+        "invoiceId" to invoiceId,
+        "chargeId" to chargeId,
+        "customerId" to customerId,
+    )
+    return Gson().toJson(resultMap)
 }

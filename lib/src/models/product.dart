@@ -82,6 +82,29 @@ class PurchaseResult {
       'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, status: $status)';
 }
 
+/// Store the information related to non subscription product purchase
+class NonSubscriptionPurchaseResult {
+  /// invoice id
+  String invoiceId;
+
+  /// charge id associated with invoices
+  String chargeId;
+
+  //// customerId
+  String customerId;
+
+  NonSubscriptionPurchaseResult(this.invoiceId, this.chargeId, this.customerId);
+
+  /// convert json data and returned NonSubscriptionPurchaseResult object
+  factory NonSubscriptionPurchaseResult.fromJson(Map<String, dynamic> json) =>
+      NonSubscriptionPurchaseResult(json['invoiceId'] as String,
+          json['chargeId'] as String, json['customerId'] as String);
+
+  @override
+  String toString() =>
+      'NonSubscriptionPurchaseResult(invoiceId: $invoiceId, chargeId: $chargeId,customerId: $customerId)';
+}
+
 /// Store information about the list of subscriptions
 class Subscripton {
   /// subscription id

@@ -96,6 +96,40 @@ class Chargebee {
     }
   }
 
+  /// Buy the non-subscription product with/without customer data.
+  ///
+  /// [product] product object to be passed.
+  ///
+  /// [productType] One time Product Type. Consumable or Non-Consumable
+  /// [customer] it can be optional.
+  /// if passed, the subscription will be created by using customerId in chargebee.
+  /// if not passed, the value of customerId is same as SubscriptionId.
+  ///
+  /// If purchase success [NonSubscriptionPurchaseResult] object be returned.
+  /// Throws an [PlatformException] in case of failure.
+  static Future<NonSubscriptionPurchaseResult> purchaseNonSubscriptionProduct(
+    Product product,
+    OneTimeProductType productType, [
+    CBCustomer? customer,
+  ]) async {
+    final params = {
+      Constants.product: product.id,
+      Constants.customerId: customer?.id ?? '',
+      Constants.firstName: customer?.firstName ?? '',
+      Constants.lastName: customer?.lastName ?? '',
+      Constants.email: customer?.email ?? '',
+      Constants.productType: productType.name,
+    };
+    String purchaseResult = await platform.invokeMethod(
+      Constants.mPurchaseNonSubscriptionProduct,
+      params,
+    );
+    if (purchaseResult.isNotEmpty) {
+      purchaseResult = purchaseResult.toString();
+    }
+    return NonSubscriptionPurchaseResult.fromJson(jsonDecode(purchaseResult));
+  }
+
   /// Retrieves the subscriptions by customer_id or subscription_id.
   ///
   /// [queryParams] The map value to be passed as queryParams.
@@ -270,7 +304,7 @@ class Chargebee {
     return restorePurchases;
   }
 
-  /// This method will be used to validate the receipt with Chargebee,
+  /// This method will be used to validate the receipt of Subscriptions with Chargebee,
   /// when syncing with Chargebee fails after the successful purchase in Google Play Store.
   ///
   /// [productId] productId to be passed.
@@ -301,5 +335,41 @@ class Chargebee {
       purchaseResult = PurchaseResult.fromJson(jsonDecode(result.toString()));
     }
     return purchaseResult;
+  }
+
+  /// This method will be used to validate the receipt of One Time Purchase with Chargebee,
+  /// when syncing with Chargebee fails after the successful purchase in Google Play Store.
+  ///
+  /// [productId] productId to be passed.
+  ///
+  /// [productType] One time Product Type. Consumable or Non-Consumable
+  /// [customer] it can be optional.
+  /// if passed, the subscription will be created by using customerId in chargebee.
+  /// if not passed, the value of customerId is same as SubscriptionId.
+  ///
+  /// If purchase success [NonSubscriptionPurchaseResult] object be returned.
+  /// Throws an [PlatformException] in case of failure.
+  static Future<NonSubscriptionPurchaseResult>
+      validateReceiptForNonSubscriptions(
+    String productId,
+    OneTimeProductType productType, [
+    CBCustomer? customer,
+  ]) async {
+    final params = {
+      Constants.product: productId,
+      Constants.customerId: customer?.id ?? '',
+      Constants.firstName: customer?.firstName ?? '',
+      Constants.lastName: customer?.lastName ?? '',
+      Constants.email: customer?.email ?? '',
+      Constants.productType: productType.name,
+    };
+    String purchaseResult = await platform.invokeMethod(
+      Constants.mValidateReceiptForNonSubscriptions,
+      params,
+    );
+    if (purchaseResult.isNotEmpty) {
+      purchaseResult = purchaseResult.toString();
+    }
+    return NonSubscriptionPurchaseResult.fromJson(jsonDecode(purchaseResult));
   }
 }

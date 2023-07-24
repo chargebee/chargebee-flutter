@@ -14,7 +14,7 @@ A new Flutter plugin.
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
 
-  s.dependency 'Chargebee', '1.0.22'
+  s.dependency 'Chargebee', '1.0.25'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

@@ -93,7 +93,45 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     }
                 }
             })
-            
+        case "purchaseNonSubscriptionProduct":
+            guard let params = call.arguments as?  [String: String] else {
+                return _result(FlutterError.noArgsError)
+            }
+            let productId = params["product"]
+            let productTypeString = params["product_type"]
+            let productType = getProductType(productTypeString: productTypeString)
+            let customer = CBCustomer(customerID: params["customerId"], firstName:params["firstName"], lastName: params["lastName"], email:params["email"])
+            var dict = [String:String]()
+            CBPurchase.shared.retrieveProducts(withProductID: [productId!], completion: { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case let .success(products):
+                        debugPrint("products: \(products)");
+                        let  product: CBProduct = products.self.first!;
+                        CBPurchase.shared.purchaseNonSubscriptionProduct(product: product, customer: customer, productType: productType) { result in
+                            switch result {
+                            case .success(let result):
+                                dict = ["invoiceId": "\(result.invoiceID)", "chargeId": "\(result.chargeID)", "customerId": "\(result.customerID)"]
+                            
+                                if let data = try? JSONSerialization.data(
+                                    withJSONObject:dict,
+                                    options: []) {
+                                    if let jsonString = String(data: data,
+                                                               encoding: .ascii) {
+                                        _result(jsonString)
+                                    }
+                                }else {
+                                    _result(FlutterError.jsonSerializationError("Serialization Issue"))
+                                }
+                            case .failure(let error):
+                                self.onPurchaseError(error, completion: _result)
+                            }
+                        }
+                    case let .failure(error):
+                        _result(FlutterError.purchaseError(error ))
+                    }
+                }
+            })
         case "getProducts":
             guard let args = call.arguments as? [String: Any] else {
                 return _result(FlutterError.noArgsError)
@@ -268,6 +306,43 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     }
                 }
             })
+        case "validateReceiptForNonSubscriptions":
+            guard let params = call.arguments as?  [String: String] else {
+                return _result(FlutterError.noArgsError)
+            }
+            let productId = params["product"]
+            let productTypeString = params["product_type"]
+            let productType = getProductType(productTypeString: productTypeString)
+            var dict = [String:String]()
+            CBPurchase.shared.retrieveProducts(withProductID: [productId!], completion: { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case let .success(products):
+                        debugPrint("products: \(products)");
+                        let  product: CBProduct = products.self.first!;
+                        CBPurchase.shared.validateReceiptForNonSubscriptions(product,productType) { result in
+                            switch result {
+                            case .success(let result):
+                                dict = ["invoiceId": "\(result.invoiceID)", "chargeId": "\(result.chargeID)", "customerId": "\(result.customerID)"]
+                                if let data = try? JSONSerialization.data(
+                                    withJSONObject:dict,
+                                    options: []) {
+                                    if let jsonString = String(data: data,
+                                                               encoding: .ascii) {
+                                        _result(jsonString)
+                                    }
+                                }else {
+                                    _result(FlutterError.jsonSerializationError("Serialization Issue"))
+                                }
+                            case .failure(let error):
+                                self.onPurchaseError(error, completion: _result)
+                            }
+                        }
+                    case let .failure(error):
+                        _result(FlutterError.purchaseError(error ))
+                    }
+                }
+            })
         default:
             print("Default statement")
         }
@@ -281,6 +356,18 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
         } else {
             completion(FlutterError.purchaseError(CBPurchaseError.unknown))
         }
+    }
+    
+    private func getProductType(productTypeString: String?)-> ProductType{
+        var productType: ProductType!
+        if productTypeString == ProductType.Consumable.rawValue{
+            productType = .Consumable
+        }else if productTypeString == ProductType.NonConsumable.rawValue{
+            productType = .NonConsumable
+        }else {
+            productType = .NonRenewingSubscription
+        }
+        return productType
     }
 }
 

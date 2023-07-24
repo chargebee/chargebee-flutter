@@ -22,19 +22,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Flutter Demo',
-    theme: ThemeData(
-      primarySwatch: Colors.blue,
-    ),
-    home: const MyHomePage(title: 'Chargebee-Flutter SDK'),
-  );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MyHomePage(title: 'Chargebee-Flutter SDK'),
+      );
 }
 
 class MyHomePage extends StatefulWidget {
   final String title;
 
-  const MyHomePage( {Key? key, required this.title})
-      : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -46,14 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController sdkKeyController = TextEditingController();
   final TextEditingController iosDdkKeyController = TextEditingController();
   final TextEditingController productIdTextFieldController =
-  TextEditingController();
+      TextEditingController();
 
   List<Product> products = [];
   late List<String> cbMenu = Constants.menu;
-  late String siteName = '',
-      apiKey = '',
-      androidSdkKey = '',
-      iosSdkKey = '';
+  late String siteName = '', apiKey = '', androidSdkKey = '', iosSdkKey = '';
   late String productIDs;
   late String userInput;
   late ProgressBarUtil mProgressBarUtil;
@@ -87,13 +83,15 @@ class _MyHomePageState extends State<MyHomePage> {
       _source = source;
       switch (_source.keys.toList()[0]) {
         case ConnectivityResult.mobile:
-          string = _source.values.toList()[0] ? 'Mobile: Online' : 'Mobile: Offline';
+          string =
+              _source.values.toList()[0] ? 'Mobile: Online' : 'Mobile: Offline';
           debugPrint(string);
           _verifyLocalCache();
           _configure();
           break;
         case ConnectivityResult.wifi:
-          string = _source.values.toList()[0] ? 'WiFi: Online' : 'WiFi: Offline';
+          string =
+              _source.values.toList()[0] ? 'WiFi: Online' : 'WiFi: Offline';
           debugPrint(string);
           _verifyLocalCache();
           _configure();
@@ -109,9 +107,10 @@ class _MyHomePageState extends State<MyHomePage> {
   _verifyLocalCache() async {
     final prefs = await SharedPreferences.getInstance();
     final productId = prefs.getString('productId');
-    if (productId !=null) {
-      validateReceipt(productId);
-    }else{
+    final products = <String>['$productId'];
+    if (productId != null) {
+      retrieveProducts(products);
+    } else {
       debugPrint('Local cache empty!');
     }
   }
@@ -121,6 +120,28 @@ class _MyHomePageState extends State<MyHomePage> {
     authentication('your-site', 'publishable_api_key', 'iOS ResourceID/SDK Key',
          'Android ResourceID/SDK Key',);
   }
+
+  Future<void> retrieveProducts(List<String> productIDsList) async {
+    try {
+      final products = await Chargebee.retrieveProducts(productIDsList);
+      debugPrint('result : $products');
+      if (products.isNotEmpty &&
+          products.first.subscriptionPeriod.unit.isNotEmpty &&
+          products.first.subscriptionPeriod.numberOfUnits != 0) {
+        validateReceipt(products.first.id);
+      } else {
+        validateNonSubscriptionReceipt(products.first.id);
+      }
+    } on PlatformException catch (e) {
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+
+      if (mProgressBarUtil.isProgressBarShowing()) {
+        mProgressBarUtil.hideProgressDialog();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     mProgressBarUtil = ProgressBarUtil(context);
@@ -130,15 +151,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: ListView.builder(
         itemCount: cbMenu.length,
-        itemBuilder: (context, pos) =>
-            Card(
-              child: ListTile(
-                title: Text(cbMenu[pos]),
-                onTap: () {
-                  onItemClick(cbMenu[pos]);
-                },
-              ),
-            ),
+        itemBuilder: (context, pos) => Card(
+          child: ListTile(
+            title: Text(cbMenu[pos]),
+            onTap: () {
+              onItemClick(cbMenu[pos]);
+            },
+          ),
+        ),
       ),
     );
   }
@@ -182,13 +202,17 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> authentication(String siteName, String apiKey,
-      [String? iosSdkKey = '', String? androidSdkKey = '',]) async {
+  Future<void> authentication(
+    String siteName,
+    String apiKey, [
+    String? iosSdkKey = '',
+    String? androidSdkKey = '',
+  ]) async {
     try {
       await Chargebee.configure(siteName, apiKey, iosSdkKey, androidSdkKey);
     } on PlatformException catch (e) {
-      debugPrint('Error Message: ${e.message}, Error Details: ${e
-          .details}, Error Code: ${e.code}');
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
     }
   }
 
@@ -206,13 +230,14 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(
             builder: (BuildContext context) =>
                 ProductListView(products, title: 'Google Play-Product List'),
-          ),);
+          ),
+        );
       } else {
         _showDialog(context, 'Items not available to buy');
       }
     } on PlatformException catch (e) {
-      debugPrint('Error Message: ${e.message}, Error Details: ${e
-          .details}, Error Code: ${e.code}');
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -234,16 +259,18 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) =>
-                ProductIdentifiersView(result,
-                  title: 'Product Identifiers List',),
-          ),);
+            builder: (BuildContext context) => ProductIdentifiersView(
+              result,
+              title: 'Product Identifiers List',
+            ),
+          ),
+        );
       } else {
         _showDialog(context, 'Product Ids not avilable in chargebee');
       }
     } on PlatformException catch (e) {
-      debugPrint('Error Message: ${e.message}, Error Details: ${e
-          .details}, Error Code: ${e.code}');
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -265,8 +292,8 @@ class _MyHomePageState extends State<MyHomePage> {
         _showDialog(context, 'Subscription not found in Chargebee System');
       }
     } on PlatformException catch (e) {
-      debugPrint('Error Message: ${e.message}, Error Details: ${e
-          .details}, Error Code: ${e.code}');
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -298,8 +325,8 @@ class _MyHomePageState extends State<MyHomePage> {
         _showDialog(context, 'Entitlements not found in system');
       }
     } on PlatformException catch (e) {
-      debugPrint('Error Message: ${e.message}, Error Details: ${e
-          .details}, Error Code: ${e.code}');
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -325,13 +352,14 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(
             builder: (BuildContext context) =>
                 ItemsView(name, title: 'List Plans'),
-          ),);
+          ),
+        );
       } else {
         _showDialog(context, 'Plans not available in chargebee');
       }
     } on PlatformException catch (e) {
-      debugPrint('Error Message: ${e.message}, Error Details: ${e
-          .details}, Error Code: ${e.code}');
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
@@ -359,13 +387,14 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(
             builder: (BuildContext context) =>
                 ItemsView(name, title: 'List Items'),
-          ),);
+          ),
+        );
       } else {
         _showDialog(context, 'Items not available in chargebee');
       }
     } on PlatformException catch (e) {
-      debugPrint('Error Message: ${e.message}, Error Details: ${e
-          .details}, Error Code: ${e.code}');
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -384,17 +413,18 @@ class _MyHomePageState extends State<MyHomePage> {
         for (final subscription in result) {
           if (subscription.storeStatus == StoreStatus.active) {
             debugPrint('Active Subscriptions : $subscription');
-          }  else {
+          } else {
             debugPrint('All Subscriptions : $subscription');
           }
         }
-        _showDialog(context, '${result.length} Purchases Restored Successfully');
-      }  else{
+        _showDialog(
+            context, '${result.length} Purchases Restored Successfully');
+      } else {
         _showDialog(context, 'Purchase not found to restore');
       }
     } on PlatformException catch (e) {
-      debugPrint('Error Message: ${e.message}, Error Details: ${e
-          .details}, Error Code: ${e.code}');
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
@@ -404,18 +434,44 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> validateReceipt(String productId) async {
     try {
-      final customer = CBCustomer('', '', '', '',);
-      final result = await Chargebee.validateReceipt(productId,customer);
+      final customer = CBCustomer(
+        '',
+        '',
+        '',
+        '',
+      );
+      final result = await Chargebee.validateReceipt(productId, customer);
       debugPrint('subscription result : $result');
       debugPrint('subscription id : ${result.subscriptionId}');
       debugPrint('plan id : ${result.planId}');
       debugPrint('subscription status : ${result.status}');
       mProgressBarUtil.hideProgressDialog();
+
       /// if validateReceipt success, clear the cache
       final prefs = await SharedPreferences.getInstance();
       prefs.remove('productId');
     } on PlatformException catch (e) {
-      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      mProgressBarUtil.hideProgressDialog();
+    }
+  }
+
+  Future<void> validateNonSubscriptionReceipt(String productId) async {
+    try {
+      const productType = OneTimeProductType.non_consumable;
+      final customer = CBCustomer(
+        '',
+        '',
+        '',
+        '',
+      );
+      final result = await Chargebee.validateReceiptForNonSubscriptions(
+          productId, productType, customer);
+      debugPrint('subscription result : $result');
+    } on PlatformException catch (e) {
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       mProgressBarUtil.hideProgressDialog();
     }
   }
@@ -428,138 +484,146 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  showSkProductDialog(BuildContext context) =>
-      showDialog(
+  showSkProductDialog(BuildContext context) => showDialog(
         context: context,
-        builder: (context) =>
-            AlertDialog(
-              title: const Text('Please enter Product Ids(Comma separated)'),
-              content: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    productIDs = value.trim();
-                  });
-                },
-                controller: productIdTextFieldController,
-                decoration: const InputDecoration(hintText: "Product ID's"),
+        builder: (context) => AlertDialog(
+          title: const Text('Please enter Product Ids(Comma separated)'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                productIDs = value.trim();
+              });
+            },
+            controller: productIdTextFieldController,
+            decoration: const InputDecoration(hintText: "Product ID's"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+                textStyle: const TextStyle(fontStyle: FontStyle.normal),
               ),
-              actions: <Widget>[
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.red,
-                    textStyle: const TextStyle(fontStyle: FontStyle.normal),),
-                  child: const Text('CANCEL'),
-                  onPressed: () {
-                    setState(() {
-                      Navigator.pop(context);
-                    });
-                  },
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green,
-                    textStyle: const TextStyle(fontStyle: FontStyle.normal),),
-                  child: const Text('OK'),
-                  onPressed: () {
-                    setState(() {
-                      try {
-                        Navigator.pop(context);
-                        debugPrint('productIds from user : $productIDs');
-                        mProgressBarUtil.showProgressDialog();
-
-                        final listItems = productIDs.split(',');
-                        getProducts(listItems);
-                        productIdTextFieldController.clear();
-                      } catch (e) {
-                        log('error : ${e.toString()}');
-                      }
-                    });
-                  },
-                ),
-              ],
+              child: const Text('CANCEL'),
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context);
+                });
+              },
             ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                textStyle: const TextStyle(fontStyle: FontStyle.normal),
+              ),
+              child: const Text('OK'),
+              onPressed: () {
+                setState(() {
+                  try {
+                    Navigator.pop(context);
+                    debugPrint('productIds from user : $productIDs');
+                    mProgressBarUtil.showProgressDialog();
+
+                    final listItems = productIDs.split(',');
+                    getProducts(listItems);
+                    productIdTextFieldController.clear();
+                  } catch (e) {
+                    log('error : ${e.toString()}');
+                  }
+                });
+              },
+            ),
+          ],
+        ),
       );
 
   Future<void> showAuthenticationDialog(BuildContext context) async =>
       showDialog(
         context: context,
-        builder: (context) =>
-            AlertDialog(
-                title: const Text('Chargebee'),
-                content: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    TextField(
-                      onChanged: (value) {
-                        setState(() {
-                          siteName = value;
-                        });
-                      },
-                      controller: siteNameController,
-                      decoration: const InputDecoration(hintText: 'Site Name'),
-                    ),
-                    TextField(
-                      onChanged: (value) {
-                        setState(() {
-                          apiKey = value;
-                        });
-                      },
-                      controller: apiKeyController,
-                      decoration: const InputDecoration(hintText: 'API Key'),
-                    ),
-                    TextField(
-                      onChanged: (value) {
-                        setState(() {
-                          iosSdkKey = value;
-                        });
-                      },
-                      controller: iosDdkKeyController,
-                      decoration: const InputDecoration(
-                          hintText: 'iOS SDK Key',),
-                    ),
-                    TextField(
-                      onChanged: (value) {
-                        setState(() {
-                          androidSdkKey = value;
-                        });
-                      },
-                      controller: sdkKeyController,
-                      decoration: const InputDecoration(
-                          hintText: 'Android SDK Key',),
-                    ),
-                  ],
+        builder: (context) => AlertDialog(
+          title: const Text('Chargebee'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    siteName = value;
+                  });
+                },
+                controller: siteNameController,
+                decoration: const InputDecoration(hintText: 'Site Name'),
+              ),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    apiKey = value;
+                  });
+                },
+                controller: apiKeyController,
+                decoration: const InputDecoration(hintText: 'API Key'),
+              ),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    iosSdkKey = value;
+                  });
+                },
+                controller: iosDdkKeyController,
+                decoration: const InputDecoration(
+                  hintText: 'iOS SDK Key',
                 ),
-                actions: <Widget>[
-                  TextButton(
-                    style: TextButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor: Colors.red,
-                        textStyle:
-                        const TextStyle(fontStyle: FontStyle.normal),),
-                    child: const Text('CANCEL'),
-                    onPressed: () {
-                      setState(() {
-                        Navigator.pop(context);
-                      });
-                    },
-                  ),
-                  TextButton(
-                      style: TextButton.styleFrom(
-                          foregroundColor: Colors.white, backgroundColor: Colors.green,
-                          textStyle:
-                          const TextStyle(fontStyle: FontStyle.normal),),
-                      child: const Text('Initialize'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        debugPrint(
-                            'app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey',);
-                        authentication(
-                            siteName, apiKey, iosSdkKey, androidSdkKey,);
-                      }
-                  ,)
-                ],
-            ),);
-
+              ),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    androidSdkKey = value;
+                  });
+                },
+                controller: sdkKeyController,
+                decoration: const InputDecoration(
+                  hintText: 'Android SDK Key',
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+                textStyle: const TextStyle(fontStyle: FontStyle.normal),
+              ),
+              child: const Text('CANCEL'),
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                textStyle: const TextStyle(fontStyle: FontStyle.normal),
+              ),
+              child: const Text('Initialize'),
+              onPressed: () {
+                Navigator.pop(context);
+                debugPrint(
+                  'app details : $siteName, $apiKey, $androidSdkKey, $iosSdkKey',
+                );
+                authentication(
+                  siteName,
+                  apiKey,
+                  iosSdkKey,
+                  androidSdkKey,
+                );
+              },
+            )
+          ],
+        ),
+      );
 }
