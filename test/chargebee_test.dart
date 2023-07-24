@@ -800,8 +800,8 @@ void main() {
       SubscriptionPeriod.fromMap(map),
     );
     final customer = CBCustomer('', '', '', '',);
-    const consumableProductType = OneTimeProductType.consumable;
-    const nonConsumableProductType = OneTimeProductType.non_consumable;
+    const consumableProductType = ProductType.consumable;
+    const nonConsumableProductType = ProductType.non_consumable;
     const nonSubscriptionResult =
     '''{"invoiceId":"cb-dsd", "chargeId":"test-plan", "customerId":"abc"}''';
     final params = {
@@ -888,7 +888,7 @@ void main() {
     });
 
     test('returns one time purchase(non_renewing_subscription) result for iOS', () async {
-      const nonConsumableProductType = OneTimeProductType.non_renewing_subscription;
+      const nonConsumableProductType = ProductType.non_renewing_subscription;
       channelResponse = nonSubscriptionResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final result = await Chargebee.purchaseNonSubscriptionProduct(product, nonConsumableProductType);
@@ -901,7 +901,7 @@ void main() {
             Constants.firstName: customer.firstName ?? '',
             Constants.lastName: customer.lastName ?? '',
             Constants.email: customer.email ?? '',
-            Constants.productType: OneTimeProductType.non_renewing_subscription.name,
+            Constants.productType: ProductType.non_renewing_subscription.name,
           },
         )
       ]);
@@ -973,8 +973,8 @@ void main() {
       'INR',
        SubscriptionPeriod.fromMap({'periodUnit': 'month', 'numberOfUnits': 1}),
     );
-    const consumableProductType = OneTimeProductType.consumable;
-    const nonConsumableProductType = OneTimeProductType.non_consumable;
+    const consumableProductType = ProductType.consumable;
+    const nonConsumableProductType = ProductType.non_consumable;
     const nonSubscriptionResult =
     '''{"invoiceId":"cb-dsd", "chargeId":"test-plan", "customerId":"abc"}''';
     final params = {

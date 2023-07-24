@@ -109,7 +109,7 @@ class Chargebee {
   /// Throws an [PlatformException] in case of failure.
   static Future<NonSubscriptionPurchaseResult> purchaseNonSubscriptionProduct(
     Product product,
-    OneTimeProductType productType, [
+    ProductType productType, [
     CBCustomer? customer,
   ]) async {
     final params = {
@@ -352,7 +352,7 @@ class Chargebee {
   static Future<NonSubscriptionPurchaseResult>
       validateReceiptForNonSubscriptions(
     String productId,
-    OneTimeProductType productType, [
+    ProductType productType, [
     CBCustomer? customer,
   ]) async {
     final params = {

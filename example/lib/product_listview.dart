@@ -129,7 +129,7 @@ class ProductListViewState extends State<ProductListView> {
   }
 
   Future<void> purchaseNonSubscriptionProduct(
-      Product product, OneTimeProductType productType) async {
+      Product product, ProductType productType) async {
     final customer = CBCustomer(
       'abc_flutter_test',
       'fn',
@@ -191,7 +191,7 @@ class ProductListViewState extends State<ProductListView> {
   }
 
   Future<void> validateNonSubscriptionReceipt(String productId,
-      OneTimeProductType productType, CBCustomer customer) async {
+      ProductType productType, CBCustomer customer) async {
     try {
       final result = await Chargebee.validateReceiptForNonSubscriptions(
           productId, productType, customer);
@@ -256,15 +256,15 @@ class ProductListViewState extends State<ProductListView> {
                   Navigator.pop(context);
                   mProgressBarUtil.showProgressDialog();
                   try {
-                    OneTimeProductType type;
+                    ProductType type;
                     if (productType != null) {
-                      if (productType == OneTimeProductType.consumable.name) {
-                        type = OneTimeProductType.consumable;
+                      if (productType == ProductType.consumable.name) {
+                        type = ProductType.consumable;
                       } else if (productType ==
-                          OneTimeProductType.non_consumable.name) {
-                        type = OneTimeProductType.non_consumable;
+                          ProductType.non_consumable.name) {
+                        type = ProductType.non_consumable;
                       } else {
-                        type = OneTimeProductType.non_renewing_subscription;
+                        type = ProductType.non_renewing_subscription;
                       }
                       purchaseNonSubscriptionProduct(product, type);
                     }

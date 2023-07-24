@@ -1,3 +1,9 @@
+## 0.0.14
+New Feature
+* Adds one time purchase support. (#63)
+* Use `Chargebee.purchaseNonSubscriptionProduct` to purchase one time purchase product on Apple App Store and Google Play Store.
+* Use `Chargebee.validateReceiptForNonSubscriptions` to validate one time purchase receipt if syncing failed with Chargebee after the successful purchase on Apple App Store and Google
+  Play Store.
 ## 0.0.13
 SDK Improvements
 * Added cache retry mechanism for validating the receipt. (#62)

@@ -109,6 +109,32 @@ try {
 
 The above function will handle the purchase against Apple App Store or Google Play Store and send the in-app purchase receipt for server-side receipt verification to your Chargebee account. Use the Subscription ID returned by the above function to check for Subscription status on Chargebee and confirm the access - granted or denied.
 
+### One-Time Purchases
+The `purchaseNonSubscriptionProduct` function handles the one-time purchase against Apple App Store and Google Play Store and then sends the IAP receipt for server-side receipt verification to your Chargebee account. Post verification a Charge corresponding to this one-time purchase will be created in Chargebee. The Apple App Store supports three types of one-time purchases `consumable`, `non_consumable` and `non_renewing_subscription`. The Google Play Store supports two types of one-time purchases `consumable` and `non_consumable`.
+
+``` dart
+try {
+  final productType = OneTimeProductType.consumable;
+  final customer = CBCustomer('id','','','');
+  final result = await Chargebee.purchaseNonSubscriptionProduct(product, productType, customer);
+  debugPrint('invoice id : ${result.invoiceId}');
+  debugPrint('charge id : ${result.chargeId}');
+  debugPrint('customer id : ${result.customerId}');
+} on PlatformException catch (e) {
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+}
+```
+
+The given code defines a function named `purchaseNonSubscriptionProduct` in the Chargebee class, which takes three input parameters:
+
+- `product`: An instance of `Product` class, representing the product to be purchased from the Apple App Store or Google Play Store.
+- `customer`: Optional. An instance of `CBCustomer` class, initialized with the customer's details such as `customerId`, `firstName`, `lastName`, and `email`.
+- `productType`: An enum instance of `productType` type, indicating the type of product to be purchased. It can be either .`consumable`, or `non_consumable`, or `non_renewing_subscription`. Currently `non_renewing_subscription` product type supports only in Apple App Store.
+
+The function is called asynchronously, and it returns a `Result` object with a `success` or `failure` case, as mentioned are below.
+- If the purchase is successful, it returns `NonSubscriptionPurchaseResult` object. which includes the `invoiceId`, `chargeId`, and `customerId` associated with the purchase.
+- If there is any failure during the purchase, it returns `PlatformException`. which includes an error object that can be used to handle the error.
+
 #### Restore Purchases
 
 The `restorePurchases()` function helps to recover your app user's previous purchases without making them pay again. Sometimes, your app user may want to restore their previous purchases after switching to a new device or reinstalling your app. You can use the `restorePurchases()` function to allow your app user to easily restore their previous purchases.
@@ -146,13 +172,28 @@ Receipt validation is crucial to ensure that the purchases made by your users ar
 * When the network connectivity is lost after the purchase is completed at Apple App Store/Google Play Store but not synced with Chargebee, retrieve the product from the cache once the network connection is back and initiate validateReceipt() by passing `productId` and `CBCustomer(optional)` as input. This will validate the receipt and sync the purchase in Chargebee as a subscription. For subscriptions, use the function to validateReceipt().
 
 Use the function available for the retry mechanism.
-##### Function for validating the receipt
+##### Function for validating the Subscriptions receipt
 
 ``` dart
 try {
   final result = await Chargebee.validateReceipt(productId);
   print("subscription id : ${result.subscriptionId}");
   print("subscription status : ${result.status}");
+} on PlatformException catch (e) {
+  print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+}
+```
+
+##### Function for validating the One-Time Purchases receipt
+
+``` dart
+try {
+  final productType = OneTimeProductType.consumable;
+  final customer = CBCustomer('id','','','');
+  final result = await Chargebee.validateReceiptForNonSubscriptions(productId, productType, customer);
+  debugPrint('invoice id : ${result.invoiceId}');
+  debugPrint('charge id : ${result.chargeId}');
+  debugPrint('customer id : ${result.customerId}');
 } on PlatformException catch (e) {
   print('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
 }

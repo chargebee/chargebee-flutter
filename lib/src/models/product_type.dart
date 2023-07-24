@@ -1,4 +1,4 @@
-enum OneTimeProductType {
+enum ProductType {
   unknown,
   consumable,
   non_consumable,

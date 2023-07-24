@@ -459,7 +459,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> validateNonSubscriptionReceipt(String productId) async {
     try {
-      const productType = OneTimeProductType.non_consumable;
+      const productType = ProductType.non_consumable;
       final customer = CBCustomer(
         '',
         '',
