@@ -124,6 +124,10 @@ try {
 }
 ```
 
+##### Return Subscriptions Object
+
+The `restorePurchases()` function returns an array of subscription objects and each object holds three attributes `subscriptionId`, `planId`, and `storeStatus`. The value of `storeStatus` can be used to verify subscription status.
+
 ##### Error Handling
 In the event of any failures while finding associated subscriptions for the restored items, The SDK will return an error, as mentioned in the following table.
 
