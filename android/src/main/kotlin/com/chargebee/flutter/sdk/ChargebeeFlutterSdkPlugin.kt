@@ -255,7 +255,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                         productType,
                         object : CBCallback.OneTimePurchaseCallback {
                             override fun onSuccess(result: NonSubscription, status: Boolean) {
-                                callback.success(result.toMap(status))
+                                callback.success(result.toMap())
                             }
 
                             override fun onError(error: CBException) {
@@ -457,7 +457,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                         productType = productType,
                         object : CBCallback.OneTimePurchaseCallback {
                             override fun onSuccess(result: NonSubscription, status: Boolean) {
-                                callback.success(result.toMap(status))
+                                callback.success(result.toMap())
                             }
 
                             override fun onError(error: CBException) {
@@ -568,7 +568,7 @@ internal fun CBRestoreSubscription.toMap(): Map<String, String> {
     )
 }
 
-internal fun NonSubscription.toMap(status: Boolean): String {
+internal fun NonSubscription.toMap(): String {
     val resultMap = mapOf(
         "invoiceId" to invoiceId,
         "chargeId" to chargeId,
