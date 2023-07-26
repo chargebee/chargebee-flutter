@@ -789,4 +789,265 @@ void main() {
     });
   });
 
+  group('purchaseNonSubscriptionProduct', () {
+    final map = <String, dynamic>{'unit': 'year', 'numberOfUnits': 1};
+    final product = Product(
+      'merchant.pro.android',
+      1500.00,
+      '1500.00',
+      'title',
+      'INR',
+      SubscriptionPeriod.fromMap(map),
+    );
+    final customer = CBCustomer('', '', '', '',);
+    const consumableProductType = ProductType.consumable;
+    const nonConsumableProductType = ProductType.non_consumable;
+    const nonSubscriptionResult =
+    '''{"invoiceId":"cb-dsd", "chargeId":"test-plan", "customerId":"abc"}''';
+    final params = {
+      Constants.product: product.id,
+      Constants.customerId: customer.id ?? '',
+      Constants.firstName: customer.firstName ?? '',
+      Constants.lastName: customer.lastName ?? '',
+      Constants.email: customer.email ?? '',
+      Constants.productType: nonConsumableProductType.name,
+    };
+
+    test('returns one time purchase(non_consumable) result for Android', () async {
+      channelResponse = nonSubscriptionResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final result = await Chargebee.purchaseNonSubscriptionProduct(product,nonConsumableProductType);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseNonSubscriptionProduct,
+          arguments: params,
+        )
+      ]);
+      expect(result.invoiceId.isNotEmpty, true);
+      expect(result.chargeId.isNotEmpty, true);
+      expect(result.customerId.isNotEmpty, true);
+    });
+
+    test('returns one time purchase(consumable) result for Android', () async {
+      channelResponse = nonSubscriptionResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final result = await Chargebee.purchaseNonSubscriptionProduct(product,consumableProductType);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseNonSubscriptionProduct,
+          arguments: {
+            Constants.product: product.id,
+            Constants.customerId: customer.id ?? '',
+            Constants.firstName: customer.firstName ?? '',
+            Constants.lastName: customer.lastName ?? '',
+            Constants.email: customer.email ?? '',
+            Constants.productType: consumableProductType.name,
+          },
+        )
+      ]);
+      expect(result.invoiceId.isNotEmpty, true);
+      expect(result.chargeId.isNotEmpty, true);
+      expect(result.customerId.isNotEmpty, true);
+    });
+
+    test('returns one time purchase(non_consumable) result for iOS', () async {
+      channelResponse = nonSubscriptionResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final result = await Chargebee.purchaseNonSubscriptionProduct(product, nonConsumableProductType);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseNonSubscriptionProduct,
+          arguments: params,
+        )
+      ]);
+      expect(result.invoiceId.isNotEmpty, true);
+      expect(result.chargeId.isNotEmpty, true);
+      expect(result.customerId.isNotEmpty, true);
+    });
+
+    test('returns one time purchase(consumable) result for iOS', () async {
+      channelResponse = nonSubscriptionResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final result = await Chargebee.purchaseNonSubscriptionProduct(product, consumableProductType);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseNonSubscriptionProduct,
+          arguments: {
+            Constants.product: product.id,
+            Constants.customerId: customer.id ?? '',
+            Constants.firstName: customer.firstName ?? '',
+            Constants.lastName: customer.lastName ?? '',
+            Constants.email: customer.email ?? '',
+            Constants.productType: consumableProductType.name,
+          },
+        )
+      ]);
+      expect(result.invoiceId.isNotEmpty, true);
+      expect(result.chargeId.isNotEmpty, true);
+      expect(result.customerId.isNotEmpty, true);
+    });
+
+    test('returns one time purchase(non_renewing_subscription) result for iOS', () async {
+      const nonConsumableProductType = ProductType.non_renewing_subscription;
+      channelResponse = nonSubscriptionResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final result = await Chargebee.purchaseNonSubscriptionProduct(product, nonConsumableProductType);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseNonSubscriptionProduct,
+          arguments: {
+            Constants.product: product.id,
+            Constants.customerId: customer.id ?? '',
+            Constants.firstName: customer.firstName ?? '',
+            Constants.lastName: customer.lastName ?? '',
+            Constants.email: customer.email ?? '',
+            Constants.productType: ProductType.non_renewing_subscription.name,
+          },
+        )
+      ]);
+      expect(result.invoiceId.isNotEmpty, true);
+      expect(result.chargeId.isNotEmpty, true);
+      expect(result.customerId.isNotEmpty, true);
+    });
+
+
+    test('one time purchase with customer info for Android', () async {
+      channelResponse = nonSubscriptionResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final result = await Chargebee.purchaseNonSubscriptionProduct(product, nonConsumableProductType, customer);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseNonSubscriptionProduct,
+          arguments: params,
+        )
+      ]);
+      expect(result.invoiceId.isNotEmpty, true);
+      expect(result.chargeId.isNotEmpty, true);
+      expect(result.customerId.isNotEmpty, true);
+    });
+
+    test('one time purchase with customer info for iOS', () async {
+      channelResponse = nonSubscriptionResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final result = await Chargebee.purchaseNonSubscriptionProduct(product, nonConsumableProductType, customer);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseNonSubscriptionProduct,
+          arguments: params,
+        )
+      ]);
+      expect(result.invoiceId.isNotEmpty, true);
+      expect(result.chargeId.isNotEmpty, true);
+      expect(result.customerId.isNotEmpty, true);
+    });
+
+    test('handles exception on iOS', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+          code: 'PlatformError', message: 'An error occured',);
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await expectLater(() => Chargebee.purchaseNonSubscriptionProduct(product, nonConsumableProductType, customer),
+        throwsA(isA<PlatformException>()),);
+      channel.setMockMethodCallHandler(null);
+    });
+
+    test('handles exception on Android', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+          code: 'PlatformError', message: 'An error occured',);
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await expectLater(() => Chargebee.purchaseNonSubscriptionProduct(product, nonConsumableProductType, customer),
+        throwsA(isA<PlatformException>()),);
+      channel.setMockMethodCallHandler(null);
+    });
+  });
+
+  group('validateReceiptForNonSubscriptions', () {
+    final product = Product(
+      'merchant.pro.android',
+      1500.00,
+      '1500.00',
+      'title',
+      'INR',
+       SubscriptionPeriod.fromMap({'periodUnit': 'month', 'numberOfUnits': 1}),
+    );
+    const consumableProductType = ProductType.consumable;
+    const nonConsumableProductType = ProductType.non_consumable;
+    const nonSubscriptionResult =
+    '''{"invoiceId":"cb-dsd", "chargeId":"test-plan", "customerId":"abc"}''';
+    final params = {
+      Constants.product: product.id,
+      Constants.customerId: '',
+      Constants.firstName: '',
+      Constants.lastName: '',
+      Constants.email: '',
+      Constants.productType: nonConsumableProductType.name,
+    };
+
+    test('returns the one time purchase result for Android', () async {
+      channelResponse = nonSubscriptionResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      try {
+        final result = await Chargebee.validateReceiptForNonSubscriptions(product.id, nonConsumableProductType);
+        expect(callStack, <Matcher>[
+          isMethodCall(
+            Constants.mValidateReceiptForNonSubscriptions,
+            arguments: params,
+          )
+        ]);
+        expect(result.invoiceId.isNotEmpty, true);
+        expect(result.chargeId.isNotEmpty, true);
+        expect(result.customerId.isNotEmpty, true);
+      } on PlatformException catch (e) {
+        debugPrint('exception: ${e.message}');
+      }
+    });
+
+    test('returns the one time purchase result for iOS', () async {
+      channelResponse = nonSubscriptionResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final result = await Chargebee.validateReceiptForNonSubscriptions(product.id, nonConsumableProductType);
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mValidateReceiptForNonSubscriptions,
+          arguments: params,
+        )
+      ]);
+      expect(result.invoiceId.isNotEmpty, true);
+      expect(result.chargeId.isNotEmpty, true);
+      expect(result.customerId.isNotEmpty, true);
+    });
+
+    test('handles exception for iOS', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await expectLater(
+            () => Chargebee.validateReceiptForNonSubscriptions(product.id, nonConsumableProductType),
+        throwsA(isA<PlatformException>()),
+      );
+      channel.setMockMethodCallHandler(null);
+    });
+
+    test('handles exception for Android', () async {
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+          code: 'PlatformError',
+          message: 'An error occured',
+        );
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await expectLater(
+            () => Chargebee.validateReceiptForNonSubscriptions(product.id, nonConsumableProductType),
+        throwsA(isA<PlatformException>()),
+      );
+      channel.setMockMethodCallHandler(null);
+    });
+  });
 }

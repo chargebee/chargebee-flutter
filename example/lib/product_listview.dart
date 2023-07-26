@@ -25,7 +25,7 @@ class ProductListViewState extends State<ProductListView> {
   late ProgressBarUtil mProgressBarUtil;
   final TextEditingController productIdTextFieldController =
       TextEditingController();
-  String? customerId = '';
+  String? productType;
 
   ProductListViewState(this.listProducts);
 
@@ -45,29 +45,36 @@ class ProductListViewState extends State<ProductListView> {
             currencyCode = listProducts[pos].currencyCode;
             return Card(
               child: ListTile(
-                title: Text(productId,
-                    style: const TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,),),
+                title: Text(
+                  productId,
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
                 subtitle: Text(
-                    productPrice +
-                        ' (currencyCode: ' +
-                        currencyCode +
-                        ')',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.normal, fontSize: 15,),),
-                trailing: const Text('Subscribe',
+                  productPrice + ' (currencyCode: ' + currencyCode + ')',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 15,
+                  ),
+                ),
+                trailing: const Text(
+                  'Buy',
                   style: TextStyle(
                     color: Colors.cyan,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,),),
+                    fontSize: 18,
+                  ),
+                ),
                 onTap: () {
                   onItemClick(pos);
                 },
               ),
             );
-          },),
+          },
+        ),
       ),
       debugShowCheckedModeBanner: false,
     );
@@ -75,8 +82,14 @@ class ProductListViewState extends State<ProductListView> {
 
   onItemClick(int position) async {
     try {
-      final map = listProducts[position];
-      _showCustomerIdDialog(context, map);
+      final product = listProducts[position];
+      if (product.subscriptionPeriod.unit.isNotEmpty &&
+          product.subscriptionPeriod.numberOfUnits != 0) {
+        mProgressBarUtil.showProgressDialog();
+        purchaseProduct(product);
+      } else {
+        _showDialog(context, product);
+      }
     } on PlatformException catch (e) {
       debugPrint('${e.message}, ${e.details}');
     }
@@ -84,7 +97,7 @@ class ProductListViewState extends State<ProductListView> {
 
   Future<void> purchaseProduct(Product product) async {
     try {
-      final result = await Chargebee.purchaseProduct(product, customerId);
+      final result = await Chargebee.purchaseProduct(product, 'customerId');
       debugPrint('subscription result : $result');
       debugPrint('subscription id : ${result.subscriptionId}');
       debugPrint('plan id : ${result.planId}');
@@ -98,15 +111,59 @@ class ProductListViewState extends State<ProductListView> {
         _showSuccessDialog(context, result.subscriptionId);
       }
     } on PlatformException catch (e) {
-      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      mProgressBarUtil.hideProgressDialog();
       if (e.code.isNotEmpty) {
         final responseCode = int.parse(e.code);
-        if (responseCode >= 500 && responseCode <=599 ) {
+        if (responseCode >= 500 && responseCode <= 599) {
           /// Cache the productId in SharedPreferences if failed synching with Chargebee.
           final prefs = await SharedPreferences.getInstance();
-          prefs.setString('productId',product.id);
+          prefs.setString('productId', product.id);
+
           /// validate the receipt
           validateReceipt(product.id);
+        }
+      }
+    }
+  }
+
+  Future<void> purchaseNonSubscriptionProduct(
+      Product product, ProductType productType) async {
+    final customer = CBCustomer(
+      'abc_flutter_test',
+      'fn',
+      'ln',
+      'abc@gmail.com',
+    );
+    try {
+      final result = await Chargebee.purchaseNonSubscriptionProduct(
+          product = product, productType = productType, customer);
+      debugPrint('subscription result : $result');
+      debugPrint('invoice id : ${result.invoiceId}');
+      debugPrint('charge id : ${result.chargeId}');
+      debugPrint('customer id : ${result.customerId}');
+
+      mProgressBarUtil.hideProgressDialog();
+
+      if (result.invoiceId.isNotEmpty) {
+        _showSuccessDialog(context, 'Success');
+      } else {
+        _showSuccessDialog(context, 'Failed');
+      }
+    } on PlatformException catch (e) {
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      mProgressBarUtil.hideProgressDialog();
+      if (e.code.isNotEmpty) {
+        final responseCode = int.parse(e.code);
+        if (responseCode >= 500 && responseCode <= 599) {
+          /// Cache the productId in SharedPreferences if failed synching with Chargebee.
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString('productId', product.id);
+
+          /// validate the receipt
+          validateNonSubscriptionReceipt(product.id, productType, customer);
         }
       }
     }
@@ -127,76 +184,120 @@ class ProductListViewState extends State<ProductListView> {
         _showSuccessDialog(context, result.subscriptionId);
       }
     } on PlatformException catch (e) {
-      debugPrint('Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
       mProgressBarUtil.hideProgressDialog();
     }
   }
 
-  Future<void> _showCustomerIdDialog(
-      BuildContext context, Product product,) async => showDialog(
+  Future<void> validateNonSubscriptionReceipt(String productId,
+      ProductType productType, CBCustomer customer) async {
+    try {
+      final result = await Chargebee.validateReceiptForNonSubscriptions(
+          productId, productType, customer);
+      debugPrint('subscription result : $result');
+      mProgressBarUtil.hideProgressDialog();
+
+      if (result.invoiceId.isNotEmpty) {
+        /// if validateReceipt success, clear the cache
+        final prefs = await SharedPreferences.getInstance();
+        prefs.remove('productId');
+        _showSuccessDialog(context, 'Success');
+      } else {
+        _showSuccessDialog(context, 'Failed');
+      }
+    } on PlatformException catch (e) {
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      mProgressBarUtil.hideProgressDialog();
+    }
+  }
+
+  Future<void> _showDialog(
+    BuildContext context,
+    Product product,
+  ) async =>
+      showDialog(
         context: context,
         builder: (context) => AlertDialog(
-            title: const Text('Please enter Customer ID'),
-            content: TextField(
-              onChanged: (value) {
+          title: const Text('Please enter One Time Product Type'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                productType = value;
+              });
+            },
+            controller: productIdTextFieldController,
+            decoration: const InputDecoration(hintText: 'Product Type'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+                textStyle: const TextStyle(fontStyle: FontStyle.normal),
+              ),
+              child: const Text('CANCEL'),
+              onPressed: () {
                 setState(() {
-                  customerId = value;
+                  Navigator.pop(context);
                 });
               },
-              controller: productIdTextFieldController,
-              decoration: const InputDecoration(hintText: 'Customer ID'),
             ),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.red,
-                    textStyle: const TextStyle(fontStyle: FontStyle.normal),),
-                child: const Text('CANCEL'),
-                onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                  });
-                },
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                textStyle: const TextStyle(fontStyle: FontStyle.normal),
               ),
-              TextButton(
-                style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green,
-                    textStyle: const TextStyle(fontStyle: FontStyle.normal),),
-                child: const Text('OK'),
-                onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                    mProgressBarUtil.showProgressDialog();
-                    try {
-                      purchaseProduct(product);
-                    } catch (e) {
-                      log('error : ${e.toString()}');
+              child: const Text('OK'),
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context);
+                  mProgressBarUtil.showProgressDialog();
+                  try {
+                    ProductType type;
+                    if (productType != null) {
+                      if (productType == ProductType.consumable.name) {
+                        type = ProductType.consumable;
+                      } else if (productType ==
+                          ProductType.non_consumable.name) {
+                        type = ProductType.non_consumable;
+                      } else {
+                        type = ProductType.non_renewing_subscription;
+                      }
+                      purchaseNonSubscriptionProduct(product, type);
                     }
-                  });
-                },
-              ),
-            ],
-          ),);
+                  } catch (e) {
+                    log('error : ${e.toString()}');
+                  }
+                });
+              },
+            ),
+          ],
+        ),
+      );
 
-  Future<void> _showSuccessDialog(BuildContext context, String status) async => showDialog(
+  Future<void> _showSuccessDialog(BuildContext context, String status) async =>
+      showDialog(
         context: context,
         builder: (context) => AlertDialog(
-            title: const Text('Chargebee'),
-            content: Text(status),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green,
-                    textStyle: const TextStyle(fontStyle: FontStyle.normal),),
-                child: const Text('OK'),
-                onPressed: () {
-                  mProgressBarUtil.hideProgressDialog();
-                  Navigator.pop(context);
-                },
+          title: const Text('Chargebee'),
+          content: Text(status),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                textStyle: const TextStyle(fontStyle: FontStyle.normal),
               ),
-            ],
-          ),);
+              child: const Text('OK'),
+              onPressed: () {
+                mProgressBarUtil.hideProgressDialog();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      );
 }
