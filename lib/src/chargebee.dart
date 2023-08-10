@@ -96,6 +96,21 @@ class Chargebee {
     }
   }
 
+  /// This method will be used to show Manage Subscriptions Settings in your App,
+  ///
+  /// [productId] it is optional.
+  ///
+  /// [applicationId] it is optional. packageName/bundleId of the app
+  static Future<void> showManageSubscriptionsSettings([
+    String? productId = '',
+    String? applicationId = '',
+  ]) async {
+    await platform.invokeMethod(
+      Constants.mShowManageSubscriptionsSettings,
+      {Constants.productId: productId, Constants.applicationId: applicationId},
+    );
+  }
+
   /// Buy the non-subscription product with/without customer data.
   ///
   /// [product] product object to be passed.
