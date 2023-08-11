@@ -109,6 +109,18 @@ try {
 
 The above function will handle the purchase against Apple App Store or Google Play Store and send the in-app purchase receipt for server-side receipt verification to your Chargebee account. Use the Subscription ID returned by the above function to check for Subscription status on Chargebee and confirm the access - granted or denied.
 
+### Invoke Show Manage Subscriptions Settings
+#### For Android
+The `showManageSubscriptionsSettings()` function is designed to invoke the Manage Subscriptions in your app using Chargebee's Flutter SDKs. `Chargebee.showManageSubscriptionsSettings()`, opens the Play Store App subscriptions settings page.
+#### For iOS
+##### Invoke Upgrade or Downgrade Subscription Flow in your App
+The `showManageSubscriptionsSettings()` function is designed to invoke the upgrade/downgrade flow in your app using Chargebee's Flutter SDKs. `Chargebee.shared.showManageSubscriptionsSettings()`, opens the App Store App subscriptions settings page.
+
+**Note:** Upgrades and downgrades are handled through [Apple App Store Server Notifications](https://apidocs.chargebee.com/docs/api/in_app_purchase_events?prod_cat_ver=2#app_store_notifications) in Chargebee.
+##### Upgrade or Downgrade Subscription
+When a user changes their subscription level from a lower price plan to a higher price plan, it's considered an upgrade. On the other hand, when a user switches from a higher-price plan to a lower-price plan, it's considered a downgrade.
+In the case of the Apple App Store, you can arrange the subscriptions using the drag-and-drop option in **Edit Subscription Order** in App Store Connect. [Learn more](https://developer.apple.com/app-store/subscriptions/#ranking).
+
 ### One-Time Purchases
 The `purchaseNonSubscriptionProduct` function handles the one-time purchase against Apple App Store and Google Play Store and then sends the IAP receipt for server-side receipt verification to your Chargebee account. Post verification a Charge corresponding to this one-time purchase will be created in Chargebee. The Apple App Store supports three types of one-time purchases `consumable`, `non_consumable` and `non_renewing_subscription`. The Google Play Store supports two types of one-time purchases `consumable` and `non_consumable`.
 
