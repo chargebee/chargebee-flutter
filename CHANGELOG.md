@@ -1,4 +1,4 @@
-## 0.0.15
+## 0.1.0
 New Feature
 * Adds show manage subscriptions settings in app (#67)
 ## 0.0.14
