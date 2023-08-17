@@ -60,6 +60,9 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     purchaseProduct(args, result)
                 }
             }
+            "showManageSubscriptionsSettings" -> {
+                showManageSubscriptionsSettings(args)
+            }
             "purchaseNonSubscriptionProduct" -> {
                 if (args != null) {
                     purchaseNonSubscriptionProduct(args, result)
@@ -221,6 +224,12 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     onError(error, result)
                 }
             })
+    }
+
+    private fun showManageSubscriptionsSettings(args: Map<String, Any>?) {
+        val productId = args?.get("productId") as String
+        val packageName = args?.get("applicationId") as String
+        Chargebee.showManageSubscriptionsSettings(context = activity, productId = productId, packageName = packageName)
     }
 
     private fun purchaseNonSubscriptionProduct(args: Map<String, Any>, callback: Result) {

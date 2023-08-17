@@ -12,6 +12,8 @@ class Constants {
   static const params = 'params';
   static const includeInactivePurchases = 'includeInactivePurchases';
   static const productType = 'product_type';
+  static const productId = 'productId';
+  static const applicationId = 'applicationId';
 
   /// API name for both iOS and Android
   static const mAuthentication = 'authentication';
@@ -28,6 +30,7 @@ class Constants {
       'purchaseNonSubscriptionProduct';
   static const mValidateReceiptForNonSubscriptions =
       'validateReceiptForNonSubscriptions';
+  static const mShowManageSubscriptionsSettings = 'showManageSubscriptionsSettings';
 
   /// Customer info
   static const customerId = 'customerId';

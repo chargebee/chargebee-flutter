@@ -1,3 +1,6 @@
+## 0.1.0
+New Feature
+* Adds show manage subscriptions settings in app (#67)
 ## 0.0.14
 New Feature
 * Adds one time purchase support. (#64)

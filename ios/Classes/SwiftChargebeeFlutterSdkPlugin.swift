@@ -93,6 +93,9 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     }
                 }
             })
+        case "showManageSubscriptionsSettings":
+            Chargebee.shared.showManageSubscriptionsSettings()
+            
         case "purchaseNonSubscriptionProduct":
             guard let params = call.arguments as?  [String: String] else {
                 return _result(FlutterError.noArgsError)

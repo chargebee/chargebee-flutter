@@ -197,6 +197,9 @@ class _MyHomePageState extends State<MyHomePage> {
         mProgressBarUtil.showProgressDialog();
         restorePurchases();
         break;
+      case Constants.showManageSubscriptions:
+        Chargebee.showManageSubscriptionsSettings();
+        break;
       default:
         break;
     }
