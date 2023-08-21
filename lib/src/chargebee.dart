@@ -70,7 +70,7 @@ class Chargebee {
     return products;
   }
 
-  /// Buy the product with/without customer id.
+  /// Buy the product with/without customer data.
   ///
   /// [product] product object to be passed.
   ///
