@@ -185,14 +185,21 @@ void main() {
       'ln',
       'abc@gmail.com',
     );
+    final params = {
+      Constants.product: product.id,
+      Constants.customerId: customer.id ?? '',
+      Constants.firstName: customer.firstName ?? '',
+      Constants.lastName: customer.lastName ?? '',
+      Constants.email: customer.email ?? '',
+    };
     test('returns subscription result for Android', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseProduct(product);
+      final result = await Chargebee.purchaseProduct(product, customer: customer);
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
-          arguments: {Constants.product: product.id, Constants.customerId: ''},
+          arguments: params,
         )
       ]);
       expect(result.status, 'active');
@@ -201,11 +208,11 @@ void main() {
     test('returns subscription result for iOS', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      final result = await Chargebee.purchaseProduct(product);
+      final result = await Chargebee.purchaseProduct(product, customer: customer);
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
-          arguments: {Constants.product: product.id, Constants.customerId: ''},
+          arguments: params,
         )
       ]);
       expect(result.status, 'active');
@@ -218,10 +225,7 @@ void main() {
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
-          arguments: {
-            Constants.product: product.id,
-            Constants.customerId: 'asz'
-          },
+          arguments: params,
         )
       ]);
       expect(result.status, 'active');
@@ -234,10 +238,7 @@ void main() {
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
-          arguments: {
-            Constants.product: product.id,
-            Constants.customerId: 'ast'
-          },
+          arguments: params,
         )
       ]);
       expect(result.status, 'active');
