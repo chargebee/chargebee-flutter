@@ -97,7 +97,13 @@ class ProductListViewState extends State<ProductListView> {
 
   Future<void> purchaseProduct(Product product) async {
     try {
-      final result = await Chargebee.purchaseProduct(product, 'customerId');
+      final customer = CBCustomer(
+        'abc_flutter_test',
+        'fn',
+        'ln',
+        'abc@gmail.com',
+      );
+      final result = await Chargebee.purchaseProduct(product, customer: customer);
       debugPrint('subscription result : $result');
       debugPrint('subscription id : ${result.subscriptionId}');
       debugPrint('plan id : ${result.planId}');

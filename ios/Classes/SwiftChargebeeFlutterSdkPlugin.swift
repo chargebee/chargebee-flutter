@@ -60,7 +60,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                 return _result(FlutterError.noArgsError)
             }
             let productId = params["product"]
-            let customerId = params["customerId"]
+            let customer = CBCustomer(customerID: params["customerId"], firstName:params["firstName"], lastName: params["lastName"], email:params["email"])
             var dict = [String:String]()
             CBPurchase.shared.retrieveProducts(withProductID: [productId!], completion: { result in
                 DispatchQueue.main.async {
@@ -68,7 +68,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     case let .success(products):
                         debugPrint("products: \(products)");
                         let  product: CBProduct = products.self.first!;
-                        CBPurchase.shared.purchaseProduct(product: product, customerId: customerId) { result in
+                        CBPurchase.shared.purchaseProduct(product: product, customer: customer) { result in
                             switch result {
                             case .success(let result):
                                 if let subscriptionId = result.subscriptionId, let planId = result.planId{

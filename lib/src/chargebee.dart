@@ -75,19 +75,24 @@ class Chargebee {
   /// [product] product object to be passed.
   ///
   /// [customerId] it can be optional.
+  /// [customer] it can be optional.
   /// if passed, the subscription will be created by using customerId in chargebee.
   /// if not passed, the value of customerId is same as SubscriptionId.
   ///
   /// If purchase success [PurchaseResult] object be returned.
   /// Throws an [PlatformException] in case of failure.
   static Future<PurchaseResult> purchaseProduct(
-    Product product, [
+    Product product, {
+    @Deprecated(
+      'This param will be removed in upcoming release, Use CBCustomer object to pass customer info instead',
+    )
     String? customerId = '',
-  ]) async {
-    customerId ??= '';
+    CBCustomer? customer,
+  }) async {
+    final map = _convertObjectToMap(product, customerId, customer);
     final String purchaseResult = await platform.invokeMethod(
       Constants.mPurchaseProduct,
-      {Constants.product: product.id, Constants.customerId: customerId},
+      map,
     );
     if (purchaseResult.isNotEmpty) {
       return PurchaseResult.fromJson(jsonDecode(purchaseResult.toString()));
@@ -386,5 +391,21 @@ class Chargebee {
       purchaseResult = purchaseResult.toString();
     }
     return NonSubscriptionPurchaseResult.fromJson(jsonDecode(purchaseResult));
+  }
+
+  static Map _convertObjectToMap(Product product, String? customerId, CBCustomer? customer){
+    String? id = '';
+    if (customerId?.isNotEmpty == true) {
+      id = customerId;
+    } else if (customer?.id?.isNotEmpty == true) {
+      id = customer?.id;
+    }
+    return {
+      Constants.product: product.id,
+      Constants.customerId: id,
+      Constants.firstName: customer?.firstName ?? '',
+      Constants.lastName: customer?.lastName ?? '',
+      Constants.email: customer?.email ?? '',
+    };
   }
 }

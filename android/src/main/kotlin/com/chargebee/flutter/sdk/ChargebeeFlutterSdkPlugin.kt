@@ -181,7 +181,12 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
 
     private fun purchaseProduct(args: Map<String, Any>, result: Result) {
-        val customerID = args["customerId"] as String
+        val customer = CBCustomer(
+            args["customerId"] as String,
+            args["firstName"] as String,
+            args["lastName"] as String,
+            args["email"] as String
+        )
         val arrayList: ArrayList<String> = ArrayList<String>()
         arrayList.add(args["product"] as String)
         CBPurchase.retrieveProducts(
@@ -198,7 +203,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     }
                     CBPurchase.purchaseProduct(
                         productIDs.first(),
-                        customerID,
+                        customer,
                         object : CBCallback.PurchaseCallback<String> {
                             override fun onSuccess(
                                 receiptDetail: ReceiptDetail,

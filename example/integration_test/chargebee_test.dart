@@ -111,6 +111,12 @@ class ChargebeeTest {
         'currencyCode',
         SubscriptionPeriod.fromMap(
             {'periodUnit': 'month', 'numberOfUnits': 3},),);
+  final customer = CBCustomer(
+    'abc_flutter_test',
+    'fn',
+    'ln',
+    'abc@gmail.com',
+  );
 
   Future<void> purchaseProducts_withCustomerInfo() async {
     tester.printToConsole('Starting to subscribe the product');
@@ -122,7 +128,7 @@ class ChargebeeTest {
     }
 
     try {
-      final result = await Chargebee.purchaseProduct(product, 'abc');
+      final result = await Chargebee.purchaseProduct(product, customer: customer);
       debugPrint('purchase result: $result');
       expect(result.status, 'true');
       tester.printToConsole('Product subscribed successfully!');
@@ -141,7 +147,7 @@ class ChargebeeTest {
     }
 
     try {
-      final result = await Chargebee.purchaseProduct(product, 'abc');
+      final result = await Chargebee.purchaseProduct(product, customer: customer);
       debugPrint('purchase result: $result');
       expect(result.status, 'true');
       tester.printToConsole('Product subscribed successfully!');
