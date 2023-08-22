@@ -185,14 +185,15 @@ Receipt validation is crucial to ensure that the purchases made by your users ar
 
 * Add a network listener, as shown in the example project.
 * Save the product identifier in the cache once the purchase is initiated and clear the cache once the purchase is successful.
-* When the network connectivity is lost after the purchase is completed at Apple App Store/Google Play Store but not synced with Chargebee, retrieve the product from the cache once the network connection is back and initiate validateReceipt() by passing `productId` and `CBCustomer(optional)` as input. This will validate the receipt and sync the purchase in Chargebee as a subscription. For subscriptions, use the function to validateReceipt().
+* When the network connectivity is lost after the purchase is completed at Google Play Store but not synced with Chargebee, retrieve the product from the cache once the network connection is back and initiate `validateReceipt() / validateReceiptForNonSubscriptions()` by passing `productId` and `CBCustomer(optional)` as input. This will validate the receipt and sync the purchase in Chargebee as a subscription or one-time purchase. For subscriptions, use the function to `validateReceipt()`;for one-time purchases, use the function `validateReceiptForNonSubscriptions()`.
 
 Use the function available for the retry mechanism.
 ##### Function for validating the Subscriptions receipt
 
 ``` dart
 try {
-  final result = await Chargebee.validateReceipt(productId);
+  final customer = CBCustomer('customerId','firstName','lastName','emailId');
+  final result = await Chargebee.validateReceipt(productId, customer);
   print("subscription id : ${result.subscriptionId}");
   print("subscription status : ${result.status}");
 } on PlatformException catch (e) {
