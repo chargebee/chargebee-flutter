@@ -180,10 +180,10 @@ void main() {
     const purchaseResult =
         '''{"subscriptionId":"cb-dsd", "planId":"test", "status":"active"}''';
     final customer = CBCustomer(
-      'abc_flutter_test',
-      'fn',
-      'ln',
-      'abc@gmail.com',
+      'abc',
+      '',
+      '',
+      '',
     );
     final params = {
       Constants.product: product.id,
@@ -195,7 +195,7 @@ void main() {
     test('returns subscription result for Android', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseStoreProduct(product, customer: customer);
+      final result = await Chargebee.purchaseProduct(product, 'abc');
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
@@ -208,7 +208,33 @@ void main() {
     test('returns subscription result for iOS', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      final result = await Chargebee.purchaseStoreProduct(product, customer: customer);
+      final result = await Chargebee.purchaseProduct(product, 'abc');
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseProduct,
+          arguments: params,
+        )
+      ]);
+      expect(result.status, 'active');
+    });
+
+    test('subscribed with customer id for Android', () async {
+      channelResponse = purchaseResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final result = await Chargebee.purchaseProduct(product, 'abc');
+      expect(callStack, <Matcher>[
+        isMethodCall(
+          Constants.mPurchaseProduct,
+          arguments:  params,
+        )
+      ]);
+      expect(result.status, 'active');
+    });
+
+    test('subscribed with customer id for iOS', () async {
+      channelResponse = purchaseResult;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final result = await Chargebee.purchaseProduct(product, 'abc');
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
@@ -221,11 +247,17 @@ void main() {
     test('subscribed with customer info for Android', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseStoreProduct(product, customer: customer);
+      final result = await Chargebee.purchaseStoreProduct(product, customer: CBCustomer('abc_flutter_test', 'flutter', 'test', 'abc@gmail.com'));
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
-          arguments: params,
+          arguments: {
+            Constants.product: product.id,
+            Constants.customerId: 'abc_flutter_test',
+            Constants.firstName: 'flutter',
+            Constants.lastName: 'test',
+            Constants.email: 'abc@gmail.com',
+          },
         )
       ]);
       expect(result.status, 'active');
@@ -234,11 +266,17 @@ void main() {
     test('subscribed with customer info for iOS', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseStoreProduct(product, customer: customer);
+      final result = await Chargebee.purchaseStoreProduct(product, customer: CBCustomer('abc_flutter_test', 'flutter', 'test', 'abc@gmail.com'));
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
-          arguments: params,
+          arguments: {
+            Constants.product: product.id,
+            Constants.customerId: 'abc_flutter_test',
+            Constants.firstName: 'flutter',
+            Constants.lastName: 'test',
+            Constants.email: 'abc@gmail.com',
+          },
         )
       ]);
       expect(result.status, 'active');
