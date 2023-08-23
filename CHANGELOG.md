@@ -1,3 +1,6 @@
+## 0.2.0
+New Feature
+* Introduced new API `purchaseStoreProduct` to purchase product with customer information. (#68)
 ## 0.1.0
 New Feature
 * Adds show manage subscriptions settings in app (#67)

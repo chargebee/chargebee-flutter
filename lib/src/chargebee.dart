@@ -80,14 +80,39 @@ class Chargebee {
   ///
   /// If purchase success [PurchaseResult] object be returned.
   /// Throws an [PlatformException] in case of failure.
+  @Deprecated(
+    'This method will be removed in upcoming release, Use purchaseStoreProduct API instead',
+  )
   static Future<PurchaseResult> purchaseProduct(
     Product product, [
     String? customerId = '',
   ]) async {
-    customerId ??= '';
+    final map = _convertToMap(product, customerId: customerId);
+    return _purchaseResult(map);
+  }
+
+  /// Buy the product with/without customer data.
+  ///
+  /// [product] product object to be passed.
+  ///
+  /// [customer] it can be optional.
+  /// if passed, the subscription will be created by using customerId in chargebee.
+  /// if not passed, the value of customerId is same as SubscriptionId.
+  ///
+  /// If purchase success [PurchaseResult] object be returned.
+  /// Throws an [PlatformException] in case of failure.
+  static Future<PurchaseResult> purchaseStoreProduct(
+    Product product, {
+    CBCustomer? customer,
+  }) async {
+    final map = _convertToMap(product, customer: customer);
+    return _purchaseResult(map);
+  }
+
+  static Future<PurchaseResult> _purchaseResult(Map params) async {
     final String purchaseResult = await platform.invokeMethod(
       Constants.mPurchaseProduct,
-      {Constants.product: product.id, Constants.customerId: customerId},
+      params,
     );
     if (purchaseResult.isNotEmpty) {
       return PurchaseResult.fromJson(jsonDecode(purchaseResult.toString()));
@@ -386,5 +411,25 @@ class Chargebee {
       purchaseResult = purchaseResult.toString();
     }
     return NonSubscriptionPurchaseResult.fromJson(jsonDecode(purchaseResult));
+  }
+
+  static Map _convertToMap(
+    Product product, {
+    String? customerId = '',
+    CBCustomer? customer,
+  }) {
+    String? id = '';
+    if (customerId?.isNotEmpty ?? false) {
+      id = customerId;
+    } else if (customer?.id?.isNotEmpty ?? false) {
+      id = customer?.id;
+    }
+    return {
+      Constants.product: product.id,
+      Constants.customerId: id,
+      Constants.firstName: customer?.firstName ?? '',
+      Constants.lastName: customer?.lastName ?? '',
+      Constants.email: customer?.email ?? '',
+    };
   }
 }

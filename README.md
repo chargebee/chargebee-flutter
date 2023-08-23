@@ -27,7 +27,7 @@ To use Chargebee SDK in your Flutter app, follow these steps:
 
     ``` dart
     dependencies: 
-     chargebee_flutter: ^0.1.0
+     chargebee_flutter: ^0.2.0
     ```
     
 2.  Install dependency.
@@ -91,15 +91,16 @@ try {
 You can present any of the above products to your users for them to purchase.
 
 #### Buy or Subscribe Product
+Pass the `Product` and  `CBCustomer` objects to the following function when the user chooses the product to purchase.
 
-Pass the product and customer identifier to the following function when your customer chooses the product to purchase.
+`CBCustomer` - **Optional object**. Although this is an optional object, we recommend passing the necessary customer details, such as `customerId`, `firstName`, `lastName`, and `email` if it is available before the user subscribes to your App. This ensures that the customer details in your database match the customer details in Chargebee. If the `customerId` is not passed in the customer's details, then the value of `customerId` will be the same as the `subscriptionId` created in Chargebee.
 
-`customerId` -  **Optional parameter**. Although this is an optional parameter, we recommend passing customerId if it is available before user subscribes on your App. Passing this parameter ensures that customerId in your database matches with the customerId in Chargebee.
-In case this parameter is not passed, then the **customerId** will be the same as the **SubscriptionId** created in Chargebee.
+**Note**: The `customer` parameter in the below code snippet is an instance of `CBCustomer` class that contains the details of the customer who wants to subscribe or buy the product.
 
 ``` dart
 try {
-  final result = await Chargebee.purchaseProduct(product, customerId);
+  final customer = CBCustomer('customerId','firstName','lastName','emailId');
+  final result = await Chargebee.purchaseStoreProduct(product, customer: customer);
   print("subscription id : ${result.subscriptionId}");
   print("subscription status : ${result.status}");
 } on PlatformException catch (e) {
@@ -184,14 +185,15 @@ Receipt validation is crucial to ensure that the purchases made by your users ar
 
 * Add a network listener, as shown in the example project.
 * Save the product identifier in the cache once the purchase is initiated and clear the cache once the purchase is successful.
-* When the network connectivity is lost after the purchase is completed at Apple App Store/Google Play Store but not synced with Chargebee, retrieve the product from the cache once the network connection is back and initiate validateReceipt() by passing `productId` and `CBCustomer(optional)` as input. This will validate the receipt and sync the purchase in Chargebee as a subscription. For subscriptions, use the function to validateReceipt().
+* When the network connectivity is lost after the purchase is completed at Apple App Store/Google Play Store but not synced with Chargebee, retrieve the product from the cache once the network connection is back and initiate `validateReceipt() / validateReceiptForNonSubscriptions()` by passing `productId` and `CBCustomer(optional)` as input. This will validate the receipt and sync the purchase in Chargebee as a subscription or one-time purchase. For subscriptions, use the function to `validateReceipt()`;for one-time purchases, use the function `validateReceiptForNonSubscriptions()`.
 
 Use the function available for the retry mechanism.
 ##### Function for validating the Subscriptions receipt
 
 ``` dart
 try {
-  final result = await Chargebee.validateReceipt(productId);
+  final customer = CBCustomer('customerId','firstName','lastName','emailId');
+  final result = await Chargebee.validateReceipt(productId, customer);
   print("subscription id : ${result.subscriptionId}");
   print("subscription status : ${result.status}");
 } on PlatformException catch (e) {

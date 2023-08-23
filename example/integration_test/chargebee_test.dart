@@ -19,7 +19,8 @@ void main() {
       await chargebeeTest.retrieveProductIdentifiersWithoutParam();
       await chargebeeTest.retrieveProductIdentifiersWithParam();
       await chargebeeTest.retrieveProducts();
-      await chargebeeTest.purchaseProducts_withCustomerInfo();
+      await chargebeeTest.purchaseProducts_withCustomerId();
+      await chargebeeTest.purchaseProduct_withCustomerInfo();
       await chargebeeTest.purchaseProducts_withoutCustomerInfo();
       await chargebeeTest.retrieveSubscriptions();
       await chargebeeTest.retrieveEntitlements();
@@ -111,8 +112,14 @@ class ChargebeeTest {
         'currencyCode',
         SubscriptionPeriod.fromMap(
             {'periodUnit': 'month', 'numberOfUnits': 3},),);
+  final customer = CBCustomer(
+    'abc_flutter_test',
+    'fn',
+    'ln',
+    'abc@gmail.com',
+  );
 
-  Future<void> purchaseProducts_withCustomerInfo() async {
+  Future<void> purchaseProducts_withCustomerId() async {
     tester.printToConsole('Starting to subscribe the product');
 
     if (platformName == 'ios') {
@@ -141,7 +148,24 @@ class ChargebeeTest {
     }
 
     try {
-      final result = await Chargebee.purchaseProduct(product, 'abc');
+      final result = await Chargebee.purchaseProduct(product);
+      debugPrint('purchase result: $result');
+      expect(result.status, 'true');
+      tester.printToConsole('Product subscribed successfully!');
+    } on PlatformException catch (e) {
+      fail('Error: ${e.message}');
+    }
+  }
+
+  Future<void> purchaseProduct_withCustomerInfo() async {
+    tester.printToConsole('Starting to subscribe the product');
+    if (platformName == 'ios') {
+      _getProduct(productIdForiOS);
+    } else {
+      _getProduct(productIdForAndroid);
+    }
+    try {
+      final result = await Chargebee.purchaseStoreProduct(product, customer: customer);
       debugPrint('purchase result: $result');
       expect(result.status, 'true');
       tester.printToConsole('Product subscribed successfully!');

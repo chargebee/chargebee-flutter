@@ -86,7 +86,8 @@ class ProductListViewState extends State<ProductListView> {
       if (product.subscriptionPeriod.unit.isNotEmpty &&
           product.subscriptionPeriod.numberOfUnits != 0) {
         mProgressBarUtil.showProgressDialog();
-        purchaseProduct(product);
+        // purchaseProduct(product);
+         purchaseStoreProduct(product);
       } else {
         _showDialog(context, product);
       }
@@ -97,7 +98,46 @@ class ProductListViewState extends State<ProductListView> {
 
   Future<void> purchaseProduct(Product product) async {
     try {
-      final result = await Chargebee.purchaseProduct(product, 'customerId');
+      final result = await Chargebee.purchaseProduct(product, 'abc');
+      debugPrint('subscription result : $result');
+      debugPrint('subscription id : ${result.subscriptionId}');
+      debugPrint('plan id : ${result.planId}');
+      debugPrint('subscription status : ${result.status}');
+
+      mProgressBarUtil.hideProgressDialog();
+
+      if (result.status == 'true') {
+        _showSuccessDialog(context, 'Success');
+      } else {
+        _showSuccessDialog(context, result.subscriptionId);
+      }
+    } on PlatformException catch (e) {
+      debugPrint(
+          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
+      mProgressBarUtil.hideProgressDialog();
+      if (e.code.isNotEmpty) {
+        final responseCode = int.parse(e.code);
+        if (responseCode >= 500 && responseCode <= 599) {
+          /// Cache the productId in SharedPreferences if failed synching with Chargebee.
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString('productId', product.id);
+
+          /// validate the receipt
+          validateReceipt(product.id);
+        }
+      }
+    }
+  }
+
+  Future<void> purchaseStoreProduct(Product product) async {
+    try {
+      final customer = CBCustomer(
+        'abc_flutter_test',
+        'fn',
+        'ln',
+        'abc@gmail.com',
+      );
+      final result = await Chargebee.purchaseStoreProduct(product, customer: customer);
       debugPrint('subscription result : $result');
       debugPrint('subscription id : ${result.subscriptionId}');
       debugPrint('plan id : ${result.planId}');
