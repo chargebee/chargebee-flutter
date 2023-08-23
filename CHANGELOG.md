@@ -1,6 +1,6 @@
 ## 0.2.0
 New Feature
-* Pass `CBCustomer` object to `purchaseProduct` API method. (#68)
+* Introduced new API `purchaseStoreProduct` to purchase product with customer information. (#68)
 ## 0.1.0
 New Feature
 * Adds show manage subscriptions settings in app (#67)

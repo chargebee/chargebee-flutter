@@ -70,29 +70,49 @@ class Chargebee {
     return products;
   }
 
-  /// Buy the product with/without customer data.
+  /// Buy the product with/without customer id.
   ///
   /// [product] product object to be passed.
   ///
   /// [customerId] it can be optional.
+  /// if passed, the subscription will be created by using customerId in chargebee.
+  /// if not passed, the value of customerId is same as SubscriptionId.
+  ///
+  /// If purchase success [PurchaseResult] object be returned.
+  /// Throws an [PlatformException] in case of failure.
+  @Deprecated(
+    'This method will be removed in upcoming release, Use purchaseStoreProduct API instead',
+  )
+  static Future<PurchaseResult> purchaseProduct(
+    Product product, [
+    String? customerId = '',
+  ]) async {
+    final map = _convertToMap(product, customerId: customerId);
+    return _purchaseResult(map);
+  }
+
+  /// Buy the product with/without customer data.
+  ///
+  /// [product] product object to be passed.
+  ///
   /// [customer] it can be optional.
   /// if passed, the subscription will be created by using customerId in chargebee.
   /// if not passed, the value of customerId is same as SubscriptionId.
   ///
   /// If purchase success [PurchaseResult] object be returned.
   /// Throws an [PlatformException] in case of failure.
-  static Future<PurchaseResult> purchaseProduct(
+  static Future<PurchaseResult> purchaseStoreProduct(
     Product product, {
-    @Deprecated(
-      'This param will be removed in upcoming release, Use CBCustomer object to pass customer info instead',
-    )
-    String? customerId = '',
     CBCustomer? customer,
   }) async {
-    final map = _convertObjectToMap(product, customerId, customer);
+    final map = _convertToMap(product, customer: customer);
+    return _purchaseResult(map);
+  }
+
+  static Future<PurchaseResult> _purchaseResult(Map params) async {
     final String purchaseResult = await platform.invokeMethod(
       Constants.mPurchaseProduct,
-      map,
+      params,
     );
     if (purchaseResult.isNotEmpty) {
       return PurchaseResult.fromJson(jsonDecode(purchaseResult.toString()));
@@ -393,7 +413,11 @@ class Chargebee {
     return NonSubscriptionPurchaseResult.fromJson(jsonDecode(purchaseResult));
   }
 
-  static Map _convertObjectToMap(Product product, String? customerId, CBCustomer? customer){
+  static Map _convertToMap(
+    Product product, {
+    String? customerId = '',
+    CBCustomer? customer,
+  }) {
     String? id = '';
     if (customerId?.isNotEmpty == true) {
       id = customerId;

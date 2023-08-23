@@ -100,7 +100,7 @@ Pass the `Product` and  `CBCustomer` objects to the following function when the 
 ``` dart
 try {
   final customer = CBCustomer('customerId','firstName','lastName','emailId');
-  final result = await Chargebee.purchaseProduct(product, customer: customer);
+  final result = await Chargebee.purchaseStoreProduct(product, customer: customer);
   print("subscription id : ${result.subscriptionId}");
   print("subscription status : ${result.status}");
 } on PlatformException catch (e) {
