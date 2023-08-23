@@ -419,9 +419,9 @@ class Chargebee {
     CBCustomer? customer,
   }) {
     String? id = '';
-    if (customerId?.isNotEmpty == true) {
+    if (customerId?.isNotEmpty ?? false) {
       id = customerId;
-    } else if (customer?.id?.isNotEmpty == true) {
+    } else if (customer?.id?.isNotEmpty ?? false) {
       id = customer?.id;
     }
     return {
