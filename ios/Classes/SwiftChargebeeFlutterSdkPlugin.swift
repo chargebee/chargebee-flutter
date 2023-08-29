@@ -28,8 +28,8 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                     _result(status.details.status!)
                 case .error(let error):
                     debugPrint("error : \(error)")
-                    _result(FlutterError.chargebeeError(error as CBError))
-                    
+                    _result(FlutterError.chargebeeError(error))
+                
                 }
             }
             
@@ -177,10 +177,10 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                                 _result(jsonString)
                             }
                         }else {
-                            _result(FlutterError.jsonSerializationError("Serialization Issue"))
+                            _result(FlutterError.jsonSerializationError("JSON serialization error"))
                         }
                     case let .failure(error):
-                        _result(FlutterError.productIdentifierError(error.localizedDescription))
+                        _result(FlutterError.productIdentifierError(error))
                     }
                 }
             })

@@ -3,34 +3,38 @@ package com.chargebee.flutter.sdk
 import com.android.billingclient.api.BillingClient
 
 enum class CBNativeError(val code: Int) {
-    // Restore Error
-    SERVICE_TIMEOUT(2014),
-    FEATURE_NOT_SUPPORTED(2015),
-    SERVICE_UNAVAILABLE(2016),
-    DEVELOPER_ERROR(2017),
-    ERROR(2018),
-    SERVICE_DISCONNECTED(2019),
-    USER_CANCELED(2020),
-    BILLING_UNAVAILABLE(2021),
-    ITEM_UNAVAILABLE(2022),
-    ITEM_NOT_OWNED(2023),
-    ITEM_ALREADY_OWNED(2024),
-    UNKNOWN(0);
+
+    UNKNOWN(0),
+
+    // Chargebee Errors
+    INVALID_API_KEY(999),
+    INVALID_SDK_CONFIGURATION(1000),
+    INVALID_CATALOG_VERSION(1001),
+
+    // Store Errors
+    INVALID_OFFER(2001),
+    INVALID_PURCHASE(2002),
+    INVALID_SANDBOX(2003),
+    NETWORK_ERROR(2004),
+    PAYMENT_FAILED(2005),
+    PAYMENT_NOT_ALLOWED(2006),
+    PRODUCT_NOT_AVAILABLE(2007),
+    PURCHASE_NOT_ALLOWED(2008),
+    PURCHASE_CANCELLED(2009),
+    STORE_PROBLEM(2010),
+    INVALID_RECEIPT(2011),
+    REQUEST_FAILED(2012),
+    PRODUCT_PURCHASED_ALREADY(2013);
 
     companion object {
         fun billingResponseCode(code: Int): CBNativeError {
             return when (code) {
-                BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> SERVICE_TIMEOUT
-                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> FEATURE_NOT_SUPPORTED
-                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> SERVICE_UNAVAILABLE
-                BillingClient.BillingResponseCode.DEVELOPER_ERROR -> DEVELOPER_ERROR
-                BillingClient.BillingResponseCode.ERROR -> ERROR
-                BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> SERVICE_DISCONNECTED
-                BillingClient.BillingResponseCode.USER_CANCELED -> USER_CANCELED
-                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> BILLING_UNAVAILABLE
-                BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> ITEM_UNAVAILABLE
-                BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> ITEM_NOT_OWNED
-                BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> ITEM_ALREADY_OWNED
+                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED, BillingClient.BillingResponseCode.BILLING_UNAVAILABLE, BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> PURCHASE_NOT_ALLOWED
+                BillingClient.BillingResponseCode.ERROR, BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE, BillingClient.BillingResponseCode.SERVICE_DISCONNECTED, BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> STORE_PROBLEM
+                BillingClient.BillingResponseCode.USER_CANCELED -> PURCHASE_CANCELLED
+                BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> PRODUCT_NOT_AVAILABLE
+                BillingClient.BillingResponseCode.DEVELOPER_ERROR -> INVALID_PURCHASE
+                BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> PRODUCT_PURCHASED_ALREADY
                 else -> UNKNOWN
             }
         }
