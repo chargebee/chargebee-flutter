@@ -7,7 +7,6 @@ enum class CBNativeError(val code: Int) {
     UNKNOWN(0),
 
     // Chargebee Errors
-    INVALID_API_KEY(999),
     INVALID_SDK_CONFIGURATION(1000),
     INVALID_CATALOG_VERSION(1001),
 

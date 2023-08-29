@@ -135,7 +135,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
                 is ChargebeeResult.Error -> {
                     onCBError(
-                        "${it.exp.errorCode().code}",
+                        "${CBNativeError.INVALID_SDK_CONFIGURATION.code}",
                         it.exp.messageUserInfo()["message"] as String, it.exp, result
                     )
                 }
@@ -330,7 +330,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
                 is ChargebeeResult.Error -> {
                     onCBError(
-                        "${it.exp.errorCode().code}",
+                        "${CBNativeError.INVALID_SDK_CONFIGURATION.code}",
                         it.exp.messageUserInfo()["message"] as String, it.exp, result
                     )
                 }
@@ -355,7 +355,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
                 is ChargebeeResult.Error -> {
                     onCBError(
-                        "${it.exp.errorCode().code}",
+                        "${CBNativeError.INVALID_SDK_CONFIGURATION.code}",
                         it.exp.messageUserInfo()["message"] as String, it.exp, result
                     )
                 }
@@ -379,7 +379,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
                 is ChargebeeResult.Error -> {
                     onCBError(
-                        "${it.exp.errorCode().code}",
+                        "${CBNativeError.INVALID_SDK_CONFIGURATION.code}",
                         it.exp.messageUserInfo()["message"] as String, it.exp, result
                     )
                 }
@@ -423,7 +423,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
                 is ChargebeeResult.Error -> {
                     onCBError(
-                        "${it.exp.errorCode().code}",
+                        "${CBNativeError.INVALID_SDK_CONFIGURATION.code}",
                         it.exp.messageUserInfo()["message"] as String, it.exp, result
                     )
                 }

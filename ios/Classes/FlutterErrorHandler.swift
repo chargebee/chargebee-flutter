@@ -22,7 +22,7 @@ extension FlutterError {
     }
 
     static func chargebeeError(_ error: CBError) -> FlutterError {
-        return FlutterError(code: "\(errorCode(error: error).rawValue)",
+        return FlutterError(code: "\(CBNativeError.invalidSdkConfiguration.rawValue)",
                             message: error.errorDescription,
                             details: error.userInfo)
     }
@@ -55,54 +55,12 @@ extension FlutterError {
                              message: error.errorDescription,
                             details: restoreError.userInfo)
     }
-    
-    internal static func errorCode(error: CBError) -> CBNativeError {
-        switch error.httpStatusCode {
-        case 401:
-            return CBNativeError.invalidAPIKey
-        case 404:
-            return CBNativeError.invalidSdkConfiguration
-        default:
-            return CBNativeError.unknown
-        }
-    }
-
-}
-
-extension CBPurchaseError {
-    public var skErrorCode: Int {
-        switch self {
-        case .unknown: return 0
-        case .invalidClient: return 1
-        case .userCancelled: return 2
-        case .paymentFailed: return 3
-        case .paymentNotAllowed: return 4
-        case .productNotAvailable: return 5
-        case .cannotMakePayments: return 6
-        case .networkConnectionFailed: return 7            
-        case .productsNotFound: return 8
-        case .privacyAcknowledgementRequired: return 9
-        case .invalidOffer: return 11
-        case .invalidPromoCode: return 12
-        case .invalidPrice: return 14
-        case .invalidPromoOffer: return 13
-        case .invalidSandbox: return 8
-        case .productIDNotFound: return 10
-        case .skRequestFailed:return 15
-        case .noProductToRestore:return 16
-        case .invalidSDKKey:return 17
-        case .invalidCustomerId:return 18
-        case .invalidCatalogVersion:return 19
-        case .invalidPurchase:return 20
-        }
-    }
 }
 
 enum CBNativeError: Int, Error {
     case unknown = 0
     
     // MARK: Chargebee Errors
-    case invalidAPIKey = 999
     case invalidSdkConfiguration = 1000
     case invalidCatalogVersion = 1001
     case cannotMakePayments = 1002
