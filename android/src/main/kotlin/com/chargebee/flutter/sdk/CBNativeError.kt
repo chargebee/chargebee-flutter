@@ -9,6 +9,7 @@ enum class CBNativeError(val code: Int) {
     // Chargebee Errors
     INVALID_SDK_CONFIGURATION(1000),
     INVALID_CATALOG_VERSION(1001),
+    INVALID_RESOURCE(1003)
 
     // Store Errors
     INVALID_OFFER(2001),
@@ -23,7 +24,13 @@ enum class CBNativeError(val code: Int) {
     STORE_PROBLEM(2010),
     INVALID_RECEIPT(2011),
     REQUEST_FAILED(2012),
-    PRODUCT_PURCHASED_ALREADY(2013);
+    PRODUCT_PURCHASED_ALREADY(2013),
+
+    // MARK: Restore Error
+    NO_PRODUCTS_TO_RESTORE(2019),
+    SERVICE_ERROR(2020),
+
+    SYSTEM_ERROR(3000);
 
     companion object {
         fun billingResponseCode(code: Int): CBNativeError {

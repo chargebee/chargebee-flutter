@@ -64,8 +64,7 @@ enum CBNativeError: Int, Error {
     case invalidSdkConfiguration = 1000
     case invalidCatalogVersion = 1001
     case cannotMakePayments = 1002
-    case noProductToRestore = 1003
-    case invalidResource = 1004
+    case invalidResource = 1003
     
     // MARK: Store Errors
     case invalidOffer = 2001
@@ -88,7 +87,7 @@ enum CBNativeError: Int, Error {
     case restoreFailed = 2016
     case invalidReceiptURL = 2017
     case invalidReceiptData = 2018
-    case noProductsToRestore = 2019
+    case noProductToRestore = 2019
     case serviceError = 2020
     
     // MARK: General Errors

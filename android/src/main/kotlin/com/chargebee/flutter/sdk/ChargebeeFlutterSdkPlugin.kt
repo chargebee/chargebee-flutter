@@ -174,6 +174,13 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             })
     }
 
+    val purchasesNotFoundToRestore = CBException(
+        ErrorDetail(
+            message = "Products not found to restore.",
+            httpStatusCode = CBNativeError.NO_PRODUCTS_TO_RESTORE.code
+        )
+    )
+
     private fun restorePurchases(resultCallback: Result, queryParams: Map<String, Boolean>?) {
         val includeInactivePurchases = queryParams?.get("includeInactivePurchases") as Boolean
         CBPurchase.restorePurchases(
@@ -181,10 +188,20 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             includeInactivePurchases,
             object : CBCallback.RestorePurchaseCallback {
                 override fun onSuccess(result: List<CBRestoreSubscription>) {
-                    val restoreSubscription = result.map { subscription ->
-                        Gson().toJson(subscription.toMap())
+                    if (result.isNotEmpty()) {
+                        val restoreSubscription = result.map { subscription ->
+                            Gson().toJson(subscription.toMap())
+                        }
+                        resultCallback.success(restoreSubscription)
+                    } else {
+                        val messageUserInfo = purchasesNotFoundToRestore.messageUserInfo()
+                        onCBError(
+                            "${purchasesNotFoundToRestore.httpStatusCode}",
+                            messageUserInfo["message"] as String,
+                            purchasesNotFoundToRestore,
+                            resultCallback
+                        )
                     }
-                    resultCallback.success(restoreSubscription)
                 }
 
                 override fun onError(error: CBException) {
@@ -259,6 +276,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             httpStatusCode = CBNativeError.PRODUCT_NOT_AVAILABLE.code
         )
     )
+
     private fun purchaseNonSubscriptionProduct(args: Map<String, Any>, callback: Result) {
         val customer = CBCustomer(
             args["customerId"] as String,
@@ -319,14 +337,30 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         return Gson().toJson(subscriptionStatus)
     }
 
+    val subscriptionNotFound = CBException(
+        ErrorDetail(
+            message = "Subscription not found",
+            httpStatusCode = CBNativeError.INVALID_SDK_CONFIGURATION.code
+        )
+    )
+
     private fun retrieveSubscriptions(queryParams: Map<String, String> = mapOf(), result: Result) {
         Chargebee.retrieveSubscriptions(queryParams) {
             when (it) {
                 is ChargebeeResult.Success -> {
                     val listSubscriptions = (it.data as CBSubscription).list
-                    val jsonString = Gson().toJson(listSubscriptions)
-
-                    result.success(jsonString)
+                    if (listSubscriptions.isNotEmpty()){
+                        val jsonString = Gson().toJson(listSubscriptions)
+                        result.success(jsonString)
+                    } else {
+                        val messageUserInfo = subscriptionNotFound.messageUserInfo()
+                        onCBError(
+                            "${subscriptionNotFound.httpStatusCode}",
+                            messageUserInfo["message"] as String,
+                            subscriptionNotFound,
+                            result
+                        )
+                    }
                 }
                 is ChargebeeResult.Error -> {
                     onCBError(

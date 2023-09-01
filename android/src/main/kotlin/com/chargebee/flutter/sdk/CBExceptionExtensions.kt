@@ -16,11 +16,3 @@ fun CBException.messageUserInfo(): MutableMap<String, out Any?> {
   }
   return messageUserInfo
 }
-
-fun CBException.errorCode(): CBNativeError {
-  return when (this.httpStatusCode) {
-    401 -> CBNativeError.INVALID_API_KEY
-    404 -> CBNativeError.INVALID_SDK_CONFIGURATION
-    else -> CBNativeError.UNKNOWN
-  }
-}
