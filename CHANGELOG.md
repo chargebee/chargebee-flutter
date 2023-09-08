@@ -1,3 +1,6 @@
+## 0.2.1
+Bug Fixes
+* The build issues on release mode and fixed in native android sdk - https://github.com/chargebee/chargebee-android/pull/87
 ## 0.2.0
 New Feature
 * Introduced new API `purchaseStoreProduct` to purchase product with customer information. (#68)
