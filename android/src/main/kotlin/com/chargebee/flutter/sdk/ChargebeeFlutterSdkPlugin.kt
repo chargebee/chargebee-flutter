@@ -164,9 +164,9 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     private fun restorePurchases(resultCallback: Result, queryParams: Map<String, Boolean>?) {
         val includeInactivePurchases = queryParams?.get("includeInactivePurchases") as Boolean
         CBPurchase.restorePurchases(
-            activity,
-            includeInactivePurchases,
-            object : CBCallback.RestorePurchaseCallback {
+            context = activity,
+            includeInActivePurchases = includeInactivePurchases,
+            completionCallback = object : CBCallback.RestorePurchaseCallback {
                 override fun onSuccess(result: List<CBRestoreSubscription>) {
                     val restoreSubscription = result.map { subscription ->
                         Gson().toJson(subscription.toMap())
