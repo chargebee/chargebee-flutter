@@ -134,7 +134,10 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     result.success(response.in_app_detail.status)
                 }
                 is ChargebeeResult.Error -> {
-                    onError(it.exp, result)
+                    onCBError(
+                        "${CBNativeError.INVALID_SDK_CONFIGURATION.code}",
+                        it.exp.messageUserInfo()["message"] as String, it.exp, result
+                    )
                 }
             }
         }
@@ -148,18 +151,35 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
                 override fun onSuccess(productDetails: ArrayList<CBProduct>) {
                     mSkuProductList.clear()
-                    for (product in productDetails) {
-                        val jsonMapString = Gson().toJson(product.toMap())
-                        mSkuProductList.add(jsonMapString)
+                    if (productDetails.isEmpty()) {
+                        val messageUserInfo = productNotAvailableError.messageUserInfo()
+                        onCBError(
+                            "${productNotAvailableError.httpStatusCode}",
+                            messageUserInfo["message"] as String,
+                            productNotAvailableError,
+                            result
+                        )
+                    } else {
+                        for (product in productDetails) {
+                            val jsonMapString = Gson().toJson(product.toMap())
+                            mSkuProductList.add(jsonMapString)
+                        }
+                        result.success(mSkuProductList)
                     }
-                    result.success(mSkuProductList)
                 }
 
                 override fun onError(error: CBException) {
-                    onError(error, result)
+                    onStoreError(error, result)
                 }
             })
     }
+
+    val purchasesNotFoundToRestore = CBException(
+        ErrorDetail(
+            message = "Products not found to restore.",
+            httpStatusCode = CBNativeError.NO_PRODUCTS_TO_RESTORE.code
+        )
+    )
 
     private fun restorePurchases(resultCallback: Result, queryParams: Map<String, Boolean>?) {
         val includeInactivePurchases = queryParams?.get("includeInactivePurchases") as Boolean
@@ -168,10 +188,20 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             includeInActivePurchases = includeInactivePurchases,
             completionCallback = object : CBCallback.RestorePurchaseCallback {
                 override fun onSuccess(result: List<CBRestoreSubscription>) {
-                    val restoreSubscription = result.map { subscription ->
-                        Gson().toJson(subscription.toMap())
+                    if (result.isNotEmpty()) {
+                        val restoreSubscription = result.map { subscription ->
+                            Gson().toJson(subscription.toMap())
+                        }
+                        resultCallback.success(restoreSubscription)
+                    } else {
+                        val messageUserInfo = purchasesNotFoundToRestore.messageUserInfo()
+                        onCBError(
+                            "${purchasesNotFoundToRestore.httpStatusCode}",
+                            messageUserInfo["message"] as String,
+                            purchasesNotFoundToRestore,
+                            resultCallback
+                        )
                     }
-                    resultCallback.success(restoreSubscription)
                 }
 
                 override fun onError(error: CBException) {
@@ -195,8 +225,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
                 override fun onSuccess(productIDs: ArrayList<CBProduct>) {
                     if (productIDs.size == 0) {
-                        onError(
-                            CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)),
+                        val messageUserInfo = productNotAvailableError.messageUserInfo()
+                        onCBError(
+                            "${productNotAvailableError.httpStatusCode}",
+                            messageUserInfo["message"] as String,
+                            productNotAvailableError,
                             result
                         )
                         return
@@ -220,13 +253,13 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                             }
 
                             override fun onError(error: CBException) {
-                                onError(error, result)
+                                onStoreError(error, result)
                             }
                         })
                 }
 
                 override fun onError(error: CBException) {
-                    onError(error, result)
+                    onStoreError(error, result)
                 }
             })
     }
@@ -236,6 +269,13 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         val packageName = args?.get("applicationId") as String
         Chargebee.showManageSubscriptionsSettings(context = activity, productId = productId, packageName = packageName)
     }
+
+    val productNotAvailableError = CBException(
+        ErrorDetail(
+            message = GPErrorCode.ProductUnavailable.errorMsg,
+            httpStatusCode = CBNativeError.PRODUCT_NOT_AVAILABLE.code
+        )
+    )
 
     private fun purchaseNonSubscriptionProduct(args: Map<String, Any>, callback: Result) {
         val customer = CBCustomer(
@@ -257,8 +297,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
                 override fun onSuccess(productIDs: ArrayList<CBProduct>) {
                     if (productIDs.size == 0) {
-                        onError(
-                            CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)),
+                        val messageUserInfo = productNotAvailableError.messageUserInfo()
+                        onCBError(
+                            "${productNotAvailableError.httpStatusCode}",
+                            messageUserInfo["message"] as String,
+                            productNotAvailableError,
                             callback
                         )
                         return
@@ -273,13 +316,13 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                             }
 
                             override fun onError(error: CBException) {
-                                onError(error, callback)
+                                onStoreError(error, callback)
                             }
                         })
                 }
 
                 override fun onError(error: CBException) {
-                    onError(error, callback)
+                    onStoreError(error, callback)
                 }
             })
     }
@@ -294,17 +337,36 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         return Gson().toJson(subscriptionStatus)
     }
 
+    val subscriptionNotFound = CBException(
+        ErrorDetail(
+            message = "Subscription not found",
+            httpStatusCode = CBNativeError.INVALID_SDK_CONFIGURATION.code
+        )
+    )
+
     private fun retrieveSubscriptions(queryParams: Map<String, String> = mapOf(), result: Result) {
         Chargebee.retrieveSubscriptions(queryParams) {
             when (it) {
                 is ChargebeeResult.Success -> {
                     val listSubscriptions = (it.data as CBSubscription).list
-                    val jsonString = Gson().toJson(listSubscriptions)
-
-                    result.success(jsonString)
+                    if (listSubscriptions.isNotEmpty()){
+                        val jsonString = Gson().toJson(listSubscriptions)
+                        result.success(jsonString)
+                    } else {
+                        val messageUserInfo = subscriptionNotFound.messageUserInfo()
+                        onCBError(
+                            "${subscriptionNotFound.httpStatusCode}",
+                            messageUserInfo["message"] as String,
+                            subscriptionNotFound,
+                            result
+                        )
+                    }
                 }
                 is ChargebeeResult.Error -> {
-                    onError(it.exp, result)
+                    onCBError(
+                        "${CBNativeError.INVALID_SDK_CONFIGURATION.code}",
+                        it.exp.messageUserInfo()["message"] as String, it.exp, result
+                    )
                 }
             }
         }
@@ -326,7 +388,10 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     result.success(jsonString)
                 }
                 is ChargebeeResult.Error -> {
-                    onError(it.exp, result)
+                    onCBError(
+                        "${CBNativeError.INVALID_SDK_CONFIGURATION.code}",
+                        it.exp.messageUserInfo()["message"] as String, it.exp, result
+                    )
                 }
             }
         }
@@ -347,7 +412,10 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     result.success(jsonString)
                 }
                 is ChargebeeResult.Error -> {
-                    onError(it.exp, result)
+                    onCBError(
+                        "${CBNativeError.INVALID_SDK_CONFIGURATION.code}",
+                        it.exp.messageUserInfo()["message"] as String, it.exp, result
+                    )
                 }
             }
         }
@@ -368,7 +436,10 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     }
                 }
                 is CBProductIDResult.Error -> {
-                    onError(it.exp, result)
+                    onCBError(
+                        "${CBNativeError.INVALID_CATALOG_VERSION.code}",
+                        it.exp.messageUserInfo()["message"] as String, it.exp, result
+                    )
                 }
             }
         }
@@ -385,7 +456,10 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                     }
                 }
                 is ChargebeeResult.Error -> {
-                    onError(it.exp, result)
+                    onCBError(
+                        "${CBNativeError.INVALID_SDK_CONFIGURATION.code}",
+                        it.exp.messageUserInfo()["message"] as String, it.exp, result
+                    )
                 }
             }
         }
@@ -405,8 +479,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
                 override fun onSuccess(productIDs: ArrayList<CBProduct>) {
                     if (productIDs.size == 0) {
-                        onError(
-                            CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)),
+                        val messageUserInfo = productNotAvailableError.messageUserInfo()
+                        onCBError(
+                            "${productNotAvailableError.httpStatusCode}",
+                            messageUserInfo["message"] as String,
+                            productNotAvailableError,
                             result
                         )
                         return
@@ -429,13 +506,16 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                             }
 
                             override fun onError(error: CBException) {
-                                onError(error, result)
+                                onCBError(
+                                    "${CBNativeError.INVALID_RECEIPT.code}",
+                                    error.messageUserInfo()["message"] as String, error, result
+                                )
                             }
                         })
                 }
 
                 override fun onError(error: CBException) {
-                    onError(error, result)
+                    onStoreError(error, result)
                 }
             })
     }
@@ -459,8 +539,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
                 override fun onSuccess(productIDs: ArrayList<CBProduct>) {
                     if (productIDs.size == 0) {
-                        onError(
-                            CBException(ErrorDetail(GPErrorCode.ProductUnavailable.errorMsg)),
+                        val messageUserInfo = productNotAvailableError.messageUserInfo()
+                        onCBError(
+                            "${productNotAvailableError.httpStatusCode}",
+                            messageUserInfo["message"] as String,
+                            productNotAvailableError,
                             callback
                         )
                         return
@@ -475,13 +558,16 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                             }
 
                             override fun onError(error: CBException) {
-                                onError(error, callback)
+                                onCBError(
+                                    "${CBNativeError.INVALID_RECEIPT.code}",
+                                    error.messageUserInfo()["message"] as String, error, callback
+                                )
                             }
                         })
                 }
 
                 override fun onError(error: CBException) {
-                    onError(error, callback)
+                    onStoreError(error, callback)
                 }
             })
     }
@@ -507,13 +593,18 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         onDetachedFromActivity();
     }
 
-    private fun onError(error: CBException, result: Result) {
-        error("${error.httpStatusCode}", error, result)
+    private fun onCBError(errorCode: String, errorMsg: String, error: CBException, result: Result) {
+        result.error(
+            errorCode, errorMsg, error.messageUserInfo()
+        )
     }
 
     private fun onStoreError(error: CBException, result: Result) {
         val errorCode = error.httpStatusCode?.let { CBNativeError.billingResponseCode(it).code }
-        error("$errorCode", error, result)
+            ?: CBNativeError.UNKNOWN
+        result.error(
+            "$errorCode", error.messageUserInfo()["message"] as String, error.messageUserInfo()
+        )
     }
 
     private fun error(errorCode: String, error: CBException, result: Result) {
