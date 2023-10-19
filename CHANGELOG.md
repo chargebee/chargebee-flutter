@@ -1,3 +1,7 @@
+## 0.3.0
+Chore
+* Updates Native Android dependency to support Billing library 5 changes
+
 ## 0.2.1
 Bug Fixes
 * The build issues on release mode and fixed in native android sdk - https://github.com/chargebee/chargebee-android/pull/87
