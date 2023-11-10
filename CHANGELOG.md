@@ -1,3 +1,9 @@
+## 0.4.0
+Chore
+* Updates Android Billing library version from 4.x to 5.2.1
+* Updates the Android target SDK as per requirements for Billing library 5.2.1
+* Updated other related dependencies
+
 ## 0.3.0
 Chore
 * Updates Native Android dependency to support Billing library 5 changes
