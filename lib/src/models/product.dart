@@ -5,6 +5,15 @@ class Product {
   /// Id of the product
   late String id;
 
+  /// For Android, the basePlanId will be returned.
+  late String? baseProductId;
+
+  /// For Android, the Offer ID will be returned.
+  late String? offerId;
+
+  /// For Android, the offerToken will be returned.
+  late String? offerToken;
+
   /// title of the product
   late String title;
 
@@ -20,7 +29,7 @@ class Product {
   /// Subscription period, which consists of unit and number of units
   late SubscriptionPeriod subscriptionPeriod;
 
-  Product(this.id, this.price, this.priceString, this.title, this.currencyCode,
+  Product(this.id, this.baseProductId, this.offerId, this.offerToken, this.price, this.priceString, this.title, this.currencyCode,
       this.subscriptionPeriod);
 
   /// convert json data into Product model
@@ -30,6 +39,9 @@ class Product {
         json['subscriptionPeriod'] as Map<String, dynamic>);
     return Product(
       json['productId'] as String,
+      json['baseProductId'] as String?,
+      json['offerId'] as String?,
+      json['offerToken'] as String?,
       json['productPrice'] as num,
       json['productPriceString'] as String,
       json['productTitle'] as String,
@@ -40,7 +52,7 @@ class Product {
 
   @override
   String toString() =>
-      'Product(id: $id, price: $price, priceString: $priceString title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
+      'Product(id: $id, baseProductId: $baseProductId, offerId: $offerId, offerToken: $offerToken, price: $price, priceString: $priceString title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
 }
 
 class SubscriptionPeriod {

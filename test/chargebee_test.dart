@@ -247,7 +247,7 @@ void main() {
     test('subscribed with customer info for Android', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseStoreProduct(product, customer: CBCustomer('abc_flutter_test', 'flutter', 'test', 'abc@gmail.com'));
+      final result = await Chargebee.purchaseProduct(product, customer: CBCustomer('abc_flutter_test', 'flutter', 'test', 'abc@gmail.com'));
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
@@ -266,7 +266,7 @@ void main() {
     test('subscribed with customer info for iOS', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseStoreProduct(product, customer: CBCustomer('abc_flutter_test', 'flutter', 'test', 'abc@gmail.com'));
+      final result = await Chargebee.purchaseProduct(product, customer: CBCustomer('abc_flutter_test', 'flutter', 'test', 'abc@gmail.com'));
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,

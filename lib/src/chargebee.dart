@@ -70,30 +70,9 @@ class Chargebee {
     return products;
   }
 
-  /// Buy the product with/without customer id.
-  ///
-  /// [product] product object to be passed.
-  ///
-  /// [customerId] it can be optional.
-  /// if passed, the subscription will be created by using customerId in chargebee.
-  /// if not passed, the value of customerId is same as SubscriptionId.
-  ///
-  /// If purchase success [PurchaseResult] object be returned.
-  /// Throws an [PlatformException] in case of failure.
-  @Deprecated(
-    'This method will be removed in upcoming release, Use purchaseStoreProduct API instead',
-  )
-  static Future<PurchaseResult> purchaseProduct(
-    Product product, [
-    String? customerId = '',
-  ]) async {
-    final map = _convertToMap(product, customerId: customerId);
-    return _purchaseResult(map);
-  }
-
   /// Buy the product with/without customer data.
   ///
-  /// [product] product object to be passed.
+  /// [product] Product object to be passed.
   ///
   /// [customer] it can be optional.
   /// if passed, the subscription will be created by using customerId in chargebee.
@@ -101,7 +80,7 @@ class Chargebee {
   ///
   /// If purchase success [PurchaseResult] object be returned.
   /// Throws an [PlatformException] in case of failure.
-  static Future<PurchaseResult> purchaseStoreProduct(
+  static Future<PurchaseResult> purchaseProduct(
     Product product, {
     CBCustomer? customer,
   }) async {
@@ -208,21 +187,6 @@ class Chargebee {
     }
     return subscriptions;
   }
-
-  /// Retrieves available product identifiers.
-  ///
-  /// [queryParams] The map value to be passed as queryParams.
-  /// Example: {"limit": "10"}.
-  ///
-  /// The list of product identifiers be returned if api success.
-  /// Throws an [PlatformException] in case of failure.
-  @Deprecated(
-    'This method will be removed in upcoming release, Use retrieveProductIdentifiers instead',
-  )
-  static Future<List<String>> retrieveProductIdentifers([
-    Map<String, String>? queryParams,
-  ]) async =>
-      retrieveProductIdentifiers(queryParams);
 
   /// Retrieves available product identifiers.
   ///
@@ -415,18 +379,12 @@ class Chargebee {
 
   static Map _convertToMap(
     Product product, {
-    String? customerId = '',
     CBCustomer? customer,
   }) {
-    String? id = '';
-    if (customerId?.isNotEmpty ?? false) {
-      id = customerId;
-    } else if (customer?.id?.isNotEmpty ?? false) {
-      id = customer?.id;
-    }
     return {
       Constants.product: product.id,
-      Constants.customerId: id,
+      Constants.offerToken: product.offerToken,
+      Constants.customerId: customer?.id ?? '',
       Constants.firstName: customer?.firstName ?? '',
       Constants.lastName: customer?.lastName ?? '',
       Constants.email: customer?.email ?? '',

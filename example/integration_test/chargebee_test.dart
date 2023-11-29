@@ -165,7 +165,7 @@ class ChargebeeTest {
       _getProduct(productIdForAndroid);
     }
     try {
-      final result = await Chargebee.purchaseStoreProduct(product, customer: customer);
+      final result = await Chargebee.purchaseProduct(product, customer: customer);
       debugPrint('purchase result: $result');
       expect(result.status, 'true');
       tester.printToConsole('Product subscribed successfully!');
