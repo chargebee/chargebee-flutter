@@ -14,7 +14,7 @@ class Product {
   /// For Android, the offerToken will be returned.
   late String? offerToken;
 
-  /// title of the product
+  /// Title of the product
   late String title;
 
   /// Currency code for the price
