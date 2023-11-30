@@ -381,13 +381,16 @@ class Chargebee {
     Product product, {
     CBCustomer? customer,
   }) {
-    return {
+    Map params = {
       Constants.product: product.id,
-      Constants.offerToken: product.offerToken,
       Constants.customerId: customer?.id ?? '',
       Constants.firstName: customer?.firstName ?? '',
       Constants.lastName: customer?.lastName ?? '',
       Constants.email: customer?.email ?? '',
     };
+    if(product.offerToken != null) {
+      params[Constants.offerToken] = product.offerToken;
+    }
+    return params;
   }
 }

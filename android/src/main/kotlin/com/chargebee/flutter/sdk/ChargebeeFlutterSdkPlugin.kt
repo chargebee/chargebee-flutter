@@ -542,7 +542,7 @@ private fun PricingPhase.toMap(product: CBProduct): Map<String, Any> {
     return mapOf(
         "productId" to product.id,
         "productTitle" to product.title,
-        "productPrice" to amountInMicros,
+        "productPrice" to convertPriceAmountInMicros(),
         "productPriceString" to formattedPrice,
         "currencyCode" to currencyCode,
         "subscriptionPeriod" to defaultSubscriptionPeriod()
@@ -557,15 +557,16 @@ fun defaultSubscriptionPeriod(): Map<String, Any> {
 }
 
 fun SubscriptionOffer.toMap(product: CBProduct): Map<String, Any> {
+    val pricingPhase = pricingPhases.first()
     return mapOf(
         "productId" to product.id,
         "baseProductId" to basePlanId,
         "offerId" to offerId.orEmpty(),
         "offerToken" to offerToken,
         "productTitle" to product.title,
-        "productPrice" to pricingPhases.first().amountInMicros,
-        "productPriceString" to pricingPhases.first().formattedPrice,
-        "currencyCode" to pricingPhases.first().currencyCode,
+        "productPrice" to pricingPhase.convertPriceAmountInMicros(),
+        "productPriceString" to pricingPhase.formattedPrice,
+        "currencyCode" to pricingPhase.currencyCode,
         "subscriptionPeriod" to subscriptionPeriod()
     )
 }
@@ -605,4 +606,8 @@ internal fun NonSubscription.toMap(): String {
         "customerId" to customerId,
     )
     return Gson().toJson(resultMap)
+}
+
+fun PricingPhase.convertPriceAmountInMicros(): Double {
+    return amountInMicros / 1_000_000.0
 }
