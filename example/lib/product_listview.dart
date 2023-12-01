@@ -23,6 +23,7 @@ class ProductListViewState extends State<ProductListView> {
   late var productId = '';
   late String? baseProductId = '';
   late var currencyCode = '';
+  late Offer? offer = null;
   late ProgressBarUtil mProgressBarUtil;
   final TextEditingController productIdTextFieldController =
       TextEditingController();
@@ -45,6 +46,11 @@ class ProductListViewState extends State<ProductListView> {
             productId = listProducts[pos].id;
             baseProductId = listProducts[pos].baseProductId;
             currencyCode = listProducts[pos].currencyCode;
+            offer = listProducts[pos].offer;
+            var priceToDisplay = productPrice + ' (currencyCode: ' + currencyCode + ')';
+            if(offer != null) {
+              priceToDisplay = offer!.priceString + ' Offer:'  + offer!.id ;
+            }
             return Card(
               child: ListTile(
                 title: Text(
@@ -56,7 +62,7 @@ class ProductListViewState extends State<ProductListView> {
                   ),
                 ),
                 subtitle: Text(
-                  productPrice + ' (currencyCode: ' + currencyCode + ')',
+                  priceToDisplay,
                   style: const TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 15,

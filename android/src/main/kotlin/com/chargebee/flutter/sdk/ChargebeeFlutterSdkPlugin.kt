@@ -1,7 +1,6 @@
 package com.chargebee.flutter.sdk
 
 import android.app.Activity
-import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
 import com.chargebee.android.Chargebee
@@ -557,26 +556,38 @@ fun defaultSubscriptionPeriod(): Map<String, Any> {
 }
 
 fun SubscriptionOffer.toMap(product: CBProduct): Map<String, Any> {
-    val pricingPhase = pricingPhases.first()
-    return mapOf(
+    val pricingPhase = pricingPhases.last()
+    val subscription = mutableMapOf(
         "productId" to product.id,
+        "productType" to product.type.value,
         "baseProductId" to basePlanId,
-        "offerId" to offerId.orEmpty(),
         "offerToken" to offerToken,
         "productTitle" to product.title,
         "productPrice" to pricingPhase.convertPriceAmountInMicros(),
         "productPriceString" to pricingPhase.formattedPrice,
         "currencyCode" to pricingPhase.currencyCode,
-        "subscriptionPeriod" to subscriptionPeriod()
+        "subscriptionPeriod" to pricingPhase.subscriptionPeriod()
     )
+    offerId?.let {
+        subscription["offer"] = offer()
+    }
+    return subscription
 }
 
-private fun SubscriptionOffer.subscriptionPeriod(): Any {
-    val subscriptionPricing = this.pricingPhases.last()
-    val subscriptionPeriod = subscriptionPricing.billingPeriod
-    val numberOfUnits = subscriptionPeriod?.substring(1, subscriptionPeriod.length - 1)?.toInt()
+private fun SubscriptionOffer.offer(): Map<String, Any> {
+    val pricingPhase = pricingPhases.first()
     return mapOf(
-        "periodUnit" to subscriptionPricing.periodUnit(),
+        "id" to offerId.orEmpty(),
+        "price" to pricingPhase.convertPriceAmountInMicros(),
+        "priceString" to pricingPhase.formattedPrice,
+        "period" to pricingPhase.subscriptionPeriod()
+    )
+}
+private fun PricingPhase.subscriptionPeriod(): Map<String, Any> {
+    val subscriptionPeriod = billingPeriod
+    val numberOfUnits = subscriptionPeriod?.substring(1, subscriptionPeriod.length - 1)?.toInt() ?: 0
+    return mapOf(
+        "periodUnit" to periodUnit(),
         "numberOfUnits" to numberOfUnits
     )
 }
