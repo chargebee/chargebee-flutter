@@ -169,10 +169,11 @@ void main() {
 
   group('purchaseProduct', () {
     final map = <String, dynamic>{'unit': 'year', 'numberOfUnits': 1};
+    final offer = Offer('offerId', 10, '10', SubscriptionPeriod.fromMap(map));
     final androidProduct = Product(
       'merchant.pro.android',
       'base.product',
-      'offerId',
+      offer,
       'offerToken',
       1500.00,
       '1500.00',
@@ -845,10 +846,11 @@ void main() {
 
   group('purchaseNonSubscriptionProduct', () {
     final map = <String, dynamic>{'unit': 'year', 'numberOfUnits': 1};
+    final offer = Offer('offerId', 10, '10', SubscriptionPeriod.fromMap(map));
     final product = Product(
       'merchant.pro.android',
       'base.product',
-      'offerId',
+      offer,
       'offerToken',
       1500.00,
       '1500.00',
@@ -1022,10 +1024,11 @@ void main() {
   });
 
   group('validateReceiptForNonSubscriptions', () {
+    final offer = Offer('offerId', 10, '10', SubscriptionPeriod.fromMap({'periodUnit': 'month', 'numberOfUnits': 1}));
     final product = Product(
       'merchant.pro.android',
       'base.product',
-      'offerId',
+      offer,
       'offerToken',
       1500.00,
       '1500.00',
