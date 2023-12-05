@@ -5,7 +5,16 @@ class Product {
   /// Id of the product
   late String id;
 
-  /// title of the product
+  /// For Android, returns the basePlanId
+  late String? baseProductId;
+
+  /// For Android, returns the Offer details if present
+  late Offer? offer;
+
+  /// For Android, returns the offerToken
+  late String? offerToken;
+
+  /// Title of the product
   late String title;
 
   /// Currency code for the price
@@ -20,7 +29,7 @@ class Product {
   /// Subscription period, which consists of unit and number of units
   late SubscriptionPeriod subscriptionPeriod;
 
-  Product(this.id, this.price, this.priceString, this.title, this.currencyCode,
+  Product(this.id, this.baseProductId, this.offer, this.offerToken, this.price, this.priceString, this.title, this.currencyCode,
       this.subscriptionPeriod);
 
   /// convert json data into Product model
@@ -28,8 +37,16 @@ class Product {
     debugPrint('json: $json');
     final subscriptionPeriod = SubscriptionPeriod.fromMap(
         json['subscriptionPeriod'] as Map<String, dynamic>);
+    var offer = null;
+    if(json['offer'] != null) {
+      offer = Offer.fromMap(
+        json['offer'] as Map<String, dynamic>);
+    }
     return Product(
       json['productId'] as String,
+      json['baseProductId'] as String?,
+      offer,
+      json['offerToken'] as String?,
       json['productPrice'] as num,
       json['productPriceString'] as String,
       json['productTitle'] as String,
@@ -40,7 +57,7 @@ class Product {
 
   @override
   String toString() =>
-      'Product(id: $id, price: $price, priceString: $priceString title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
+      'Product(id: $id, baseProductId: $baseProductId, offer: $offer, offerToken: $offerToken, price: $price, priceString: $priceString title: $title, currencyCode: $currencyCode, subscriptionPeriod: $subscriptionPeriod)';
 }
 
 class SubscriptionPeriod {
@@ -57,6 +74,37 @@ class SubscriptionPeriod {
     unit = map['periodUnit'].toString();
     numberOfUnits = map['numberOfUnits'] as int;
   }
+}
+
+class Offer {
+  /// Offer Id
+  late String id;
+
+  /// Local currency offer price for the product offer in double
+  late num price;
+
+  /// Local currency offer price for the product offer in string
+  late String priceString;
+
+  /// Subscription Offer period, which consists of unit and number of units
+  late SubscriptionPeriod offerPeriod;
+
+  Offer(this.id, this.price, this.priceString, this.offerPeriod);
+
+  /// convert map object into SubscriptionPeriod
+  factory Offer.fromMap(Map<String, dynamic> map) {
+    final offerPeriod = SubscriptionPeriod.fromMap(
+        map['period'] as Map<String, dynamic>);
+    return Offer(map['id'] as String,
+      map['price'] as num,
+      map['priceString'] as String,
+      offerPeriod
+      );
+  }
+
+  @override
+  String toString() =>
+      'Offer(id: $id, price: $price, priceString: $priceString, offerPeriod: $offerPeriod)';
 }
 
 /// Store the information related to product subscriptions

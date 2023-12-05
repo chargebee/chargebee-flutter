@@ -169,8 +169,23 @@ void main() {
 
   group('purchaseProduct', () {
     final map = <String, dynamic>{'unit': 'year', 'numberOfUnits': 1};
-    final product = Product(
+    final offer = Offer('offerId', 10, '10', SubscriptionPeriod.fromMap(map));
+    final androidProduct = Product(
       'merchant.pro.android',
+      'base.product',
+      offer,
+      'offerToken',
+      1500.00,
+      '1500.00',
+      'title',
+      'INR',
+      SubscriptionPeriod.fromMap(map),
+    );
+    final iOSProduct = Product(
+      'merchant.pro.android',
+      null,
+      null,
+      null,
       1500.00,
       '1500.00',
       'title',
@@ -185,8 +200,16 @@ void main() {
       '',
       '',
     );
-    final params = {
-      Constants.product: product.id,
+    final paramsForAndroid = {
+      Constants.product: androidProduct.id,
+      Constants.offerToken: androidProduct.offerToken,
+      Constants.customerId: customer.id ?? '',
+      Constants.firstName: customer.firstName ?? '',
+      Constants.lastName: customer.lastName ?? '',
+      Constants.email: customer.email ?? '',
+    };
+    final paramsForiOS = {
+      Constants.product: iOSProduct.id,
       Constants.customerId: customer.id ?? '',
       Constants.firstName: customer.firstName ?? '',
       Constants.lastName: customer.lastName ?? '',
@@ -195,11 +218,11 @@ void main() {
     test('returns subscription result for Android', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseProduct(product, 'abc');
+      final result = await Chargebee.purchaseProduct(androidProduct, customer: customer);
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
-          arguments: params,
+          arguments: paramsForAndroid,
         )
       ]);
       expect(result.status, 'active');
@@ -208,24 +231,11 @@ void main() {
     test('returns subscription result for iOS', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      final result = await Chargebee.purchaseProduct(product, 'abc');
+      final result = await Chargebee.purchaseProduct(iOSProduct, customer:customer);
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
-          arguments: params,
-        )
-      ]);
-      expect(result.status, 'active');
-    });
-
-    test('subscribed with customer id for Android', () async {
-      channelResponse = purchaseResult;
-      debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseProduct(product, 'abc');
-      expect(callStack, <Matcher>[
-        isMethodCall(
-          Constants.mPurchaseProduct,
-          arguments:  params,
+          arguments: paramsForiOS,
         )
       ]);
       expect(result.status, 'active');
@@ -234,11 +244,11 @@ void main() {
     test('subscribed with customer id for iOS', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseProduct(product, 'abc');
+      final result = await Chargebee.purchaseProduct(iOSProduct, customer: customer);
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
-          arguments: params,
+          arguments: paramsForiOS,
         )
       ]);
       expect(result.status, 'active');
@@ -247,12 +257,13 @@ void main() {
     test('subscribed with customer info for Android', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseStoreProduct(product, customer: CBCustomer('abc_flutter_test', 'flutter', 'test', 'abc@gmail.com'));
+      final result = await Chargebee.purchaseProduct(androidProduct, customer: CBCustomer('abc_flutter_test', 'flutter', 'test', 'abc@gmail.com'));
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
           arguments: {
-            Constants.product: product.id,
+            Constants.product: androidProduct.id,
+            Constants.offerToken: androidProduct.offerToken,
             Constants.customerId: 'abc_flutter_test',
             Constants.firstName: 'flutter',
             Constants.lastName: 'test',
@@ -266,12 +277,12 @@ void main() {
     test('subscribed with customer info for iOS', () async {
       channelResponse = purchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final result = await Chargebee.purchaseStoreProduct(product, customer: CBCustomer('abc_flutter_test', 'flutter', 'test', 'abc@gmail.com'));
+      final result = await Chargebee.purchaseProduct(iOSProduct, customer: CBCustomer('abc_flutter_test', 'flutter', 'test', 'abc@gmail.com'));
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mPurchaseProduct,
           arguments: {
-            Constants.product: product.id,
+            Constants.product: iOSProduct.id,
             Constants.customerId: 'abc_flutter_test',
             Constants.firstName: 'flutter',
             Constants.lastName: 'test',
@@ -288,7 +299,7 @@ void main() {
             code: 'PlatformError', message: 'An error occured',);
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      await expectLater(() => Chargebee.purchaseProduct(product),
+      await expectLater(() => Chargebee.purchaseProduct(iOSProduct),
           throwsA(isA<PlatformException>()),);
       channel.setMockMethodCallHandler(null);
     });
@@ -299,7 +310,7 @@ void main() {
             code: 'PlatformError', message: 'An error occured',);
       });
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      await expectLater(() => Chargebee.purchaseProduct(product),
+      await expectLater(() => Chargebee.purchaseProduct(androidProduct),
           throwsA(isA<PlatformException>()),);
       channel.setMockMethodCallHandler(null);
     });
@@ -835,8 +846,12 @@ void main() {
 
   group('purchaseNonSubscriptionProduct', () {
     final map = <String, dynamic>{'unit': 'year', 'numberOfUnits': 1};
+    final offer = Offer('offerId', 10, '10', SubscriptionPeriod.fromMap(map));
     final product = Product(
       'merchant.pro.android',
+      'base.product',
+      offer,
+      'offerToken',
       1500.00,
       '1500.00',
       'title',
@@ -1009,13 +1024,17 @@ void main() {
   });
 
   group('validateReceiptForNonSubscriptions', () {
+    final offer = Offer('offerId', 10, '10', SubscriptionPeriod.fromMap({'periodUnit': 'month', 'numberOfUnits': 1}));
     final product = Product(
       'merchant.pro.android',
+      'base.product',
+      offer,
+      'offerToken',
       1500.00,
       '1500.00',
       'title',
       'INR',
-       SubscriptionPeriod.fromMap({'periodUnit': 'month', 'numberOfUnits': 1}),
+      SubscriptionPeriod.fromMap({'periodUnit': 'month', 'numberOfUnits': 1}),
     );
     const consumableProductType = ProductType.consumable;
     const nonConsumableProductType = ProductType.non_consumable;

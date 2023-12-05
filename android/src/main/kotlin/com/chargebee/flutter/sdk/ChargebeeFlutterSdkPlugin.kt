@@ -1,7 +1,6 @@
 package com.chargebee.flutter.sdk
 
 import android.app.Activity
-import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
 import com.chargebee.android.Chargebee
@@ -25,16 +24,7 @@ import java.util.*
 
 class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private lateinit var channel: MethodChannel
-    var mItemsList = ArrayList<String>()
-    var mPlansList = ArrayList<String>()
-    var mSkuProductList = ArrayList<String>()
-    var result: MethodChannel.Result? = null
-    var mContext: Context? = null
-    var subscriptionStatus = HashMap<String, Any>()
-    var subscriptionsList = ArrayList<String>()
-    private lateinit var context: Context
     private lateinit var activity: Activity
-    var queryParam = arrayOf<String>()
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "chargebee_flutter")
@@ -147,12 +137,11 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             productIdList,
             object : CBCallback.ListProductsCallback<ArrayList<CBProduct>> {
                 override fun onSuccess(productDetails: ArrayList<CBProduct>) {
-                    mSkuProductList.clear()
+                    var productsList = ArrayList<String>()
                     for (product in productDetails) {
-                        val jsonMapString = Gson().toJson(product.toMap())
-                        mSkuProductList.add(jsonMapString)
+                        productsList.addAll(product.toProducts())
                     }
-                    result.success(mSkuProductList)
+                    result.success(productsList)
                 }
 
                 override fun onError(error: CBException) {
@@ -189,6 +178,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         )
         val arrayList: ArrayList<String> = ArrayList<String>()
         arrayList.add(args["product"] as String)
+        val offerToken = args["offerToken"] as String
         CBPurchase.retrieveProducts(
             activity,
             arrayList,
@@ -201,8 +191,10 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                         )
                         return
                     }
+                    val purchaseProductParams =
+                        PurchaseProductParams(productIDs.first(), offerToken)
                     CBPurchase.purchaseProduct(
-                        productIDs.first(),
+                        purchaseProductParams,
                         customer,
                         object : CBCallback.PurchaseCallback<String> {
                             override fun onSuccess(
@@ -287,6 +279,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     private fun onResultMap(
         id: String, planId: String, customerId: String, status: String
     ): String {
+        var subscriptionStatus = HashMap<String, Any>()
         subscriptionStatus["subscriptionId"] = id
         subscriptionStatus["planId"] = planId
         subscriptionStatus["customerId"] = customerId
@@ -312,6 +305,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
 
     private fun retrieveAllItems(queryParams: Map<String, String>? = mapOf(), result: Result) {
+        var queryParam = arrayOf<String>()
         if (queryParams != null)
             queryParam = arrayOf(
                 queryParams["limit"] ?: "",
@@ -333,6 +327,7 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
 
     private fun retrieveAllPlans(queryParams: Map<String, String>? = mapOf(), result: Result) {
+        var queryParam = arrayOf<String>()
         if (queryParams != null)
             queryParam = arrayOf(
                 queryParams["limit"] ?: "",
@@ -357,9 +352,10 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         queryParams: Map<String, String>? = mapOf(),
         result: Result
     ) {
+        var queryParam = arrayOf<String>()
         if (queryParams != null)
             queryParam = arrayOf(queryParams["limit"] ?: "")
-        CBPurchase.retrieveProductIdentifers(queryParam) {
+        CBPurchase.retrieveProductIdentifiers(queryParam) {
             when (it) {
                 is CBProductIDResult.ProductIds -> {
                     if (it.IDs.isNotEmpty()) {
@@ -532,40 +528,72 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
 }
 
-fun CBProduct.toMap(): Map<String, Any> {
+private fun CBProduct.toProducts(): List<String> {
+    var products =  mutableListOf<String>()
+    subscriptionOffers?.forEach{
+        products.add(Gson().toJson(it.toMap(this)))
+    }
+    oneTimePurchaseOffer?.let { products.add(Gson().toJson(it.toMap(this))) }
+    return products
+}
+
+private fun PricingPhase.toMap(product: CBProduct): Map<String, Any> {
     return mapOf(
-        "productId" to productId,
+        "productId" to product.id,
+        "productTitle" to product.title,
         "productPrice" to convertPriceAmountInMicros(),
-        "productPriceString" to productPrice,
-        "productTitle" to productTitle,
-        "currencyCode" to skuDetails.priceCurrencyCode,
-        "subscriptionPeriod" to subscriptionPeriod()
+        "productPriceString" to formattedPrice,
+        "currencyCode" to currencyCode,
+        "subscriptionPeriod" to defaultSubscriptionPeriod()
     )
 }
 
-fun CBProduct.convertPriceAmountInMicros(): Double {
-    return skuDetails.priceAmountMicros / 1_000_000.0
+fun defaultSubscriptionPeriod(): Map<String, Any> {
+    return mapOf(
+        "periodUnit" to "",
+        "numberOfUnits" to 0
+    )
 }
 
-fun CBProduct.subscriptionPeriod(): Map<String, Any> {
-    val subscriptionPeriodMap = if (skuDetails.type == ProductType.SUBS.value) {
-        val subscriptionPeriod = skuDetails.subscriptionPeriod
-        val numberOfUnits = subscriptionPeriod.substring(1, subscriptionPeriod.length - 1).toInt()
-        mapOf(
-            "periodUnit" to periodUnit(),
-            "numberOfUnits" to numberOfUnits
-        )
-    } else {
-        mapOf(
-            "periodUnit" to "",
-            "numberOfUnits" to 0
-        )
+fun SubscriptionOffer.toMap(product: CBProduct): Map<String, Any> {
+    val pricingPhase = pricingPhases.last()
+    val subscription = mutableMapOf(
+        "productId" to product.id,
+        "productType" to product.type.value,
+        "baseProductId" to basePlanId,
+        "offerToken" to offerToken,
+        "productTitle" to product.title,
+        "productPrice" to pricingPhase.convertPriceAmountInMicros(),
+        "productPriceString" to pricingPhase.formattedPrice,
+        "currencyCode" to pricingPhase.currencyCode,
+        "subscriptionPeriod" to pricingPhase.subscriptionPeriod()
+    )
+    offerId?.let {
+        subscription["offer"] = offer()
     }
-    return subscriptionPeriodMap
+    return subscription
 }
 
-fun CBProduct.periodUnit(): String {
-    return when (skuDetails.subscriptionPeriod.last().toString()) {
+private fun SubscriptionOffer.offer(): Map<String, Any> {
+    val pricingPhase = pricingPhases.first()
+    return mapOf(
+        "id" to offerId.orEmpty(),
+        "price" to pricingPhase.convertPriceAmountInMicros(),
+        "priceString" to pricingPhase.formattedPrice,
+        "period" to pricingPhase.subscriptionPeriod()
+    )
+}
+private fun PricingPhase.subscriptionPeriod(): Map<String, Any> {
+    val subscriptionPeriod = billingPeriod
+    val numberOfUnits = subscriptionPeriod?.substring(1, subscriptionPeriod.length - 1)?.toInt() ?: 0
+    return mapOf(
+        "periodUnit" to periodUnit(),
+        "numberOfUnits" to numberOfUnits
+    )
+}
+
+fun PricingPhase.periodUnit(): String {
+    return when (this.billingPeriod?.last().toString()) {
         "Y" -> "year"
         "M" -> "month"
         "W" -> "week"
@@ -589,4 +617,8 @@ internal fun NonSubscription.toMap(): String {
         "customerId" to customerId,
     )
     return Gson().toJson(resultMap)
+}
+
+fun PricingPhase.convertPriceAmountInMicros(): Double {
+    return amountInMicros / 1_000_000.0
 }

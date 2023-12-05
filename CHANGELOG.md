@@ -1,3 +1,6 @@
+## 1.0.0-beta.1
+* Handles Android Billing library 5 changes to handle base plan and offer tokens
+
 ## 0.4.0
 Chore
 * Updates Android Billing library version from 4.x to 5.2.1

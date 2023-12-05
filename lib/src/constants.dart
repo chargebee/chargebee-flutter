@@ -14,6 +14,7 @@ class Constants {
   static const productType = 'product_type';
   static const productId = 'productId';
   static const applicationId = 'applicationId';
+  static const offerToken = 'offerToken';
 
   /// API name for both iOS and Android
   static const mAuthentication = 'authentication';

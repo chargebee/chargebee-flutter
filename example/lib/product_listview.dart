@@ -21,7 +21,9 @@ class ProductListViewState extends State<ProductListView> {
   late List<Product> listProducts;
   late var productPrice = '';
   late var productId = '';
+  late String? baseProductId = '';
   late var currencyCode = '';
+  late Offer? offer = null;
   late ProgressBarUtil mProgressBarUtil;
   final TextEditingController productIdTextFieldController =
       TextEditingController();
@@ -42,11 +44,17 @@ class ProductListViewState extends State<ProductListView> {
           itemBuilder: (context, pos) {
             productPrice = listProducts[pos].priceString;
             productId = listProducts[pos].id;
+            baseProductId = listProducts[pos].baseProductId;
             currencyCode = listProducts[pos].currencyCode;
+            offer = listProducts[pos].offer;
+            var priceToDisplay = productPrice + ' (currencyCode: ' + currencyCode + ')';
+            if(offer != null) {
+              priceToDisplay = offer!.priceString + ' Offer:'  + offer!.id ;
+            }
             return Card(
               child: ListTile(
                 title: Text(
-                  productId,
+                  productId + " " + (baseProductId ?? ''),
                   style: const TextStyle(
                     color: Colors.black54,
                     fontWeight: FontWeight.bold,
@@ -54,7 +62,7 @@ class ProductListViewState extends State<ProductListView> {
                   ),
                 ),
                 subtitle: Text(
-                  productPrice + ' (currencyCode: ' + currencyCode + ')',
+                  priceToDisplay,
                   style: const TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 15,
@@ -85,9 +93,8 @@ class ProductListViewState extends State<ProductListView> {
       final product = listProducts[position];
       if (product.subscriptionPeriod.unit.isNotEmpty &&
           product.subscriptionPeriod.numberOfUnits != 0) {
-        mProgressBarUtil.showProgressDialog();
-        // purchaseProduct(product);
-         purchaseStoreProduct(product);
+         mProgressBarUtil.showProgressDialog();
+         purchaseProduct(product);
       } else {
         _showDialog(context, product);
       }
@@ -98,46 +105,7 @@ class ProductListViewState extends State<ProductListView> {
 
   Future<void> purchaseProduct(Product product) async {
     try {
-      final result = await Chargebee.purchaseProduct(product, 'abc');
-      debugPrint('subscription result : $result');
-      debugPrint('subscription id : ${result.subscriptionId}');
-      debugPrint('plan id : ${result.planId}');
-      debugPrint('subscription status : ${result.status}');
-
-      mProgressBarUtil.hideProgressDialog();
-
-      if (result.status == 'true') {
-        _showSuccessDialog(context, 'Success');
-      } else {
-        _showSuccessDialog(context, result.subscriptionId);
-      }
-    } on PlatformException catch (e) {
-      debugPrint(
-          'Error Message: ${e.message}, Error Details: ${e.details}, Error Code: ${e.code}');
-      mProgressBarUtil.hideProgressDialog();
-      if (e.code.isNotEmpty) {
-        final responseCode = int.parse(e.code);
-        if (responseCode >= 500 && responseCode <= 599) {
-          /// Cache the productId in SharedPreferences if failed synching with Chargebee.
-          final prefs = await SharedPreferences.getInstance();
-          prefs.setString('productId', product.id);
-
-          /// validate the receipt
-          validateReceipt(product.id);
-        }
-      }
-    }
-  }
-
-  Future<void> purchaseStoreProduct(Product product) async {
-    try {
-      final customer = CBCustomer(
-        'abc_flutter_test',
-        'fn',
-        'ln',
-        'abc@gmail.com',
-      );
-      final result = await Chargebee.purchaseStoreProduct(product, customer: customer);
+      final result = await Chargebee.purchaseProduct(product, customer: CBCustomer('abc_flutter_test', 'flutter', 'test', 'abc@gmail.com'));
       debugPrint('subscription result : $result');
       debugPrint('subscription id : ${result.subscriptionId}');
       debugPrint('plan id : ${result.planId}');
