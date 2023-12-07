@@ -1,3 +1,7 @@
+## 0.4.1
+Fix
+* Fixes multiple callback
+
 ## 0.4.0
 Chore
 * Updates Android Billing library version from 4.x to 5.2.1
