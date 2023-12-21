@@ -253,7 +253,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                 return _result(FlutterError.noArgsError)
             }
 
-            let includeInActiveProducts: Bool = params["includeInactivePurchases"] as? Bool ?? false
+            let includeInactivePurchases: Bool = params["includeInactivePurchases"] as? Bool ?? false
 
             let customer: CBCustomer = CBCustomer(
               customerID: params["customerId"] as? String,
@@ -262,7 +262,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
               email:params["email"] as? String
             )
 
-            CBPurchase.shared.restorePurchases(includeInActiveProducts: includeInActiveProducts, customer: customer) { result in
+            CBPurchase.shared.restorePurchases(includeInActiveProducts: includeInactivePurchases, customer: customer) { result in
                 switch result {
                 case .success(let response):
                     var array = [String]()
