@@ -1,3 +1,7 @@
+## 0.4.2
+Fix
+* Add customer as a parameter in restorePurchase 
+
 ## 0.4.1
 Fix
 * Fixes multiple callback
