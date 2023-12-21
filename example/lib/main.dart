@@ -409,10 +409,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> restorePurchases() async {
     try {
       final customer = CBCustomer(
-        '',
-        '',
-        '',
-        '',
+        'Test123',
+        'CB',
+        'Test',
+        'cbTest@chargebee.com',
       );
       final result = await Chargebee.restorePurchases(true, customer);
       if (mProgressBarUtil.isProgressBarShowing()) {
