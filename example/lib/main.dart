@@ -408,7 +408,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> restorePurchases() async {
     try {
-      final result = await Chargebee.restorePurchases(true);
+      final customer = CBCustomer(
+        '',
+        '',
+        '',
+        '',
+      );
+      final result = await Chargebee.restorePurchases(true, customer);
       if (mProgressBarUtil.isProgressBarShowing()) {
         mProgressBarUtil.hideProgressDialog();
       }
