@@ -705,11 +705,24 @@ void main() {
       channelResponse = restorePurchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       try {
-        final result = await Chargebee.restorePurchases(true);
+        final customer = CBCustomer(
+          'test-user',
+          'test',
+          'user',
+          'test-user@email.com',
+        );
+        final result = await Chargebee.restorePurchases(true, customer);
+        final expectedArguments = {
+          Constants.customerId: 'test-user',
+          Constants.firstName: 'test',
+          Constants.lastName: 'user',
+          Constants.email: 'test-user@email.com',
+          Constants.includeInactivePurchases: true,
+        };
         expect(callStack, <Matcher>[
           isMethodCall(
             Constants.mRestorePurchase,
-            arguments: {Constants.includeInactivePurchases: true},
+            arguments: expectedArguments,
           )
         ]);
         expect(result.isNotEmpty, true);
@@ -721,11 +734,24 @@ void main() {
     test('returns the list of Restored Subscription for iOS', () async {
       channelResponse = restorePurchaseResult;
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      final result = await Chargebee.restorePurchases(true);
+      final customer = CBCustomer(
+        'test-user',
+        'test',
+        'user',
+        'test-user@email.com',
+      );
+      final expectedArguments = {
+        Constants.customerId: 'test-user',
+        Constants.firstName: 'test',
+        Constants.lastName: 'user',
+        Constants.email: 'test-user@email.com',
+        Constants.includeInactivePurchases: true,
+      };
+      final result = await Chargebee.restorePurchases(true, customer);
       expect(callStack, <Matcher>[
         isMethodCall(
           Constants.mRestorePurchase,
-          arguments: {Constants.includeInactivePurchases: true},
+          arguments: expectedArguments,
         )
       ]);
       expect(result.isNotEmpty, true);

@@ -85,8 +85,9 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
                 }
             }
             "restorePurchases" -> {
-                val params = call.arguments() as? Map<String, Boolean>?
-                restorePurchases(result, params)
+                if (args != null) {
+                    restorePurchases(args, result)
+                }
             }
             "validateReceipt" -> {
                 if (args != null) {
@@ -150,10 +151,17 @@ class ChargebeeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
             })
     }
 
-    private fun restorePurchases(resultCallback: Result, queryParams: Map<String, Boolean>?) {
-        val includeInactivePurchases = queryParams?.get("includeInactivePurchases") as Boolean
+    private fun restorePurchases(args: Map<String, Any>, resultCallback: Result) {
+        val includeInactivePurchases = args["includeInactivePurchases"] as Boolean
+        val customer = CBCustomer(
+            args["customerId"] as String,
+            args["firstName"] as String,
+            args["lastName"] as String,
+            args["email"] as String
+        )
         CBPurchase.restorePurchases(
             context = activity,
+            customer = customer,
             includeInActivePurchases = includeInactivePurchases,
             completionCallback = object : CBCallback.RestorePurchaseCallback {
                 override fun onSuccess(result: List<CBRestoreSubscription>) {

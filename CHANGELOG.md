@@ -1,5 +1,17 @@
+## 1.0.0-beta.2
+Fix
+* Add customer as a parameter in restorePurchase for beta SDK 
+
 ## 1.0.0-beta.1
 * Handles Android Billing library 5 changes to handle base plan and offer tokens
+
+## 0.4.2
+Fix
+* Add customer as a parameter in restorePurchase 
+
+## 0.4.1
+Fix
+* Fixes multiple callback
 
 ## 0.4.0
 Chore
