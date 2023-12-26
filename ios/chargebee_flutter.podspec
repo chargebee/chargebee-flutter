@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'chargebee_flutter'
-  s.version          = '1.0.0-beta.1'
+  s.version          = '1.0.0-beta.2'
   s.summary          = 'This is the official Software Development Kit (SDK) for Chargebee Flutter.'
   s.description      = <<-DESC
 A new Flutter plugin.
@@ -14,7 +14,7 @@ A new Flutter plugin.
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
 
-  s.dependency 'Chargebee', '1.0.26'
+  s.dependency 'Chargebee', '1.0.28'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
