@@ -20,14 +20,12 @@ class Product {
   /// Subscription period, which consists of unit and number of units
   late SubscriptionPeriod subscriptionPeriod;
 
-  Product(this.id, this.price, this.priceString, this.title, this.currencyCode,
-      this.subscriptionPeriod);
+  Product(this.id, this.price, this.priceString, this.title, this.currencyCode, this.subscriptionPeriod);
 
   /// convert json data into Product model
   factory Product.fromJson(Map<String, dynamic> json) {
     debugPrint('json: $json');
-    final subscriptionPeriod = SubscriptionPeriod.fromMap(
-        json['subscriptionPeriod'] as Map<String, dynamic>);
+    final subscriptionPeriod = SubscriptionPeriod.fromMap(json['subscriptionPeriod'] as Map<String, dynamic>);
     return Product(
       json['productId'] as String,
       json['productPrice'] as num,
@@ -78,8 +76,7 @@ class PurchaseResult {
         json['status'] as String,
       );
   @override
-  String toString() =>
-      'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, status: $status)';
+  String toString() => 'PurchaseResult(subscriptionId: $subscriptionId, planId: $planId, status: $status)';
 }
 
 /// Store the information related to non subscription product purchase
@@ -97,16 +94,14 @@ class NonSubscriptionPurchaseResult {
 
   /// convert json data and returned NonSubscriptionPurchaseResult object
   factory NonSubscriptionPurchaseResult.fromJson(Map<String, dynamic> json) =>
-      NonSubscriptionPurchaseResult(json['invoiceId'] as String,
-          json['chargeId'] as String, json['customerId'] as String);
+      NonSubscriptionPurchaseResult(json['invoiceId'] as String, json['chargeId'] as String, json['customerId'] as String);
 
   @override
-  String toString() =>
-      'NonSubscriptionPurchaseResult(invoiceId: $invoiceId, chargeId: $chargeId,customerId: $customerId)';
+  String toString() => 'NonSubscriptionPurchaseResult(invoiceId: $invoiceId, chargeId: $chargeId,customerId: $customerId)';
 }
 
 /// Store information about the list of subscriptions
-class Subscripton {
+class Subscription {
   /// subscription id
   String? subscriptionId;
 
@@ -135,7 +130,7 @@ class Subscripton {
   /// subscription term start
   String? currentTermStartString;
 
-  Subscripton({
+  Subscription({
     this.subscriptionId,
     this.customerId,
     this.status,
@@ -145,8 +140,8 @@ class Subscripton {
     this.planAmount,
   });
 
-  /// convert json data into Subscripton model for iOS
-  Subscripton.fromJson(Map<String, dynamic> json) {
+  /// convert json data into Subscription model for iOS
+  Subscription.fromJson(Map<String, dynamic> json) {
     subscriptionId = json['subscription_id'] as String;
     customerId = json['customer_id'] as String;
     status = json['status'] as String;
@@ -158,8 +153,8 @@ class Subscripton {
     /// Plan amount sometime we are getting double value sometime Int
   }
 
-  /// convert json data into Subscripton model for Android
-  Subscripton.fromJsonAndroid(Map<String, dynamic> json) {
+  /// convert json data into Subscription model for Android
+  Subscription.fromJsonAndroid(Map<String, dynamic> json) {
     activatedAtString = json['activated_at'].toString();
     currentTermEndString = json['current_term_end'].toString();
     currentTermStartString = json['current_term_start'].toString();
@@ -171,36 +166,32 @@ class Subscripton {
 }
 
 /// Gets list of subscriptions
-class SubscriptonList {
+class SubscriptionList {
   /// subscription object
-  Subscripton? subscripton;
+  Subscription? subscription;
 
-  SubscriptonList({this.subscripton});
+  SubscriptionList({this.subscription});
 
-  /// json data converts into SubscriptonList for iOS
-  SubscriptonList.fromJson(Map<String, dynamic> json) {
-    subscripton = json['cb_subscription'] != null
-        ? Subscripton.fromJson(json['cb_subscription'])
-        : null;
+  /// json data converts into SubscriptionList for iOS
+  SubscriptionList.fromJson(Map<String, dynamic> json) {
+    subscription = json['cb_subscription'] != null ? Subscription.fromJson(json['cb_subscription']) : null;
   }
 
-  /// json data converts into SubscriptonList for Android
-  SubscriptonList.fromJsonAndroid(Map<String, dynamic> json) {
-    subscripton = json['cb_subscription'] != null
-        ? Subscripton.fromJsonAndroid(json['cb_subscription'])
-        : null;
+  /// json data converts into SubscriptionList for Android
+  SubscriptionList.fromJsonAndroid(Map<String, dynamic> json) {
+    subscription = json['cb_subscription'] != null ? Subscription.fromJsonAndroid(json['cb_subscription']) : null;
   }
 }
 
 class CBSubscriptionWrapper {
-  List<Subscripton>? list;
+  List<Subscription>? list;
 
   CBSubscriptionWrapper({this.list});
 
   CBSubscriptionWrapper.fromJson(List<Map<String, dynamic>> json) {
-    final subsArray = <Subscripton>[];
+    final subsArray = <Subscription>[];
     for (final value in json) {
-      subsArray.add(Subscripton.fromJson(value));
+      subsArray.add(Subscription.fromJson(value));
     }
   }
 }
@@ -261,9 +252,7 @@ class CBEntitlementWrapper {
 
   /// Convert entitlement object into CBEntitlement
   CBEntitlementWrapper.fromJson(dynamic json) {
-    cbEntitlement = json['subscription_entitlement'] != null
-        ? CBEntitlement.fromJson(json['subscription_entitlement'])
-        : null;
+    cbEntitlement = json['subscription_entitlement'] != null ? CBEntitlement.fromJson(json['subscription_entitlement']) : null;
   }
 }
 

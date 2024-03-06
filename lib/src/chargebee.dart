@@ -175,12 +175,12 @@ class Chargebee {
   /// [queryParams] The map value to be passed as queryParams.
   /// Example: {"customer_id": "abc"}.
   ///
-  /// The list of [Subscripton] object be returned if api success.
+  /// The list of [Subscription] object be returned if api success.
   /// Throws an [PlatformException] in case of failure.
-  static Future<List<Subscripton?>> retrieveSubscriptions(
+  static Future<List<Subscription?>> retrieveSubscriptions(
     Map<String, String> queryParams,
   ) async {
-    final subscriptions = <Subscripton>[];
+    final subscriptions = <Subscription>[];
     if (_isIOS) {
       final String result = await platform.invokeMethod(
         Constants.mSubscriptionMethod,
@@ -189,8 +189,8 @@ class Chargebee {
       final List jsonData = jsonDecode(result.toString());
       if (jsonData.isNotEmpty) {
         for (final value in jsonData) {
-          final wrapper = SubscriptonList.fromJson(value);
-          subscriptions.add(wrapper.subscripton!);
+          final wrapper = SubscriptionList.fromJson(value);
+          subscriptions.add(wrapper.subscription!);
         }
       }
     } else {
@@ -201,8 +201,8 @@ class Chargebee {
       final List jsonData = jsonDecode(result);
       if (jsonData.isNotEmpty) {
         for (final value in jsonData) {
-          final wrapper = SubscriptonList.fromJsonAndroid(value);
-          subscriptions.add(wrapper.subscripton!);
+          final wrapper = SubscriptionList.fromJsonAndroid(value);
+          subscriptions.add(wrapper.subscription!);
         }
       }
     }
@@ -234,10 +234,8 @@ class Chargebee {
   static Future<List<String>> retrieveProductIdentifiers([
     Map<String, String>? queryParams,
   ]) async {
-    final String result =
-        await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
-    return CBProductIdentifierWrapper.fromJson(jsonDecode(result))
-        .productIdentifiersList;
+    final String result = await platform.invokeMethod(Constants.mProductIdentifiers, queryParams);
+    return CBProductIdentifierWrapper.fromJson(jsonDecode(result)).productIdentifiersList;
   }
 
   /// Retrieves entitlements for the subscription.
@@ -250,8 +248,7 @@ class Chargebee {
   static Future<List<CBEntitlementWrapper>> retrieveEntitlements(
     Map<String, String> queryParams,
   ) async {
-    final String result =
-        await platform.invokeMethod(Constants.mGetEntitlements, queryParams);
+    final String result = await platform.invokeMethod(Constants.mGetEntitlements, queryParams);
     return CBEntitlementList.fromJson(jsonDecode(result)).entitlementsList;
   }
 
@@ -268,16 +265,14 @@ class Chargebee {
     var itemsFromServer = [];
     final listItems = <CBItem>[];
     if (_isIOS) {
-      final String result =
-          await platform.invokeMethod(Constants.mRetrieveAllItems, queryParams);
+      final String result = await platform.invokeMethod(Constants.mRetrieveAllItems, queryParams);
       itemsFromServer = jsonDecode(result);
       for (final value in itemsFromServer) {
         final wrapper = CBItemsList.fromJson(value);
         listItems.add(wrapper.cbItem!);
       }
     } else {
-      final String result =
-          await platform.invokeMethod(Constants.mRetrieveAllItems, queryParams);
+      final String result = await platform.invokeMethod(Constants.mRetrieveAllItems, queryParams);
       itemsFromServer = jsonDecode(result);
       for (final value in itemsFromServer) {
         final wrapper = CBItemsList.fromJsonAndroid(value);
@@ -300,16 +295,14 @@ class Chargebee {
     var plansFromServer = [];
     final listPlans = <CBPlan>[];
     if (_isIOS) {
-      final String result =
-          await platform.invokeMethod(Constants.mRetrieveAllPlans, queryParams);
+      final String result = await platform.invokeMethod(Constants.mRetrieveAllPlans, queryParams);
       plansFromServer = jsonDecode(result);
       for (final value in plansFromServer) {
         final wrapper = CBPlansList.fromJson(value);
         listPlans.add(wrapper.cbPlan!);
       }
     } else {
-      final String result =
-          await platform.invokeMethod(Constants.mRetrieveAllPlans, queryParams);
+      final String result = await platform.invokeMethod(Constants.mRetrieveAllPlans, queryParams);
       plansFromServer = jsonDecode(result);
       for (final value in plansFromServer) {
         final wrapper = CBPlansList.fromJsonAndroid(value);
@@ -344,8 +337,7 @@ class Chargebee {
     debugPrint('result $result');
     if (result.isNotEmpty) {
       for (var i = 0; i < result.length; i++) {
-        final subscription =
-            CBRestoreSubscription.fromJson(jsonDecode(result[i].toString()));
+        final subscription = CBRestoreSubscription.fromJson(jsonDecode(result[i].toString()));
         restorePurchases.add(subscription);
       }
     }
@@ -397,8 +389,7 @@ class Chargebee {
   ///
   /// If purchase success [NonSubscriptionPurchaseResult] object be returned.
   /// Throws an [PlatformException] in case of failure.
-  static Future<NonSubscriptionPurchaseResult>
-      validateReceiptForNonSubscriptions(
+  static Future<NonSubscriptionPurchaseResult> validateReceiptForNonSubscriptions(
     String productId,
     ProductType productType, [
     CBCustomer? customer,
