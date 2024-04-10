@@ -78,7 +78,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                                     withJSONObject:dict,
                                     options: []) {
                                     if let jsonString = String(data: data,
-                                                               encoding: .ascii) {
+                                                               encoding: .utf8) {
                                         _result(jsonString)
                                     }
                                 }else {
@@ -120,7 +120,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                                     withJSONObject:dict,
                                     options: []) {
                                     if let jsonString = String(data: data,
-                                                               encoding: .ascii) {
+                                                               encoding: .utf8) {
                                         _result(jsonString)
                                     }
                                 }else {
@@ -152,7 +152,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                                 withJSONObject: product.product.toMap(),
                                 options: []) {
                                 if let jsonString = String(data: theJSONData,
-                                                           encoding: .ascii) {
+                                                           encoding: .utf8) {
                                     array.append(jsonString)
                                 }
                             }
@@ -173,7 +173,7 @@ public class SwiftChargebeeFlutterSdkPlugin: NSObject, FlutterPlugin {
                             withJSONObject:dataWrapper.ids,
                             options: []) {
                             if let jsonString = String(data: data,
-                                                       encoding: .ascii) {
+                                                       encoding: .utf8) {
                                 _result(jsonString)
                             }
                         }else {
