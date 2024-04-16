@@ -1,3 +1,7 @@
+## 1.0.0-beta.3
+Fix
+* Pass customer params when customer ID is null/empty for android
+
 ## 1.0.0-beta.2
 Fix
 * Add customer as a parameter in restorePurchase for beta SDK 
