@@ -1,3 +1,8 @@
+## 1.0.0-beta.4
+Fix
+* Avoiding multiple callbacks from Android Billing library
+
+
 ## 1.0.0-beta.3
 Fix
 * Pass customer params when customer ID is null/empty for android
