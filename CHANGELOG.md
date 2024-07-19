@@ -1,3 +1,7 @@
+## 0.4.3
+Fix
+* Include Google Billing Library 6 
+
 ## 0.4.2
 Fix
 * Add customer as a parameter in restorePurchase 
