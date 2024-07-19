@@ -1,5 +1,5 @@
 ## 0.4.3
-Fix
+Chore
 * Include Google Billing Library 6 
 
 ## 0.4.2
