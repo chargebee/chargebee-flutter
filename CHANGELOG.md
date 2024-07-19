@@ -1,3 +1,7 @@
+## 1.0.0-beta.5
+Chore
+* Include Google Billing Library 6
+
 ## 1.0.0-beta.4
 Fix
 * Avoiding multiple callbacks from Android Billing library
