@@ -1,3 +1,7 @@
+## 1.0.0-beta.6
+Chore
+* Compatible with AGP 8
+
 ## 1.0.0-beta.5
 Chore
 * Include Google Billing Library 6
