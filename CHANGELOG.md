@@ -1,4 +1,4 @@
-## 0.4.3
+## 0.4.4
 Chore
 * Compatible with AGP 8
 
