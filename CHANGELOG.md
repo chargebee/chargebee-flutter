@@ -1,3 +1,7 @@
+## 0.4.4
+Chore
+* Compatible with AGP 8
+
 ## 0.4.3
 Chore
 * Include Google Billing Library 6 
