@@ -1,3 +1,7 @@
+## 0.4.5
+Chore
+* UTF8 support
+
 ## 0.4.4
 Chore
 * Compatible with AGP 8
