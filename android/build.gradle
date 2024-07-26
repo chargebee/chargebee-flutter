@@ -1,5 +1,5 @@
 group 'com.chargebee.flutter.sdk'
-version '1.0.0-beta.6'
+version '1.0.0-beta.7'
 
 buildscript {
     ext.kotlin_version = '1.6.0'

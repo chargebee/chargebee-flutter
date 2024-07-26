@@ -1,3 +1,7 @@
+## 1.0.0-beta.7
+Chore
+* UTF8 support
+
 ## 1.0.0-beta.6
 Chore
 * Compatible with AGP 8
