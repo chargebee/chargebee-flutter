@@ -1,3 +1,7 @@
+## 0.4.6
+Chore
+* Support trial subscriptions in retrieveSubscription
+
 ## 0.4.5
 Chore
 * UTF8 support
