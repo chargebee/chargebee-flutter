@@ -198,21 +198,22 @@ class Subscripton {
     subscriptionId = json['subscription_id'] as String;
     customerId = json['customer_id'] as String;
     status = json['status'] as String;
-    activatedAt = json['activated_at'] as int;
-    currentTermStart = json['current_term_start'] as int;
-    currentTermEnd = json['current_term_end'] as int;
-    planAmount = json['plan_amount'].toString();
+    activatedAt = json.containsKey('activated_at') ? json['activated_at'] as int : null;
+    currentTermStart = json.containsKey('current_term_start') ? json['current_term_start'] as int: null;
+    currentTermEnd = json.containsKey('current_term_end') ? json['current_term_end'] as int: null;
+    planAmount = json.containsKey('plan_amount') ? json['plan_amount'].toString() : null;
 
+    /// Defaults to null if key not present
     /// Plan amount sometime we are getting double value sometime Int
   }
 
   /// convert json data into Subscripton model for Android
   Subscripton.fromJsonAndroid(Map<String, dynamic> json) {
-    activatedAtString = json['activated_at'].toString();
-    currentTermEndString = json['current_term_end'].toString();
-    currentTermStartString = json['current_term_start'].toString();
+    activatedAtString = json.containsKey('activated_at') ? json['activated_at'].toString(): null;
+    currentTermEndString = json.containsKey('current_term_end') ? json['current_term_end'].toString(): null;
+    currentTermStartString = json.containsKey('current_term_start') ? json['current_term_start'].toString(): null;
     customerId = json['customer_id'] as String;
-    planAmount = json['plan_amount'].toString();
+    planAmount = json.containsKey('plan_amount') ? json['plan_amount'].toString(): null;
     status = json['status'] as String;
     subscriptionId = json['subscription_id'] as String;
   }

@@ -1,3 +1,7 @@
+## 1.0.0-beta.8
+Chore
+* Trial support for retrieve Subscription
+
 ## 1.0.0-beta.7
 Chore
 * UTF8 support
