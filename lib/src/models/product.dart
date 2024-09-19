@@ -154,7 +154,7 @@ class Subscripton {
     currentTermStart = json.containsKey('current_term_start') ? json['current_term_start'] as int: null;
     currentTermEnd = json.containsKey('current_term_end') ? json['current_term_end'] as int: null;
     planAmount = json.containsKey('plan_amount') ? json['plan_amount'].toString() : null;
-
+    /// Defaults to null if key not present
     /// Plan amount sometime we are getting double value sometime Int
   }
 
