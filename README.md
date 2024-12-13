@@ -155,6 +155,7 @@ To retrieve **inactive** purchases along with the **active** purchases for your 
 
 ``` dart
 try {
+  final customer = CBCustomer('id','','','');
   final result = await Chargebee.restorePurchases(true, customer);
   print("result : $result");
 } on PlatformException catch (e) {
