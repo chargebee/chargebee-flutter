@@ -1,3 +1,7 @@
+## 0.4.7
+Chore
+* Include latest chargebee-android with fix for retrofit proguard rules
+
 ## 0.4.6
 Chore
 * Support trial subscriptions in retrieveSubscription

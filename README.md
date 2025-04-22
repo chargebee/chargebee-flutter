@@ -27,7 +27,7 @@ To use Chargebee SDK in your Flutter app, follow these steps:
 
     ``` dart
     dependencies: 
-     chargebee_flutter: ^0.4.6
+     chargebee_flutter: ^0.4.7
     ```
     
 2.  Install dependency.
