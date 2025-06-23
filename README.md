@@ -1,4 +1,9 @@
-# Flutter SDK
+> [!WARNING]  
+> **Chargebee Flutter SDK** is part of Chargebee's legacy Mobile Subscription Solution and will not include the latest enhancements. We recommend using Chargebee's new [Omnichannel Subscriptions](https://www.chargebee.com/docs/billing/2.0/mobile-subscriptions/omnichannel-subscription-overview) solution for improved reliability and unified mobile subscriptions experience. 
+If you are a new customer, or considering to migrate new solution, please reach out to support@chargebee.com or contact your Technical Success Manager (TSM) for guidance.
+
+Chargebee Flutter SDK (Legacy)
+=============
 
 Chargebee's Flutter SDK enables you to build a seamless and efficient customer experience for your subscription business.
 
