@@ -1,5 +1,9 @@
 ## 0.4.7
 Chore
+* Include latest chargebee-android with upgraded blilling client lib to v7.1.1
+
+## 0.4.7
+Chore
 * Include latest chargebee-android with fix for retrofit proguard rules
 
 ## 0.4.6
