@@ -1,5 +1,5 @@
 group 'com.chargebee.flutter.sdk'
-version '1.0.0-beta.8'
+version '1.0.0-beta.9'
 
 buildscript {
     ext.kotlin_version = '1.6.0'
@@ -52,7 +52,7 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.chargebee:chargebee-android:2.0.0-beta-4'
+    implementation 'com.chargebee:chargebee-android:2.0.0-beta-5'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.android.billingclient:billing-ktx:6.2.1'
+    implementation 'com.android.billingclient:billing-ktx:7.1.1'
 }

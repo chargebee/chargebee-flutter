@@ -1,3 +1,7 @@
+## 1.0.0-beta.9
+Chore
+* Include latest chargebee-android with upgraded blilling client lib to v7.1.1
+
 ## 1.0.0-beta.8
 Chore
 * Trial support for retrieve Subscription
