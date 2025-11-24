@@ -8,7 +8,7 @@ class Product {
   /// For Android, returns the basePlanId
   late String? baseProductId;
 
-  /// For Android, returns the Offer details if present
+  /// For Android and iOS, returns the Offer details if present
   late Offer? offer;
 
   /// For Android, returns the offerToken
@@ -29,9 +29,10 @@ class Product {
   /// Subscription period, which consists of unit and number of units
   late SubscriptionPeriod subscriptionPeriod;
 
+
   Product(this.id, this.baseProductId, this.offer, this.offerToken, this.price, this.priceString, this.title, this.currencyCode,
       this.subscriptionPeriod);
-
+  
   /// convert json data into Product model
   factory Product.fromJson(Map<String, dynamic> json) {
     debugPrint('json: $json');
@@ -51,7 +52,7 @@ class Product {
       json['productPriceString'] as String,
       json['productTitle'] as String,
       json['currencyCode'] as String,
-      subscriptionPeriod,
+      subscriptionPeriod
     );
   }
 

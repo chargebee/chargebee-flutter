@@ -1,3 +1,7 @@
+## 1.0.0-beta.10
+Feature
+* Adds 'offerPrice' to return Introductory price for Apple
+
 ## 1.0.0-beta.9
 Chore
 * Include latest chargebee-android with upgraded blilling client lib to v7.1.1
