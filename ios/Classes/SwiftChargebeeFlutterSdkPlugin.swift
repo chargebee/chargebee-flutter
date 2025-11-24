@@ -395,17 +395,39 @@ extension Encodable {
 
 extension SKProduct {
     func toMap() -> [String: Any?] {
-        let map: [String: Any?] = [
+        var map: [String: Any?] = [
             "productId": productIdentifier,
             "productPrice": price.doubleValue,
             "productPriceString": price.description,
             "productTitle": localizedTitle,
             "currencyCode": priceLocale.currencyCode,
             "subscriptionPeriod": subscriptionPeriod(),
-            "offerPrice": self.introductoryPrice?.price.doubleValue,
+        ]
+        if let introPrice = self.introductoryPrice {
+            map["offer"] = offerPrice(introPrice)
+        }
+        return map
+    }
+
+    func offerPrice(_ discount: SKProductDiscount) -> [String:Any?] {
+        let map: [String: Any?] = [
+            "id": discountIdentifier(discount),
+            "price": discount.price.doubleValue,
+            "priceString": discount.price.description,
+            "period": [ "periodUnit": periodUnit(discount.subscriptionPeriod.unit),
+                             "numberOfUnits": discount.numberOfPeriods
+                           ]
         ]
         return map
     }
+    
+    func discountIdentifier(_ discount: SKProductDiscount) -> String {
+        if #available(iOS 12.2, *) {
+            return discount.identifier ?? ""
+        }
+        return ""
+    }
+    
     func subscriptionPeriod() -> [String:Any?]  {
         let period:String = periodUnit()
         let subscriptionPeriod: [String: Any?] = [
@@ -422,6 +444,16 @@ extension SKProduct {
         case .month: return "month"
         case .year: return "year"
         case .none, .some(_): return ""
+        }
+    }
+    
+    func periodUnit(_ period: SKProduct.PeriodUnit) -> String {
+        switch period {
+        case .day: return "day"
+        case .week: return "week"
+        case .month: return "month"
+        case .year: return "year"
+        default: return ""
         }
     }
 }
