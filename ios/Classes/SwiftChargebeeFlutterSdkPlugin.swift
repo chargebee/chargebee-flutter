@@ -401,7 +401,8 @@ extension SKProduct {
             "productPriceString": price.description,
             "productTitle": localizedTitle,
             "currencyCode": priceLocale.currencyCode,
-            "subscriptionPeriod": subscriptionPeriod()
+            "subscriptionPeriod": subscriptionPeriod(),
+            "offerPrice": self.introductoryPrice?.price.doubleValue,
         ]
         return map
     }

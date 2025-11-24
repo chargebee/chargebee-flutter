@@ -29,8 +29,11 @@ class Product {
   /// Subscription period, which consists of unit and number of units
   late SubscriptionPeriod subscriptionPeriod;
 
+  /// Discounted Price
+  late num? discountedPrice;
+
   Product(this.id, this.baseProductId, this.offer, this.offerToken, this.price, this.priceString, this.title, this.currencyCode,
-      this.subscriptionPeriod);
+      this.subscriptionPeriod, this.discountedPrice);
 
   /// convert json data into Product model
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -52,6 +55,7 @@ class Product {
       json['productTitle'] as String,
       json['currencyCode'] as String,
       subscriptionPeriod,
+      json['offerPrice'] as num?,
     );
   }
 
