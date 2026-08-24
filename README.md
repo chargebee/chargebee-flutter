@@ -17,7 +17,7 @@ The following requirements must be set up before installing Chargebee's Flutter 
 
 -   Flutter version 2.10.0 and above
 -   Dart SDK version 2.16.2 and above
--   [Android Gradle Plugin](https://developer.android.com/studio/releases/gradle-plugin "https://developer.android.com/studio/releases/gradle-plugin") 7.4.2+
+-   [Android Gradle Plugin](https://developer.android.com/studio/releases/gradle-plugin "https://developer.android.com/studio/releases/gradle-plugin") 7.4.2+ (AGP 8.10+ recommended; on AGP 7.4.x add `classpath 'com.android.tools:r8:8.10.21'` before AGP so D8 can dex Billing Library 8 / Kotlin 2.2)
 -   [Gradle](https://gradle.org/releases/ "https://gradle.org/releases/") 7.6.3+
 -   Android minimum SDK version 23, compile and target SDK version 34
 -   [AndroidX](https://developer.android.com/jetpack/androidx/ "https://developer.android.com/jetpack/androidx/")
