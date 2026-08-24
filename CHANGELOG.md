@@ -1,3 +1,13 @@
+## 1.0.0-beta.11
+Chore
+* Include latest chargebee-android (`2.0.0-beta-6`) with upgraded billing client lib to v8.3.0
+* Android compile/target SDK version raised to 34
+* Kotlin 2.1.21, AGP 7.4.2, Gradle 7.6.4, JDK 17
+
+Breaking
+* Android minimum SDK version raised from 21 to 23 (required by Google Play Billing Library 8)
+* On Android, `restorePurchases` no longer returns fully expired subscriptions, even when `includeInactivePurchases` is true. Google Play Billing 8 removed the purchase history API and offers no client-side replacement, so only active subscriptions can be restored, including those that are cancelled but not yet expired, paused, in trial, or suspended. iOS is unaffected.
+
 ## 1.0.0-beta.10
 Feature
 * Adds 'offerPrice' to return Introductory price for Apple

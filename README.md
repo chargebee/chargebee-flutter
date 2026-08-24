@@ -2,7 +2,7 @@
 
 > [!NOTE]  
 > #### Updates for Billing Library 5
-> - SDK Version 1.0: This version includes Google Billing Library 7.1.1 but uses Google Billing Library 5.2.1 APIs to fetch product information from the Google Play Console and make purchases. If you’re integrating Chargebee’s SDK for the first time, then use this version, and if you’re migrating from the older version of SDK to this version, follow the migration steps in this [document](https://www.chargebee.com/docs/2.0/mobile-playstore-billing-library-5.html).
+> - SDK Version 1.0: This version includes Google Billing Library 8.3.0 but uses Google Billing Library 5.2.1 APIs to fetch product information from the Google Play Console and make purchases. If you’re integrating Chargebee’s SDK for the first time, then use this version, and if you’re migrating from the older version of SDK to this version, follow the migration steps in this [document](https://www.chargebee.com/docs/2.0/mobile-playstore-billing-library-5.html).
 > - SDK Version 0.4.0: This [version](https://github.com/chargebee/chargebee-flutter/tree/main) includes Billing Library 5.2.1 but still uses Billing Library 4.0 APIs to fetch product information from the Google Play Console and make purchases. This will enable you to list or update your Android app on the store without any warnings from Google and give you enough time to migrate to version 2.0.
 
 Chargebee's Flutter SDK enables you to build a seamless and efficient customer experience for your subscription business.
@@ -17,10 +17,11 @@ The following requirements must be set up before installing Chargebee's Flutter 
 
 -   Flutter version 2.10.0 and above
 -   Dart SDK version 2.16.2 and above
--   [Android Gradle Plugin](https://developer.android.com/studio/releases/gradle-plugin "https://developer.android.com/studio/releases/gradle-plugin") 4.0.0
--   [Gradle](https://gradle.org/releases/ "https://gradle.org/releases/") 6.1.1+
+-   [Android Gradle Plugin](https://developer.android.com/studio/releases/gradle-plugin "https://developer.android.com/studio/releases/gradle-plugin") 7.4.2+
+-   [Gradle](https://gradle.org/releases/ "https://gradle.org/releases/") 7.6.3+
+-   Android minimum SDK version 23, compile and target SDK version 34
 -   [AndroidX](https://developer.android.com/jetpack/androidx/ "https://developer.android.com/jetpack/androidx/")
--   Java 8+ and Kotlin
+-   JDK 17 and Kotlin 2.0+
 -   iOS 12+
 -   Swift 5+
 
@@ -32,7 +33,7 @@ To use Chargebee SDK in your Flutter app, follow these steps:
 
     ``` dart
     dependencies: 
-     chargebee_flutter: ^1.0.0-beta.10
+     chargebee_flutter: ^1.0.0-beta.11
     ```
     
 2.  Install dependency.
@@ -157,6 +158,9 @@ The function is called asynchronously, and it returns a `Result` object with a `
 The `restorePurchases()` function helps to recover your app user's previous purchases without making them pay again. Sometimes, your app user may want to restore their previous purchases after switching to a new device or reinstalling your app. You can use the `restorePurchases()` function to allow your app user to easily restore their previous purchases by providing the `customer` object as a parameter.
 
 To retrieve **inactive** purchases along with the **active** purchases for your app user, you can call the `restorePurchases()` function with the `includeInactivePurchases` parameter set to true. If you only want to restore active subscriptions, set the parameter to false. Here is an example of how to use the restorePurchases() function in your code with the `includeInactivePurchases` parameter set to true.
+
+> [!IMPORTANT]  
+> `restorePurchases()` restores subscriptions only; one-time products are never restored. On Android, Google Play Billing Library 8 removed the purchase history API and provides no client-side replacement, so only subscriptions that Google Play still associates with the user's account can be restored: active ones, including those that are cancelled but not yet expired, paused, in trial, or suspended. Subscriptions that have fully expired are no longer returned, even when `includeInactivePurchases` is set to `true`. iOS is unaffected.
 
 ``` dart
 try {

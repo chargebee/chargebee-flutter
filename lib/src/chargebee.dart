@@ -287,6 +287,13 @@ class Chargebee {
   ///
   /// [bool] includeInactivePurchases When set to true, the inactive purchases are also synced to Chargebee.
   ///
+  /// Subscriptions only; one-time products are never restored. On Android, Google
+  /// Play Billing 8 removed the purchase history API, so only subscriptions that
+  /// Google Play still associates with the account can be restored: active ones,
+  /// including those that are cancelled but not yet expired, paused, in trial, or
+  /// suspended. Subscriptions that have fully expired are not returned even when
+  /// [includeInactivePurchases] is true. iOS is unaffected.
+  ///
   /// The list of [CBRestoreSubscription] object be returned.
   /// Throws an [PlatformException] in case of failure.
   static Future<List<CBRestoreSubscription>> restorePurchases([
