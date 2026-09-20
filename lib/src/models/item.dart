@@ -1,15 +1,15 @@
-/// This class contains all the information related to the Items which associated with a subscription
+/// This class contains all the information related to the Items which are associated with a subscription
 class CBItem {
   /// The item identifier as same as product id.
   String? id;
 
-  /// The name is same as product id.
+  /// The name is the same as product id.
   String? name;
 
   /// Description of the item.
   String? description;
 
-  /// Item status, eg. active, archived and delete.
+  /// Item status, eg. active, archived and deleted.
   String? status;
 
   /// The version of the resource.
@@ -30,7 +30,7 @@ class CBItem {
   /// Specifies if gift subscriptions can be created for this item.
   bool? isGiftable;
 
-  /// Allow the plan/item to subscribed to via Checkout.
+  /// Allow the plan/item to be subscribed to via Checkout.
   bool? enabledForCheckout;
 
   /// Allow customers to change their subscription to this plan via the Self-Serve Portal.

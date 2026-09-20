@@ -1,6 +1,6 @@
 import 'dart:core';
 
-/// This class contains all the information related to the Plans which associated with a subscription
+/// This class contains all the information related to the Plans which are associated with a subscription
 class CBPlan {
   /// The plan identifier as same as product id.
   String? id;
@@ -24,10 +24,10 @@ class CBPlan {
   int? freeQuantity;
   int? setup_cost;
 
-  /// Plan status, eg. active, archived and delete.
+  /// Plan status, eg. active, archived and deleted.
   String? status;
 
-  /// Allow the plan to subscribed to via Checkout.
+  /// Allow the plan to be subscribed to via Checkout.
   bool? enabledInHostedPages;
 
   /// Allow customers to change their subscription to this plan via the Self-Serve Portal.
